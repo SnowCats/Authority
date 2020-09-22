@@ -4,4 +4,22 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="AppSettings\" />
+    <Folder Include="Autofac\" />
+    <Folder Include="IdentityServer4\" />
+    <Folder Include="MediatR\" />
+    <Folder Include="Swagger\" />
+    <Folder Include="AutoMapper\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="5.2.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="MediatR" Version="8.1.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="IdentityServer4" Version="4.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.6.1" />
+  </ItemGroup>
 </Project>
