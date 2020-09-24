@@ -11,5 +11,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AppSettings\" />
+    <Folder Include="Base\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\Auth.IRepository\Auth.IRepository.csproj" />
   </ItemGroup>
 </Project>

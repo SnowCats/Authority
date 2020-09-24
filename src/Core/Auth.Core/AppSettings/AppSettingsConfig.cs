@@ -9,7 +9,7 @@ namespace Auth.Core.AppSettings
     {
         public static void AddAppSettings(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<ConnectionStrings>(configuration.GetSection(nameof(ConnectionStrings)));
+            services.Configure<ConnectionStrings>(configuration.GetSection("ConnectionStrings"));
         }
     }
 }

@@ -17,30 +17,30 @@ namespace Auth.UI.Web
 {
     public class Startup
     {
-        public IConfigurationRoot Configuration { get; }
-
-        public IWebHostEnvironment Environment { get; }
-
-        public ILifetimeScope AutofacContainer { get; private set; }
-
         public Startup(IWebHostEnvironment env)
         {
             Configuration = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables()
                 .Build();
 
             Environment = env;
         }
 
+        public IConfiguration Configuration { get; private set; }
+
+        public IWebHostEnvironment Environment { get; }
+
+        public ILifetimeScope AutofacContainer { get; private set; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAppSettings(Configuration);
-            //services.AddControllers().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Latest);
+            services.AddControllers().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Latest);
         }
 
         /// <summary>

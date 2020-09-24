@@ -10,6 +10,7 @@ namespace Auth.Core.Autofac
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
+                .Where(t => t.Name.StartsWith("Auth"))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
         }
