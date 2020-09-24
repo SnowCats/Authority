@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Auth.Repository
+namespace Auth.IRepository
 {
     public class Class1
     {
