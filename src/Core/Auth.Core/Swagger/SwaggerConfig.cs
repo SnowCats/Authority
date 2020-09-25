@@ -16,16 +16,23 @@ namespace Auth.Core.Swagger
         private const string title = "基础数据认证平台";
 
         /// <summary>
-        /// Add Swagger
+        /// Add SwaggerGen
         /// </summary>
         /// <param name="services"></param>
-        public static void AddSwagger(this IApplicationBuilder builder, IServiceCollection services)
+        public static void AddSwaggerGenConfiguration(this IServiceCollection services)
         {
             services.AddSwaggerGen(config =>
             {
                 config.SwaggerDoc("v1", new OpenApiInfo { Title = title, Version = "v1" });
             });
+        }
 
+        /// <summary>
+        /// Add SwaggerUI
+        /// </summary>
+        /// <param name="builder"></param>
+        public static void AddSwaggerUIConfiguration(this IApplicationBuilder builder)
+        {
             builder
                 .UseSwagger()
                 .UseSwaggerUI(config => {

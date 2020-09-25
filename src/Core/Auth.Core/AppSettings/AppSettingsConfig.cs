@@ -15,7 +15,7 @@ namespace Auth.Core.AppSettings
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
-        public static void AddAppSettings(this IServiceCollection services, IConfiguration configuration)
+        public static void AddAppSettingsConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<ConnectionStrings>(configuration.GetSection("ConnectionStrings"));
         }

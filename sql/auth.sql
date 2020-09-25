@@ -1,42 +1,3 @@
-CREATE TABLE `base_apis`  (
-  `ID` char(36) NOT NULL COMMENT '主键',
-  `Module` varchar(50) NULL COMMENT '模块名',
-  `Name` varchar(50) NULL COMMENT '名称',
-  `Route` text NULL COMMENT '路由',
-  `Status` tinyint NULL COMMENT '状态',
-  `Notes` text NULL COMMENT '备注',
-  `CreatedOn` datetime NULL COMMENT '创建时间',
-  `CreatedBy` char(36) NULL COMMENT '创建人',
-  `ModifiedOn` datetime NULL COMMENT '修改时间',
-  `ModifiedBy` char(36) NULL COMMENT '修改人',
-  PRIMARY KEY (`ID`)
-) COMMENT = '基础接口表';
-
-CREATE TABLE `base_module_permissions`  (
-  `ID` char(36) NOT NULL COMMENT '主键',
-  `ModuleID` char(36) NULL COMMENT '模块ID',
-  `PermissionID` char(36) NULL COMMENT '权限ID',
-  `Status` tinyint NULL COMMENT '状态',
-  `CreatedOn` datetime NULL COMMENT '创建时间',
-  `CreatedBy` char(36) NULL COMMENT '创建人',
-  `ModifiedOn` datetime NULL COMMENT '修改时间',
-  `ModifiedBy` char(36) NULL COMMENT '修改人',
-  PRIMARY KEY (`ID`)
-) COMMENT = '基础模块和权限关系表';
-
-CREATE TABLE `base_modules`  (
-  `ID` char(36) NOT NULL COMMENT '主键',
-  `ParentID` char(36) NULL COMMENT '上级菜单',
-  `Name` varchar(50) NULL COMMENT '名称',
-  `Status` tinyint NULL COMMENT '状态',
-  `Notes` text NULL COMMENT '备注',
-  `CreatedOn` datetime NULL COMMENT '创建时间',
-  `CreatedBy` char(36) NULL COMMENT '创建人',
-  `ModifiedOn` datetime NULL COMMENT '修改时间',
-  `ModifiedBy` char(36) NULL COMMENT '修改人',
-  PRIMARY KEY (`ID`)
-) COMMENT = '基础模块表';
-
 CREATE TABLE `base_organizations`  (
   `ID` char(36) NOT NULL COMMENT '主键',
   `ParentID` char(36) NULL COMMENT '上级组织ID',
@@ -49,18 +10,6 @@ CREATE TABLE `base_organizations`  (
   `ModifiedBy` char(36) NULL COMMENT '修改人',
   PRIMARY KEY (`ID`)
 ) COMMENT = '组织架构表';
-
-CREATE TABLE `base_permissions`  (
-  `ID` char(36) NOT NULL,
-  `Name` varchar(50) NULL,
-  `Status` tinyint NULL,
-  `Notes` varchar(4000) NULL,
-  `CreatedOn` datetime NULL,
-  `CreatedBy` char(36) NULL,
-  `ModifiedOn` datetime NULL,
-  `ModifiedBy` char(36) NULL,
-  PRIMARY KEY (`ID`)
-) COMMENT = '权限表';
 
 CREATE TABLE `base_positions`  (
   `ID` char(36) NOT NULL COMMENT '主键',
@@ -127,4 +76,57 @@ CREATE TABLE `base_users`  (
   `ModifiedBy` char(36) NULL COMMENT '修改人',
   PRIMARY KEY (`ID`)
 ) COMMENT = '用户表';
+
+CREATE TABLE `sys_apis`  (
+  `ID` char(36) NOT NULL COMMENT '主键',
+  `ModuleID` char(36) NULL COMMENT '模块名',
+  `Name` varchar(50) NULL COMMENT '名称',
+  `Route` text NULL COMMENT '路由',
+  `Method` varchar(10) NULL COMMENT '接口方法',
+  `Status` tinyint NULL COMMENT '状态',
+  `Notes` text NULL COMMENT '备注',
+  `CreatedOn` datetime NULL COMMENT '创建时间',
+  `CreatedBy` char(36) NULL COMMENT '创建人',
+  `ModifiedOn` datetime NULL COMMENT '修改时间',
+  `ModifiedBy` char(36) NULL COMMENT '修改人',
+  PRIMARY KEY (`ID`)
+) COMMENT = '基础接口表';
+
+CREATE TABLE `sys_module_permissions`  (
+  `ID` char(36) NOT NULL COMMENT '主键',
+  `ModuleID` char(36) NULL COMMENT '模块ID',
+  `PermissionID` char(36) NULL COMMENT '权限ID',
+  `Status` tinyint NULL COMMENT '状态',
+  `CreatedOn` datetime NULL COMMENT '创建时间',
+  `CreatedBy` char(36) NULL COMMENT '创建人',
+  `ModifiedOn` datetime NULL COMMENT '修改时间',
+  `ModifiedBy` char(36) NULL COMMENT '修改人',
+  PRIMARY KEY (`ID`)
+) COMMENT = '基础模块和权限关系表';
+
+CREATE TABLE `sys_modules`  (
+  `ID` char(36) NOT NULL COMMENT '主键',
+  `ParentID` char(36) NULL COMMENT '上级菜单',
+  `Name` varchar(50) NULL COMMENT '名称',
+  `Icon` varchar(50) NULL COMMENT '字体图标',
+  `Status` tinyint NULL COMMENT '状态',
+  `Notes` text NULL COMMENT '备注',
+  `CreatedOn` datetime NULL COMMENT '创建时间',
+  `CreatedBy` char(36) NULL COMMENT '创建人',
+  `ModifiedOn` datetime NULL COMMENT '修改时间',
+  `ModifiedBy` char(36) NULL COMMENT '修改人',
+  PRIMARY KEY (`ID`)
+) COMMENT = '基础模块表';
+
+CREATE TABLE `sys_permissions`  (
+  `ID` char(36) NOT NULL,
+  `Name` varchar(50) NULL,
+  `Status` tinyint NULL,
+  `Notes` varchar(4000) NULL,
+  `CreatedOn` datetime NULL,
+  `CreatedBy` char(36) NULL,
+  `ModifiedOn` datetime NULL,
+  `ModifiedBy` char(36) NULL,
+  PRIMARY KEY (`ID`)
+) COMMENT = '权限表';
 

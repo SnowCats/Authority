@@ -4,13 +4,18 @@ using Dapper.Contrib.Extensions;
 namespace Auth.Entity.Base
 {
     /// <summary>
-    /// 角色
+    /// 组织架构
     /// </summary>
-    [Table("base_roles")]
-    public class Role : SeedWork.Entity
+    [Table("base_organizations")]
+    public class Organization : SeedWork.Entity
     {
         /// <summary>
-        /// 角色名称
+        /// 上级组织ID
+        /// </summary>
+        public Guid? ParentID { get; set; }
+
+        /// <summary>
+        /// 上级组织名称
         /// </summary>
         public string Name { get; set; }
 

@@ -1,18 +1,23 @@
 ﻿using System;
 using Dapper.Contrib.Extensions;
 
-namespace Auth.Entity.Base
+namespace Auth.Entity.System
 {
     /// <summary>
-    /// 角色
+    /// 模块关系表
     /// </summary>
-    [Table("base_roles")]
-    public class Role : SeedWork.Entity
+    [Table("sys_module_permissions")]
+    public class ModulePermission : SeedWork.Entity
     {
         /// <summary>
-        /// 角色名称
+        /// 模块ID
         /// </summary>
-        public string Name { get; set; }
+        public Guid? ModuleID { get; set; }
+
+        /// <summary>
+        /// 权限ID
+        /// </summary>
+        public Guid? PermissionID { get; set; }
 
         /// <summary>
         /// 状态，0:启用，1:禁用

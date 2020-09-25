@@ -13,7 +13,7 @@ namespace Auth.Core.AutoMapper
         /// <summary>
         /// AutoMapper Extension
         /// </summary>
-        public static void AddAutoMapper(this IServiceCollection services)
+        public static void AddAutoMapperConfiguration(this IServiceCollection services)
         {
             services.AddSingleton(new MapperConfiguration(config => config.AddProfile<AutoMapperProfile>())
                 .CreateMapper());

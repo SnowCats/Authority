@@ -14,7 +14,7 @@ namespace Auth.Core.MediatR
         /// Add MediatR
         /// </summary>
         /// <param name="services"></param>
-        public static void AddMediatR(this IServiceCollection services)
+        public static void AddMediatRConfiguration(this IServiceCollection services)
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
         }

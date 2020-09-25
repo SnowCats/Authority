@@ -1,16 +1,16 @@
 ﻿using System;
 using Dapper.Contrib.Extensions;
 
-namespace Auth.Entity.Base
+namespace Auth.Entity.System
 {
     /// <summary>
-    /// 角色
+    /// 权限表
     /// </summary>
-    [Table("base_roles")]
-    public class Role : SeedWork.Entity
+    [Table("sys_permissions")]
+    public class Permission : SeedWork.Entity
     {
         /// <summary>
-        /// 角色名称
+        /// 权限名
         /// </summary>
         public string Name { get; set; }
 

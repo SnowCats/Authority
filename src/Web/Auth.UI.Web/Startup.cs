@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Auth.Core.AppSettings;
 using Auth.Core.Autofac;
+using Auth.Core.AutoMapper;
+using Auth.Core.MediatR;
+using Auth.Core.Swagger;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -39,7 +42,10 @@ namespace Auth.UI.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAppSettings(Configuration);
+            services.AddAppSettingsConfiguration(Configuration);
+            services.AddAutoMapperConfiguration();
+            services.AddMediatRConfiguration();
+            services.AddSwaggerGenConfiguration();
             services.AddControllers().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Latest);
         }
 
@@ -61,6 +67,7 @@ namespace Auth.UI.Web
             }
 
             AutofacContainer = app.ApplicationServices.GetAutofacRoot();
+            app.AddSwaggerUIConfiguration();
 
             app.UseRouting();
 

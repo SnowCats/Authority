@@ -6,8 +6,12 @@
 
   <ItemGroup>
     <Folder Include="Base\" />
+    <Folder Include="System\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dapper.Contrib" Version="2.0.35" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Auth.SeedWork\Auth.SeedWork.csproj" />
   </ItemGroup>
 </Project>

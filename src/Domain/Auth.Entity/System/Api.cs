@@ -1,18 +1,25 @@
 ﻿using System;
-using Dapper.Contrib.Extensions;
-
-namespace Auth.Entity.Base
+namespace Auth.Entity.System
 {
     /// <summary>
-    /// 角色
+    /// 接口表
     /// </summary>
-    [Table("base_roles")]
-    public class Role : SeedWork.Entity
+    public class Api : SeedWork.Entity
     {
         /// <summary>
-        /// 角色名称
+        /// 模块ID
+        /// </summary>
+        public Guid? ModuleID { get; set; }
+
+        /// <summary>
+        /// 接口名称
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// 接口地址
+        /// </summary>
+        public string Route { get; set; }
 
         /// <summary>
         /// 状态，0:启用，1:禁用

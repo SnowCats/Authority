@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="Handlers\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Auth.Dto\Auth.Dto.csproj" />
+    <PackageReference Include="Dapper.Contrib" Version="2.0.35" />
   </ItemGroup>
 </Project>
