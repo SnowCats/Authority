@@ -1,28 +1,30 @@
 ﻿using System;
-using Dapper.Contrib.Extensions;
-
-namespace Auth.Entity.Base
+namespace Auth.Dto.System
 {
     /// <summary>
-    /// 字典
+    /// 接口Dto
     /// </summary>
-    [Table("base_settings")]
-    public class Setting : SeedWork.Entity
+    public class ApiDto
     {
         /// <summary>
-        /// 上级字典Key
+        /// 主键
         /// </summary>
-        public string ParentKey { get; set; }
+        public Guid ID { get; set; }
 
         /// <summary>
-        /// 字典Key
+        /// 模块ID
         /// </summary>
-        public string CodeKey { get; set; }
+        public Guid? ModuleID { get; set; }
 
         /// <summary>
-        /// 字典Value
+        /// 接口名称
         /// </summary>
-        public string CodeValue { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 接口地址
+        /// </summary>
+        public string Route { get; set; }
 
         /// <summary>
         /// 状态，0:启用，1:禁用

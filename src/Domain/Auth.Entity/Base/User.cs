@@ -15,6 +15,11 @@ namespace Auth.Entity.Base
         public string Name { get; set; }
 
         /// <summary>
+        /// 性别
+        /// </summary>
+        public string Gender { get; set; }
+
+        /// <summary>
         /// 用户名
         /// </summary>
         public string UserName { get; set; }
