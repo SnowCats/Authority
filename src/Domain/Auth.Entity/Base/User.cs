@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Dapper.Contrib.Extensions;
 
 namespace Auth.Entity.Base
@@ -88,5 +89,10 @@ namespace Auth.Entity.Base
         /// 修改人
         /// </summary>
         public Guid? ModifiedBy { get; set; }
+
+        /// <summary>
+        /// 用户角色关系列表
+        /// </summary>
+        public IEnumerable<UserRole> UserRoles { get; set; }
     }
 }

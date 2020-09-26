@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace Auth.Dto.Base
 {
     /// <summary>
@@ -90,5 +92,10 @@ namespace Auth.Dto.Base
         /// 修改人
         /// </summary>
         public Guid? ModifiedBy { get; set; }
+
+        /// <summary>
+        /// 用户角色关系列表
+        /// </summary>
+        public IEnumerable<UserRoleDto> UserRoles { get; set; }
     }
 }
