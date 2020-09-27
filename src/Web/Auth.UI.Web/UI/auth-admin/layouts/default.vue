@@ -12,6 +12,8 @@
         </v-list-item-content>
       </v-list-item>
 
+      <v-divider></v-divider>
+
       <v-list>
         <v-list-group
           v-for="item in items"
@@ -26,9 +28,11 @@
             </v-list-item-content>
           </template>
 
-          <v-list-item v-for="subItem in item.items" :key="subItem.title" link>
+          <v-list-item v-for="subItem in item.items" :href="subItem.url" :key="subItem.title" link>
             <v-list-item-content>
-              <v-list-item-title v-text="subItem.title"></v-list-item-title>
+              <v-list-item-title
+                v-text="subItem.title"
+              ></v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-group>
@@ -69,10 +73,10 @@ export default {
         title: "基础数据",
         active: true,
         items: [
-          { title: "组织架构", icon: "", url: "" },
-          { title: "用户信息", icon: "", url: "" },
-          { title: "角色信息", icon: "", url: "" },
-          { title: "岗位信息", icon: "", url: "" },
+          { title: "组织架构", icon: "", url: "/base/organization" },
+          { title: "用户信息", icon: "", url: "/base/user" },
+          { title: "角色信息", icon: "", url: "/base/role" },
+          { title: "岗位信息", icon: "", url: "/base/position" },
         ],
       },
       {
@@ -80,10 +84,10 @@ export default {
         title: "系统设置",
         active: false,
         items: [
-          { title: "接口信息", icon: "", url: "" },
-          { title: "模块信息", icon: "", url: "" },
-          { title: "权限信息", icon: "", url: "" },
-          { title: "数据字典", icon: "", url: "" },
+          { title: "接口信息", icon: "", url: "/system/api" },
+          { title: "模块信息", icon: "", url: "/system/module" },
+          { title: "权限信息", icon: "", url: "/system/permission" },
+          { title: "数据字典", icon: "", url: "/system/setting" },
         ],
       },
     ],
