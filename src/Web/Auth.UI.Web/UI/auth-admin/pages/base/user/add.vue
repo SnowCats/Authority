@@ -43,15 +43,20 @@
                   ></v-select>
                 </v-flex>
                 <v-flex md3 sm12 xs12>
-                    <v-text-field label="地址" name="address"></v-text-field>
+                  <v-text-field label="地址" name="address"></v-text-field>
                 </v-flex>
                 <v-flex md12 sm12 xs12>
-                    <v-textarea label="备注" name="notes"></v-textarea>
+                  <v-textarea label="备注" name="notes"></v-textarea>
                 </v-flex>
-                <v-flex md12 sm12 xs12>
-                    <v-btn @click="submit()" tile color="success">
-                      <v-icon>mdi-content-save-edit</v-icon>保存
-                    </v-btn>
+                <v-flex md12 sm12 xs12 text-center>
+                  <v-btn @click="submit()" tile color="success">
+                    <v-icon>mdi-content-save-edit</v-icon>
+                    &nbsp;保存
+                  </v-btn>
+                  <v-btn to="/base/user" tile color="#FFFFFF">
+                    <v-icon>mdi-backspace</v-icon>
+                    &nbsp;取消
+                  </v-btn>
                 </v-flex>
               </v-layout>
             </div>

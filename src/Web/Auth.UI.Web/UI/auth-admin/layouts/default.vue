@@ -51,7 +51,7 @@
     </v-app-bar>
     <!-- Sizes your content based upon application components -->
     <v-main>
-      <v-container>
+      <v-container fluid>
         <nuxt />
       </v-container>
     </v-main>

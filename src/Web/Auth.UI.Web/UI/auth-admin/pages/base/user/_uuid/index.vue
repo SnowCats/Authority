@@ -1,6 +1,6 @@
 <template>
   <div id="user-edit">
-    <v-container grid-list-xl fluid>
+    <v-container>
       <v-layout row wrap>
         <v-flex sm12>
           <v-widget title="编辑用户信息">

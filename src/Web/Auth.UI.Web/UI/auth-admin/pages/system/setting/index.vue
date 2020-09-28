@@ -1,6 +1,6 @@
 <template>
-  <div id="user-list">
-    <v-container grid-list-xl fluid>
+    <div id="setting-list">
+        <v-container grid-list-xl fluid>
       <v-layout row wrap>
         <v-flex sm12>
           <v-widget title="查询条件">
@@ -12,13 +12,16 @@
             <div slot="widget-content">
               <v-layout row>
                 <v-flex md3 sm12 xs12>
-                  <v-text-field label="姓名"></v-text-field>
+                  <v-text-field label="字典键" name="key"></v-text-field>
                 </v-flex>
                 <v-flex md3 sm12 xs12>
-                  <v-text-field label="邮箱"></v-text-field>
+                  <v-text-field label="字典值" name="value"></v-text-field>
                 </v-flex>
                 <v-flex md3 sm12 xs12>
-                  <v-text-field label="手机"></v-text-field>
+                  <v-text-field label="上级字典键" name="parent_key"></v-text-field>
+                </v-flex>
+                <v-flex md3 sm12 xs12>
+                  <v-text-field label="上级字典值" name="parent_value"></v-text-field>
                 </v-flex>
                 <v-flex md12 sm12 xs12 text-right>
                   <v-btn rounded color="blue" class="white--text"
@@ -30,7 +33,7 @@
           </v-widget>
         </v-flex>
         <v-flex sm12>
-          <v-widget title="用户列表">
+          <v-widget title="数据字典列表">
             <div slot="widget-content">
               <v-data-table
                 :headers="headers"
@@ -78,92 +81,5 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </div>
+    </div>
 </template>
-<script>
-import VWidget from "@/components/VWidget";
-
-export default {
-  components: {
-    VWidget,
-  },
-  data: () => ({
-    pageIndex: 1,
-    pageSize: 10,
-    pagination: {
-      rowsPerPage: null,
-      totalItems: null,
-    },
-    headers: [
-      {
-        text: "序号",
-        align: "center",
-        sortable: false,
-        value: "id",
-      },
-      {
-        text: "姓名",
-        value: "name",
-        align: "center",
-      },
-      {
-        text: "性别",
-        value: "gender",
-        align: "center",
-      },
-      {
-        text: "邮箱",
-        value: "email",
-        align: "center",
-      },
-      {
-        text: "手机号",
-        value: "mobilePhone",
-        align: "center",
-      },
-      {
-        text: "所属角色",
-        value: "roleDatas",
-        align: "center",
-      },
-      {
-        text: "状态",
-        value: "status",
-        align: "center",
-      },
-      {
-        text: "备注",
-        value: "notes",
-        align: "center",
-      },
-      {
-        text: "操作",
-        value: "action",
-        align: "center",
-      },
-    ],
-    users: [],
-  }),
-  computed: {
-    pages() {
-      if (
-        this.pagination.rowsPerPage == null ||
-        this.pagination.totalItems == null
-      )
-        return 0;
-      return Math.ceil(
-        this.pagination.totalItems / this.pagination.rowsPerPage
-      );
-    },
-  },
-  methods: {
-    add: () => {},
-    edit: () => {},
-    del: (id) => {
-      if (confirm("是否删除？")) {
-        alert("已删除！");
-      }
-    },
-  },
-};
-</script>
