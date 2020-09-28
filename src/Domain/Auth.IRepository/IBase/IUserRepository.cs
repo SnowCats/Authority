@@ -4,7 +4,7 @@ using Auth.Entity.Base;
 
 namespace Auth.IRepository.IBase
 {
-    public interface IBaseRepository
+    public interface IUserRepository
     {
         IEnumerable<User> GetUsers();
     }

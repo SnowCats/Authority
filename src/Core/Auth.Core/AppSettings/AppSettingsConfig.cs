@@ -1,5 +1,4 @@
 ﻿using System;
-using Auth.Repository.AppSettings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,7 +16,7 @@ namespace Auth.Core.AppSettings
         /// <param name="configuration"></param>
         public static void AddAppSettingsConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<ConnectionStrings>(configuration.GetSection("ConnectionStrings"));
+            
         }
     }
 }

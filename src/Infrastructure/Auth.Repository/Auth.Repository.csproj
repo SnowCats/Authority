@@ -8,6 +8,7 @@
     <PackageReference Include="Dapper" Version="2.0.35" />
     <PackageReference Include="Dapper.Contrib" Version="2.0.35" />
     <PackageReference Include="MySql.Data" Version="8.0.21" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.8" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AppSettings\" />

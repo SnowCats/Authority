@@ -5,10 +5,17 @@ using Auth.IRepository.IBase;
 
 namespace Auth.Repository.Base
 {
-    public class BaseRepository : IBaseRepository
+    /// <summary>
+    /// Base
+    /// </summary>
+    public class UserRepository : IUserRepository
     {
-        public BaseRepository()
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public UserRepository()
         {
+            
         }
 
         public IEnumerable<User> GetUsers()
