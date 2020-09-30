@@ -14,14 +14,14 @@ namespace Auth.IRepository
         Guid Id { get; }
 
         /// <summary>
-        /// 数据库连接字符串
+        /// 数据库连接对象
         /// </summary>
-        IDbConnection DbConnection { get; }
+        public IDbConnection Connection { get; }
 
         /// <summary>
-        /// 数据库事务
+        /// 数据库事务对象
         /// </summary>
-        IDbTransaction DbTransaction { get; }
+        public IDbTransaction Transaction { get; }
 
         /// <summary>
         /// 开始事务

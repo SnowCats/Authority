@@ -66,6 +66,11 @@ namespace Auth.Entity.Base
         public short? Status { get; set; }
 
         /// <summary>
+        /// 数据时间戳
+        /// </summary>
+        public long TimeStamp { get; set; }
+
+        /// <summary>
         /// 备注
         /// </summary>
         public string Notes { get; set; }

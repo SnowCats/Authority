@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Data;
 using Auth.IRepository;
-using Auth.IRepository.IBase;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
 
 namespace Auth.Repository
 {
@@ -18,43 +18,43 @@ namespace Auth.Repository
         Guid id = Guid.Empty;
 
         /// <summary>
-        /// DbConnection
+        /// 配置对象
         /// </summary>
-        IDbConnection dbConnection = null;
+        private IConfiguration Configuration;
 
         /// <summary>
-        /// DbTransaction
+        /// 数据库连接对象
         /// </summary>
-        IDbTransaction dbTransaction = null;
+        IDbConnection connection = null;
 
         /// <summary>
-        /// 基础数据
+        /// 数据库事务对象
         /// </summary>
-        public IUserRepository _userRepository { get; set; }
+        IDbTransaction transaction = null;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public UnitOfWork(
-            IConfiguration configuration,
-            IUserRepository userRepository)
+        public UnitOfWork(IConfiguration configuration)
         {
-            // 初始化数据库连接
-            if(configuration.GetConnectionString("DefaultDB") == DbType.MySql.ToString())   // MySql
-            {
-                dbConnection = new MySqlConnection(configuration.GetConnectionString("MySqlConnectionString"));
-            }
-            else if (configuration.GetConnectionString("DefaultDB") == DbType.SqlServer.ToString())    // SqlServer
-            {
-                dbConnection = new MySqlConnection(configuration.GetConnectionString("SqlServerConnectionString"));
-            }
-            else    // Other
-            {
-
-            }
-
+            // 配置对象
+            Configuration = configuration;
             // 主键
             id = Guid.NewGuid();
+
+            // 初始化数据库连接
+            if (Configuration.GetConnectionString("DefaultDB") == DbType.MySql.ToString())   // MySql
+            {
+                connection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString"));
+            }
+            else if (Configuration.GetConnectionString("DefaultDB") == DbType.SqlServer.ToString())    // SqlServer
+            {
+                connection = new SqlConnection(Configuration.GetConnectionString("SqlServerConnectionString"));
+            }
+            else    // Other DataBase
+            {
+                connection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString"));
+            }
         }
 
         /// <summary>
@@ -69,21 +69,34 @@ namespace Auth.Repository
         }
 
         /// <summary>
-        /// 数据库连接对象
+        /// IUnitOfWork数据库连接对象
         /// </summary>
-        IDbConnection IUnitOfWork.DbConnection { get => dbConnection; }
+        IDbConnection IUnitOfWork.Connection {
+            get
+            {
+                return connection;
+            }
+        }
 
         /// <summary>
-        /// 事务连接对象
+        /// IUnitOfWork数据库事务对象
         /// </summary>
-        IDbTransaction IUnitOfWork.DbTransaction { get => dbTransaction; }
+        IDbTransaction IUnitOfWork.Transaction
+        {
+            get
+            {
+                return transaction;
+            }
+        }
+
+        #region 事务处理
 
         /// <summary>
         /// 开始事务
         /// </summary>
         public void Begin()
         {
-            dbTransaction = dbConnection.BeginTransaction();
+            transaction = connection.BeginTransaction();
         }
 
         /// <summary>
@@ -91,7 +104,7 @@ namespace Auth.Repository
         /// </summary>
         public void Commit()
         {
-            dbTransaction.Commit();
+            transaction.Commit();
             Dispose();
         }
 
@@ -100,7 +113,7 @@ namespace Auth.Repository
         /// </summary>
         public void Rollback()
         {
-            dbTransaction.Rollback();
+            transaction.Rollback();
             Dispose();
         }
 
@@ -109,13 +122,15 @@ namespace Auth.Repository
         /// </summary>
         public void Dispose()
         {
-            if(dbTransaction != null)
+            if(transaction != null)
             {
-                dbTransaction.Dispose();
+                transaction.Dispose();
             }
 
-            dbTransaction = null;
+            transaction = null;
         }
+
+        #endregion
     }
 
     /// <summary>

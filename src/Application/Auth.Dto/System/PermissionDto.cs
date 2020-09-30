@@ -27,6 +27,11 @@ namespace Auth.Dto.System
         public string Notes { get; set; }
 
         /// <summary>
+        /// 数据时间戳
+        /// </summary>
+        public long TimeStamp { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime? CreatedOn { get; set; }

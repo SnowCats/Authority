@@ -6,18 +6,27 @@ using Auth.IRepository.IBase;
 namespace Auth.Repository.Base
 {
     /// <summary>
-    /// Base
+    /// /Base/User
     /// </summary>
     public class UserRepository : IUserRepository
     {
         /// <summary>
+        /// IRepository
+        /// </summary>
+        private IRepository.IRepository Repository;
+
+        /// <summary>
         /// Constructor
         /// </summary>
-        public UserRepository()
+        public UserRepository(IRepository.IRepository repository)
         {
-            
+            Repository = repository;
         }
 
+        /// <summary>
+        /// Get Users
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<User> GetUsers()
         {
             return new List<User>

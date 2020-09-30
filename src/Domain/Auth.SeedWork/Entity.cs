@@ -3,7 +3,10 @@ using Dapper.Contrib.Extensions;
 
 namespace Auth.SeedWork
 {
-    public class Entity
+    /// <summary>
+    /// 抽象实体基类
+    /// </summary>
+    public abstract class Entity
     {
         [ExplicitKey]
         public Guid ID { get; set; }
