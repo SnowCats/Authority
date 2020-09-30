@@ -5,12 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
     <Folder Include="Handlers\" />
     <Folder Include="Handlers\Base\" />
     <Folder Include="Handlers\System\" />
-    <Folder Include="Interfaces\IBase\" />
-    <Folder Include="Interfaces\ISystem\" />
     <Folder Include="Handlers\Base\UserCommand\" />
   </ItemGroup>
   <ItemGroup>

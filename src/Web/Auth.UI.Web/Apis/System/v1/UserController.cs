@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Auth.UI.Web.Apis.System.v1
 {
-    [Route("api/[controller]")]
-    public class UserController : Controller
+    /// <summary>
+    /// 用户信息接口
+    /// </summary>
+    public class UserController : ApiController
     {
         // GET: api/values
         [HttpGet]

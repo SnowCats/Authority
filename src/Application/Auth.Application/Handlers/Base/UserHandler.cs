@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Auth.Application.Handlers.Base.UserCommand;
-using Auth.Application.Interfaces.IBase;
 using Auth.Dto;
 using Auth.Dto.Base;
 using Auth.Entity.Base;
@@ -16,7 +15,7 @@ namespace Auth.Application.Handlers.Base
     /// <summary>
     /// UserHanlder
     /// </summary>
-    public class UserHandler : IUserHandler,
+    public class UserHandler :
         IRequestHandler<CreateCommand, Response>,
         IRequestHandler<UpdateCommand, Response>
     {
