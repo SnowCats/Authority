@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using MediatR;
 
 namespace Auth.Dto.Base
 {
     /// <summary>
     /// 用户信息Dto
     /// </summary>
-    public class UserDto
+    public class UserDto : IRequest<Response>
     {
         /// <summary>
         /// 主键

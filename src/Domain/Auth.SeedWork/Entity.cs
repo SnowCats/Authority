@@ -8,6 +8,9 @@ namespace Auth.SeedWork
     /// </summary>
     public abstract class Entity
     {
+        /// <summary>
+        /// 主键
+        /// </summary>
         [ExplicitKey]
         public Guid ID { get; set; }
     }

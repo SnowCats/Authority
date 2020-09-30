@@ -14,5 +14,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="UI\" />
+    <Folder Include="Apis\" />
+    <Folder Include="Apis\Base\" />
+    <Folder Include="Apis\System\" />
+    <Folder Include="Apis\Base\v1\" />
+    <Folder Include="Apis\System\v1\" />
+    <Folder Include="Apis\Base\v2\" />
+    <Folder Include="Apis\System\v2\" />
   </ItemGroup>
 </Project>

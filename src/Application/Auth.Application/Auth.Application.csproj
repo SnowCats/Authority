@@ -7,8 +7,20 @@
   <ItemGroup>
     <Folder Include="Interfaces\" />
     <Folder Include="Handlers\" />
+    <Folder Include="Handlers\Base\" />
+    <Folder Include="Handlers\System\" />
+    <Folder Include="Interfaces\IBase\" />
+    <Folder Include="Interfaces\ISystem\" />
+    <Folder Include="Handlers\Base\UserCommand\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Auth.Dto\Auth.Dto.csproj" />
+    <ProjectReference Include="..\..\Domain\Auth.Entity\Auth.Entity.csproj" />
+    <ProjectReference Include="..\..\Domain\Auth.IRepository\Auth.IRepository.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="8.1.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
   </ItemGroup>
 </Project>

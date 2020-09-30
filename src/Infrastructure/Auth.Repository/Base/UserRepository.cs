@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Auth.Entity.Base;
+using Auth.IRepository;
 using Auth.IRepository.IBase;
 
 namespace Auth.Repository.Base
@@ -8,7 +9,7 @@ namespace Auth.Repository.Base
     /// <summary>
     /// /Base/User
     /// </summary>
-    public class UserRepository : IUserRepository
+    public class UserRepository : Repository, IUserRepository
     {
         /// <summary>
         /// IRepository
@@ -18,7 +19,7 @@ namespace Auth.Repository.Base
         /// <summary>
         /// Constructor
         /// </summary>
-        public UserRepository(IRepository.IRepository repository)
+        public UserRepository(IRepository.IRepository repository, IUnitOfWork unitOfWork) : base(unitOfWork)
         {
             Repository = repository;
         }

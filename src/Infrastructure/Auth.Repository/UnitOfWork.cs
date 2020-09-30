@@ -45,7 +45,7 @@ namespace Auth.Repository
             // 初始化数据库连接
             if (Configuration.GetConnectionString("DefaultDB") == DbType.MySql.ToString())   // MySql
             {
-                connection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString"));
+                connection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString:Write"));
             }
             else if (Configuration.GetConnectionString("DefaultDB") == DbType.SqlServer.ToString())    // SqlServer
             {
