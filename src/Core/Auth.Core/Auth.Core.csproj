@@ -8,7 +8,6 @@
     <Folder Include="AppSettings\" />
     <Folder Include="Autofac\" />
     <Folder Include="IdentityServer4\" />
-    <Folder Include="MediatR\" />
     <Folder Include="Swagger\" />
     <Folder Include="AutoMapper\" />
     <Folder Include="Utility\" />

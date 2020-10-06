@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Auth.Core.AppSettings;
 using Auth.Core.Autofac;
 using Auth.Core.AutoMapper;
-using Auth.Core.MediatR;
 using Auth.Core.Swagger;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -25,7 +26,7 @@ namespace Auth.UI.Web
             Configuration = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables()
                 .Build();
 
@@ -42,11 +43,11 @@ namespace Auth.UI.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Latest);
+            services.AddMediatR(typeof(Startup));
             services.AddAppSettingsConfiguration(Configuration);
             services.AddAutoMapperConfiguration();
-            services.AddMediatRConfiguration();
             services.AddSwaggerGenConfiguration();
-            services.AddControllers().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Latest);
         }
 
         /// <summary>
@@ -67,9 +68,17 @@ namespace Auth.UI.Web
             }
 
             AutofacContainer = app.ApplicationServices.GetAutofacRoot();
+
             app.AddSwaggerUIConfiguration();
 
             app.UseRouting();
+
+            app.UseCors(c =>
+            {
+                c.AllowAnyHeader();
+                c.AllowAnyMethod();
+                c.AllowAnyOrigin();
+            });
 
             app.UseEndpoints(endpoints =>
             {

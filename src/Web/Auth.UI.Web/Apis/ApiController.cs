@@ -14,7 +14,6 @@ namespace Auth.UI.Web.Apis
     /// </summary>
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize]
     public class ApiController : Controller
     {
         /// <summary>

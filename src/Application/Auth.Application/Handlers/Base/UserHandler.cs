@@ -15,9 +15,7 @@ namespace Auth.Application.Handlers.Base
     /// <summary>
     /// UserHanlder
     /// </summary>
-    public class UserHandler :
-        IRequestHandler<CreateCommand, Response>,
-        IRequestHandler<UpdateCommand, Response>
+    public class UserHandler : IRequestHandler<CreateUserRequest, Guid>
     {
         /// <summary>
         /// User Repository
@@ -27,7 +25,7 @@ namespace Auth.Application.Handlers.Base
         /// <summary>
         /// Mapper
         /// </summary>
-        private readonly IMapper _mapper;
+        private readonly IMapper _Mapper;
 
         /// <summary>
         /// Constructor
@@ -36,33 +34,22 @@ namespace Auth.Application.Handlers.Base
         public UserHandler(IUserRepository userRepository, IMapper mapper)
         {
             UserRepository = userRepository;
-            _mapper = mapper;
+            _Mapper = mapper;
         }
 
         /// <summary>
-        /// 新增
+        /// Handle
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<Response> Handle(CreateCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateUserRequest request, CancellationToken cancellationToken)
         {
-            User user = _mapper.Map<User>(request);
+            User user = _Mapper.Map<User>(request.UserDto);
 
-            return new Response { Data = await UserRepository.InsertAsync(user), StatusCode = 200, Message = "Success" };
-        }
+            await UserRepository.InsertAsync(user);
 
-        /// <summary>
-        /// 更新
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public async Task<Response> Handle(UpdateCommand request, CancellationToken cancellationToken)
-        {
-            User user = _mapper.Map<User>(request);
-
-            return new Response { Data = await UserRepository.UpdateAsync(user), StatusCode = 200, Message = "Success" };
+            return user.ID;
         }
     }
 }

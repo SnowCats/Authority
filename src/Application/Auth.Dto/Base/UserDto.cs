@@ -7,7 +7,7 @@ namespace Auth.Dto.Base
     /// <summary>
     /// 用户信息Dto
     /// </summary>
-    public class UserDto : IRequest<Response>
+    public class UserDto
     {
         /// <summary>
         /// 主键

@@ -36,7 +36,7 @@ namespace Auth.Core.Swagger
             builder
                 .UseSwagger()
                 .UseSwaggerUI(config => {
-                    config.RoutePrefix = "swagger/ui";
+                    config.RoutePrefix = string.Empty;
                     config.SwaggerEndpoint("/swagger/v1/swagger.json", title);
                 });
         }

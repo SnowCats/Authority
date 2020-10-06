@@ -14,7 +14,7 @@ namespace Auth.IRepository
         /// <typeparam name="T">返回类型</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        dynamic Insert<T>(T t) where T : class, new();
+        Guid Insert<T>(T t) where T : SeedWork.Entity;
 
         /// <summary>
         /// 新增接口
@@ -22,7 +22,7 @@ namespace Auth.IRepository
         /// <typeparam name="T">返回类型</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        Task<dynamic> InsertAsync<T>(T t) where T : class, new();
+        Task<Guid> InsertAsync<T>(T t) where T : SeedWork.Entity;
 
         /// <summary>
         /// 更新接口

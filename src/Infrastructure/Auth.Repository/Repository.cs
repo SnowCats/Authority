@@ -67,15 +67,19 @@ namespace Auth.Repository
         /// <typeparam name="T">返回实体类型</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        public dynamic Insert<T>(T t) where T : class, new()
+        public Guid Insert<T>(T t) where T : SeedWork.Entity
         {
+            t.ID = unitOfWork.Id;
+
             using (var connection = unitOfWork.Connection)
             {
                 if (connection.State != ConnectionState.Open)
                 {
                     connection.Open();
                 }
-                return connection.Insert(t);
+                connection.Insert(t);
+
+                return t.ID;
             }
         }
 
@@ -85,15 +89,20 @@ namespace Auth.Repository
         /// <typeparam name="T">返回实体类型</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        public async Task<dynamic> InsertAsync<T>(T t) where T : class, new()
+        public async Task<Guid> InsertAsync<T>(T t) where T : SeedWork.Entity
         {
+            t.ID = unitOfWork.Id;
+
             using (var connection = unitOfWork.Connection)
             {
                 if (connection.State != ConnectionState.Open)
                 {
                     connection.Open();
                 }
-                return await connection.InsertAsync(t);
+
+                await connection.InsertAsync(t);
+
+                return t.ID;
             }
         }
 
