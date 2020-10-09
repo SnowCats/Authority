@@ -28,7 +28,7 @@ namespace Auth.Core.AutoMapper
                     {
                         if (dto.Name.EndsWith($"{entity.Name}Dto"))
                         {
-                            CreateMap(entity, dto);
+                            CreateMap(entity, dto).ReverseMap();
                         }
                     });
                 });

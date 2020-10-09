@@ -6,22 +6,20 @@
 
   <ItemGroup>
     <Folder Include="AppSettings\" />
-    <Folder Include="Autofac\" />
     <Folder Include="IdentityServer4\" />
     <Folder Include="Swagger\" />
     <Folder Include="AutoMapper\" />
     <Folder Include="Utility\" />
+    <Folder Include="DI\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="5.2.0" />
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="MediatR" Version="9.0.0" />
-    <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
-    <PackageReference Include="IdentityServer4" Version="4.1.0" />
+    <PackageReference Include="IdentityServer4" Version="4.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\Auth.Repository\Auth.Repository.csproj" />
+    <ProjectReference Include="..\..\Application\Auth.Application\Auth.Application.csproj" />
   </ItemGroup>
 </Project>

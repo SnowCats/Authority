@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Auth.Application.Handlers.Base;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 

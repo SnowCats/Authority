@@ -25,7 +25,7 @@ namespace Auth.Application.Handlers.Base
         /// <summary>
         /// Mapper
         /// </summary>
-        private readonly IMapper _Mapper;
+        private readonly IMapper mapper;
 
         /// <summary>
         /// Constructor
@@ -34,7 +34,7 @@ namespace Auth.Application.Handlers.Base
         public UserHandler(IUserRepository userRepository, IMapper mapper)
         {
             UserRepository = userRepository;
-            _Mapper = mapper;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Auth.Application.Handlers.Base
         /// <returns></returns>
         public async Task<Guid> Handle(CreateUserRequest request, CancellationToken cancellationToken)
         {
-            User user = _Mapper.Map<User>(request.UserDto);
+            User user = mapper.Map<User>(request.UserDto);
 
             await UserRepository.InsertAsync(user);
 
