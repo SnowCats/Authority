@@ -22,7 +22,7 @@ namespace Auth.Dto.Base
         /// <summary>
         /// 性别
         /// </summary>
-        public string Gender { get; set; }
+        public short? Gender { get; set; }
 
         /// <summary>
         /// 用户名

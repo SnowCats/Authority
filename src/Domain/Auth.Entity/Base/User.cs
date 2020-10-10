@@ -7,7 +7,7 @@ namespace Auth.Entity.Base
     /// <summary>
     /// 用户信息
     /// </summary>
-    [Table("base_user")]
+    [Table("base_users")]
     public class User : SeedWork.Entity
     {
         /// <summary>
@@ -18,7 +18,7 @@ namespace Auth.Entity.Base
         /// <summary>
         /// 性别
         /// </summary>
-        public string Gender { get; set; }
+        public short? Gender { get; set; }
 
         /// <summary>
         /// 用户名
@@ -98,6 +98,7 @@ namespace Auth.Entity.Base
         /// <summary>
         /// 用户角色关系列表
         /// </summary>
+        [Computed]
         public IEnumerable<UserRole> UserRoles { get; set; }
     }
 }

@@ -23,9 +23,14 @@ namespace Auth.Repository
         private IConfiguration Configuration;
 
         /// <summary>
-        /// 数据库连接对象
+        /// 数据库连接对象(写)
         /// </summary>
         IDbConnection connection = null;
+
+        /// <summary>
+        /// 数据库连接对象(读)
+        /// </summary>
+        IDbConnection dbConnection = null;
 
         /// <summary>
         /// 数据库事务对象
@@ -39,21 +44,29 @@ namespace Auth.Repository
         {
             // 配置对象
             Configuration = configuration;
+
             // 主键
             id = Guid.NewGuid();
 
             // 初始化数据库连接
-            if (Configuration.GetConnectionString("DefaultDB") == DbType.MySql.ToString())   // MySql
+            int dbType;
+
+            if (int.TryParse(Configuration.GetConnectionString("DefaultDB"), out dbType))
             {
-                connection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString:Write"));
+                if (dbType == (int)DbType.MySql)
+                {
+                    connection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString:Write"));
+                    dbConnection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString:Read"));
+                }
+                else if (dbType == (int)DbType.SqlServer)
+                {
+                    connection = new SqlConnection(Configuration.GetConnectionString("SqlServerConnectionString:Write"));
+                    dbConnection = new MySqlConnection(Configuration.GetConnectionString("SqlServerConnectionString:Read"));
+                }
             }
-            else if (Configuration.GetConnectionString("DefaultDB") == DbType.SqlServer.ToString())    // SqlServer
+            else
             {
-                connection = new SqlConnection(Configuration.GetConnectionString("SqlServerConnectionString"));
-            }
-            else    // Other DataBase
-            {
-                connection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString"));
+                throw new Exception("\"DefaultDB\" is incorrect, Please check your appsettings.{*}.json.");
             }
         }
 
@@ -69,12 +82,24 @@ namespace Auth.Repository
         }
 
         /// <summary>
-        /// IUnitOfWork数据库连接对象
+        /// IUnitOfWork数据库连接对象(写)
         /// </summary>
-        IDbConnection IUnitOfWork.Connection {
+        IDbConnection IUnitOfWork.Connection
+        {
             get
             {
                 return connection;
+            }
+        }
+
+        /// <summary>
+        /// IUnitOfWork数据库连接对象(读)
+        /// </summary>
+        IDbConnection IUnitOfWork.DbConnection
+        {
+            get
+            {
+                return dbConnection;
             }
         }
 
@@ -96,6 +121,11 @@ namespace Auth.Repository
         /// </summary>
         public void Begin()
         {
+            if(connection.State == ConnectionState.Closed)
+            {
+                connection.Open();
+            }
+
             transaction = connection.BeginTransaction();
         }
 
@@ -104,8 +134,18 @@ namespace Auth.Repository
         /// </summary>
         public void Commit()
         {
-            transaction.Commit();
-            Dispose();
+            try
+            {
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+            }
+            finally
+            {
+                Dispose();
+            }
         }
 
         /// <summary>
@@ -138,7 +178,7 @@ namespace Auth.Repository
     /// </summary>
     public enum DbType
     {
-        MySql = 0,
-        SqlServer = 1
+        MySql,
+        SqlServer
     }
 }

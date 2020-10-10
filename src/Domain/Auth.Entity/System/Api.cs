@@ -1,9 +1,12 @@
 ﻿using System;
+using Dapper.Contrib.Extensions;
+
 namespace Auth.Entity.System
 {
     /// <summary>
     /// 接口表
     /// </summary>
+    [Table("sys_apis")]
     public class Api : SeedWork.Entity
     {
         /// <summary>

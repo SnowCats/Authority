@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using Auth.IRepository;
 using Dapper.Contrib.Extensions;
+using Microsoft.Extensions.Configuration;
 
 namespace Auth.Repository
 {
@@ -14,15 +15,15 @@ namespace Auth.Repository
         /// <summary>
         /// UnitOfWork
         /// </summary>
-        private readonly IUnitOfWork unitOfWork;
+        private readonly IUnitOfWork UnitOfWork;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="_unitOfWork">工作单元</param>
-        public Repository(IUnitOfWork _unitOfWork)
+        public Repository(IUnitOfWork unitOfWork)
         {
-            unitOfWork = _unitOfWork;
+            UnitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -33,13 +34,15 @@ namespace Auth.Repository
         /// <returns></returns>
         public bool Delete<T>(T t) where T : class, new()
         {
-            using(var connection = unitOfWork.Connection)
+            using(UnitOfWork.Connection)
             {
-                if(connection.State != ConnectionState.Open)
-                {
-                    connection.Open();
-                }
-                return connection.Delete(t);
+                UnitOfWork.Begin();
+
+                var result = UnitOfWork.Connection.Delete(t, UnitOfWork.Transaction);
+
+                UnitOfWork.Commit();
+
+                return result;
             }
         }
 
@@ -51,13 +54,15 @@ namespace Auth.Repository
         /// <returns></returns>
         public async Task<bool> DeleteAsync<T>(T t) where T : class, new()
         {
-            using (var connection = unitOfWork.Connection)
+            using (UnitOfWork.Connection)
             {
-                if (connection.State != ConnectionState.Open)
-                {
-                    connection.Open();
-                }
-                return await connection.DeleteAsync(t);
+                UnitOfWork.Begin();
+
+                var result = await UnitOfWork.Connection.DeleteAsync(t, UnitOfWork.Transaction);
+
+                UnitOfWork.Commit();
+
+                return result;
             }
         }
 
@@ -69,15 +74,15 @@ namespace Auth.Repository
         /// <returns></returns>
         public Guid Insert<T>(T t) where T : SeedWork.Entity
         {
-            t.ID = unitOfWork.Id;
+            t.ID = UnitOfWork.Id;
 
-            using (var connection = unitOfWork.Connection)
+            using (UnitOfWork.Connection)
             {
-                if (connection.State != ConnectionState.Open)
-                {
-                    connection.Open();
-                }
-                connection.Insert(t);
+                UnitOfWork.Begin();
+
+                UnitOfWork.Connection.Insert(t, UnitOfWork.Transaction);
+
+                UnitOfWork.Commit();
 
                 return t.ID;
             }
@@ -91,16 +96,15 @@ namespace Auth.Repository
         /// <returns></returns>
         public async Task<Guid> InsertAsync<T>(T t) where T : SeedWork.Entity
         {
-            t.ID = unitOfWork.Id;
+            t.ID = UnitOfWork.Id;
 
-            using (var connection = unitOfWork.Connection)
+            using (UnitOfWork.Connection)
             {
-                if (connection.State != ConnectionState.Open)
-                {
-                    connection.Open();
-                }
+                UnitOfWork.Begin();
 
-                await connection.InsertAsync(t);
+                await UnitOfWork.Connection.InsertAsync(t);
+
+                UnitOfWork.Commit();
 
                 return t.ID;
             }
@@ -114,13 +118,15 @@ namespace Auth.Repository
         /// <returns></returns>
         public bool Update<T>(T t) where T : class, new()
         {
-            using (var connection = unitOfWork.Connection)
+            using (UnitOfWork.Connection)
             {
-                if (connection.State != ConnectionState.Open)
-                {
-                    connection.Open();
-                }
-                return connection.Update(t);
+                UnitOfWork.Begin();
+
+                var result = UnitOfWork.Connection.Update(t);
+
+                UnitOfWork.Commit();
+
+                return result;
             }
         }
 
@@ -132,13 +138,15 @@ namespace Auth.Repository
         /// <returns></returns>
         public async Task<bool> UpdateAsync<T>(T t) where T : class, new()
         {
-            using (var connection = unitOfWork.Connection)
+            using (UnitOfWork.Connection)
             {
-                if (connection.State != ConnectionState.Open)
-                {
-                    connection.Open();
-                }
-                return await connection.UpdateAsync(t);
+                UnitOfWork.Begin();
+
+                var result = await UnitOfWork.Connection.UpdateAsync(t);
+
+                UnitOfWork.Commit();
+
+                return result;
             }
         }
     }

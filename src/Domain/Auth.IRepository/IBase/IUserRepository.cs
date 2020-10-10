@@ -6,6 +6,6 @@ namespace Auth.IRepository.IBase
 {
     public interface IUserRepository : IRepository
     {
-        IEnumerable<User> GetUsers();
+        
     }
 }
