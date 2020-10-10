@@ -8,7 +8,9 @@
     <Folder Include="Handlers\" />
     <Folder Include="Handlers\Base\" />
     <Folder Include="Handlers\System\" />
-    <Folder Include="Handlers\Base\UserCommand\" />
+    <Folder Include="Commands\" />
+    <Folder Include="Commands\Base\" />
+    <Folder Include="Commands\Base\User\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Auth.Dto\Auth.Dto.csproj" />

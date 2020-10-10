@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Auth.Application.Handlers.Base.UserCommand;
-using Auth.Dto;
-using Auth.Dto.Base;
+using Auth.Application.Commands.Base.User;
 using Auth.Entity.Base;
 using Auth.IRepository.IBase;
-using Auth.SeedWork;
 using AutoMapper;
 using MediatR;
 
@@ -15,7 +12,7 @@ namespace Auth.Application.Handlers.Base
     /// <summary>
     /// UserHanlder
     /// </summary>
-    public class UserHandler : IRequestHandler<CreateUserRequest, Guid>
+    public class UserHandler : IRequestHandler<CreateRequest, Guid>
     {
         /// <summary>
         /// User Repository
@@ -43,7 +40,7 @@ namespace Auth.Application.Handlers.Base
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<Guid> Handle(CreateUserRequest request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateRequest request, CancellationToken cancellationToken)
         {
             User user = mapper.Map<User>(request.UserDto);
 

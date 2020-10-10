@@ -1,11 +1,13 @@
 ﻿using System;
-using Auth.Dto;
 using Auth.Dto.Base;
 using MediatR;
 
-namespace Auth.Application.Handlers.Base.UserCommand
+namespace Auth.Application.Commands.Base.User
 {
-    public class CreateUserRequest : IRequest<Guid>
+    /// <summary>
+    /// 更新用户
+    /// </summary>
+    public class UpdateRequest : IRequest<bool>
     {
         /// <summary>
         /// UserDto
