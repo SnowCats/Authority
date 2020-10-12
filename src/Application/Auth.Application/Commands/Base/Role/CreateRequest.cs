@@ -2,16 +2,16 @@
 using Auth.Dto.Base;
 using MediatR;
 
-namespace Auth.Application.Commands.Base.User
+namespace Auth.Application.Commands.Base.Role
 {
     /// <summary>
-    /// 新增用户请求
+    /// 新增角色请求
     /// </summary>
     public class CreateRequest : IRequest<Guid>
     {
         /// <summary>
-        /// UserDto
+        /// 角色类
         /// </summary>
-        public UserDto UserDto { get; set; }
+        public RoleDto RoleDto { get; set; }
     }
 }

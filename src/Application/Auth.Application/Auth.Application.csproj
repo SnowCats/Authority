@@ -11,6 +11,7 @@
     <Folder Include="Commands\" />
     <Folder Include="Commands\Base\" />
     <Folder Include="Commands\Base\User\" />
+    <Folder Include="Commands\Base\Role\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Auth.Dto\Auth.Dto.csproj" />

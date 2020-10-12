@@ -1,24 +1,17 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Auth.Application.Commands.Base.User;
-using Auth.Entity.Base;
-using Auth.IRepository.IBase;
+using Auth.Application.Commands.Base.Role;
 using AutoMapper;
 using MediatR;
 
 namespace Auth.Application.Handlers.Base
 {
     /// <summary>
-    /// 用户处理服务
+    /// 角色处理服务
     /// </summary>
-    public class UserHandler : IRequestHandler<CreateRequest, Guid>
+    public class RoleHandler : IRequestHandler<CreateRequest, Guid>
     {
-        /// <summary>
-        /// User Repository
-        /// </summary>
-        private readonly IUserRepository UserRepository;
-
         /// <summary>
         /// Mapper
         /// </summary>
@@ -28,9 +21,8 @@ namespace Auth.Application.Handlers.Base
         /// Constructor
         /// </summary>
         /// <param name="userRepository"></param>
-        public UserHandler(IUserRepository userRepository, IMapper mapper)
+        public RoleHandler(IMapper mapper)
         {
-            UserRepository = userRepository;
             this.mapper = mapper;
         }
 
@@ -40,13 +32,9 @@ namespace Auth.Application.Handlers.Base
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<Guid> Handle(CreateRequest request, CancellationToken cancellationToken)
+        public Task<Guid> Handle(CreateRequest request, CancellationToken cancellationToken)
         {
-            User user = mapper.Map<User>(request.UserDto);
-
-            await UserRepository.InsertAsync(user);
-
-            return user.ID;
+            throw new NotImplementedException();
         }
     }
 }
