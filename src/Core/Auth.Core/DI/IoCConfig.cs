@@ -28,25 +28,41 @@ namespace Auth.Core.DI
         {
             #region MediatR注入
 
+            // MediatR 注入
             services.AddTransient<IMediator, Mediator>();
 
-            IEnumerable<Type> applicationTypes = BaseUtility.GetAssembly("Auth.Application").ExportedTypes;
-            var handlers = applicationTypes.Where(s => s.GetInterfaces().Where(x => x.Namespace.Equals("MediatR") && x.Name.StartsWith("IRequestHandler")).Any());
+            // MediatR Handler服务程序注入
+            IEnumerable<Type> handlers = BaseUtility.GetAssembly("Auth.Application")
+                .ExportedTypes
+                .Where(s => s.GetInterfaces()
+                    .Where(x => x.IsClass
+                        && x.Namespace.Equals("MediatR")
+                        && x.Name.StartsWith("IRequestHandler"))
+                    .Any());
 
+            // 遍历Handler类并注入
             foreach(var handler in handlers)
             {
-                services.AddTransient(handler.GetInterfaces().Where(s => s.Namespace.Equals("MediatR") && s.Name.StartsWith("IRequestHandler")).FirstOrDefault(), handler);
+                services.AddTransient(handler.GetInterfaces()
+                    .Where(s => s.Namespace.Equals("MediatR")
+                        && s.Name.StartsWith("IRequestHandler"))
+                    .FirstOrDefault(), handler);
             }
 
             #endregion
 
-            #region 批量DI
+            #region 批量注入仓储服务
 
-            services.AddSingleton<IUnitOfWork, UnitOfWork>();
-            services.AddSingleton<IRepository.IRepository, Repository.Repository>();
+            // 仓储类
+            IEnumerable<Type> repositories = BaseUtility.GetAssembly("Auth.Repository")
+                .ExportedTypes
+                .Where(s => s.IsClass && !s.IsSealed);
 
-            services.AddSingleton<IUserRepository, UserRepository>();
-
+            // 仓储类批量注入
+            foreach(var repository in repositories)
+            {
+                services.AddSingleton(repository.GetInterfaces().Where(s => s.Name.EndsWith(repository.Name)).FirstOrDefault() ,repository);
+            }
             #endregion
         }
     }
