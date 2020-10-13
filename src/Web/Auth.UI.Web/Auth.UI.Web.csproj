@@ -16,7 +16,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="UI\" />
     <Folder Include="Apis\" />
     <Folder Include="Apis\Base\" />
     <Folder Include="Apis\System\" />
