@@ -6,22 +6,26 @@ const list = [{
         items: [{
                 name: "organization",
                 title: "组织信息",
-                icon: "mdi-account-group"
+                icon: "mdi-account-group",
+                href: "/base/organization",
             },
             {
                 name: "user",
                 title: "用户信息",
-                icon: "mdi-account"
+                icon: "mdi-account",
+                href: "/base/user",
             },
             {
                 name: "position",
                 title: "岗位信息",
-                icon: "mdi-account-circle"
+                icon: "mdi-account-circle",
+                href: "/base/position",
             },
             {
                 name: "role",
                 title: "角色信息",
-                icon: "mdi-account-box"
+                icon: "mdi-account-box",
+                href: "/base/role",
             },
         ]
     },
@@ -33,22 +37,26 @@ const list = [{
         items: [{
                 name: "module",
                 title: "模块信息",
-                icon: "mdi-menu"
+                icon: "mdi-menu",
+                href: "/system/module",
             },
             {
                 name: "api",
                 title: "接口信息",
-                icon: "mdi-api"
+                icon: "mdi-api",
+                href: "/system/api",
             },
             {
                 name: "permission",
                 title: "权限信息",
-                icon: "mdi-shield-account"
+                icon: "mdi-shield-account",
+                href: "/system/permission",
             },
             {
                 name: "setting",
                 title: "数据字典",
-                icon: "mdi-book"
+                icon: "mdi-book",
+                href: "/system/setting",
             }
         ]
     }
