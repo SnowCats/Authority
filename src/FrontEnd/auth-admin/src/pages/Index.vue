@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <v-row class="text-center">
       <v-col cols="12">
         <v-img
@@ -22,15 +22,21 @@
         </p>
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import Component from "vue-class-component";
 
-export default Vue.extend({
-  name: "Index",
+// 组件注入
+@Component({
+  components: {
+    
+  }
+})
 
-  data: () => ({}),
-});
+export default class Index extends Vue {
+  // data
+}
 </script>

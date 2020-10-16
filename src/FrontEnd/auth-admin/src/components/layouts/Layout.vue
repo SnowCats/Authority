@@ -76,7 +76,13 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import Menus from "../../apis/menu";
 
-@Component
+// 组件注入
+@Component({
+  components: {
+    
+  }
+})
+
 export default class Layout extends Vue {
   // data
   menus: any = Menus;
