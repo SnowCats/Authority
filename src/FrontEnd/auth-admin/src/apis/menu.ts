@@ -1,6 +1,8 @@
-const Menu = [{
+const list = [{
         title: "基础数据",
+        group: "base",
         icon: "mdi-cog-outline",
+        active: true,
         items: [{
                 name: "organization",
                 title: "组织信息",
@@ -25,7 +27,9 @@ const Menu = [{
     },
     {
         title: "系统设置",
+        group: "system",
         icon: "mdi-cog-outline",
+        active: false,
         items: [{
                 name: "module",
                 title: "模块信息",
@@ -50,4 +54,4 @@ const Menu = [{
     }
 ];
 
-export default Menu;
+export default list;

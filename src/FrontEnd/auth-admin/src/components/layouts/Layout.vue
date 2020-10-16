@@ -51,22 +51,20 @@
         </v-list>
         <v-divider></v-divider>
         <v-list dense expand>
-          <v-list-group v-for="(menu, m) in menus" :key="m">
-            <template v-slot:activator>
-              <v-list-item-icon>
-                <v-icon v-text="menu.icon" small></v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
+          <template v-for="menu in menus">
+            <v-list-group v-if="menu.group" v-model="menu.active" :key="menu.title" sub-group>
+              <template v-slot:activator>
                 <v-list-item-title>{{ menu.title }}</v-list-item-title>
-              </v-list-item-content>
-            </template>
-            <v-list-item v-for="(item, i) in menu.items" :key="i">
-              <v-list-item-title v-text="item.title"></v-list-item-title>
-              <v-list-item-icon>
-                <v-icon v-text="item.icon"></v-icon>
-              </v-list-item-icon>
-            </v-list-item>
-          </v-list-group>
+              </template>
+              <v-list-item v-for="(item, i) in menu.items" :key="i">
+                <v-list-item-icon>
+                  <v-icon v-text="item.icon" small></v-icon>
+                </v-list-item-icon>
+                <v-list-item-title v-text="item.title"></v-list-item-title>
+              </v-list-item>
+            </v-list-group>
+            <v-list-item v-else :key="menu.title">{{ menu.title }}</v-list-item>
+          </template>
         </v-list>
       </v-navigation-drawer>
     </v-card>
@@ -75,16 +73,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import menu from "../../apis/menu.js";
+import Component from "vue-class-component";
+import Menus from "../../apis/menu";
 
-export default Vue.extend({
-  name: "Layout",
-
-  data: () => ({
-    item: 0,
-    menus: menu,
-  }),
-});
+@Component
+export default class Layout extends Vue {
+  // data
+  menus: any = Menus;
+}
 </script>
 
 <style lang="less" scoped>
