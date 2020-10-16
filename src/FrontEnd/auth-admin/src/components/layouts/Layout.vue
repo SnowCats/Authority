@@ -56,7 +56,7 @@
               <template v-slot:activator>
                 <v-list-item-title>{{ menu.title }}</v-list-item-title>
               </template>
-              <v-list-item v-for="(item, i) in menu.items" :key="i">
+              <v-list-item v-for="(item, i) in menu.items" :key="i" link>
                 <v-list-item-icon>
                   <v-icon v-text="item.icon" small></v-icon>
                 </v-list-item-icon>
