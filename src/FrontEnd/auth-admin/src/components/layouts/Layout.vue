@@ -29,8 +29,12 @@
         </template>
 
         <v-list dense>
-          <v-list-item link @click="setLanguage(language.CN)">中文简体</v-list-item>
-          <v-list-item link @click="setLanguage(language.EN)">English</v-list-item>
+          <v-list-item link @click="setLanguage(language.CN)"
+            >中文简体</v-list-item
+          >
+          <v-list-item link @click="setLanguage(language.EN)"
+            >English</v-list-item
+          >
         </v-list>
       </v-menu>
       <!---->
@@ -87,7 +91,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import { LOCALES, Locales } from '../../i18n/locales';
+import { LOCALES, Locales } from "../../i18n/locales";
 import Menus from "../../apis/menu";
 
 // 组件注入
@@ -99,7 +103,7 @@ export default class Layout extends Vue {
   menus: any = Menus;
   language: any = {
     CN: Locales.CN,
-    EN: Locales.EN
+    EN: Locales.EN,
   };
   /* Methods */
   // 跳转
@@ -109,7 +113,7 @@ export default class Layout extends Vue {
   // 切换语言
   setLanguage(lang: Locales): void {
     this.$store.commit("SET_LANGUAGE", lang);
-        console.log(this.$store.state.language);
+    console.log(this.$store.state.language);
   }
 }
 </script>
