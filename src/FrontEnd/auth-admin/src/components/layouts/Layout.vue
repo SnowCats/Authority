@@ -20,17 +20,20 @@
           width="100"
         />
       </div>
+      <!--Set Language-->
+      <v-menu transition="scroll-y-transition" open-on-hover offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn class="translation" icon v-bind="attrs" v-on="on">
+            <v-icon>mdi-google-translate</v-icon>
+          </v-btn>
+        </template>
 
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+        <v-list dense>
+          <v-list-item link @click="setLanguage(language.CN)">中文简体</v-list-item>
+          <v-list-item link @click="setLanguage(language.EN)">English</v-list-item>
+        </v-list>
+      </v-menu>
+      <!---->
     </v-app-bar>
     <v-card class="mx-auto drawer" width="256" tile>
       <v-navigation-drawer permanent>
@@ -61,13 +64,16 @@
               <template v-slot:activator>
                 <v-list-item-title>{{ menu.title }}</v-list-item-title>
               </template>
-              <v-list-item v-for="(item, i) in menu.items" :key="i" link @click="to(item.href)">
+              <v-list-item
+                v-for="(item, i) in menu.items"
+                :key="i"
+                link
+                @click="to(item.href)"
+              >
                 <v-list-item-icon>
                   <v-icon v-text="item.icon" small></v-icon>
                 </v-list-item-icon>
-                <v-list-item-title
-                  v-text="item.title"
-                ></v-list-item-title>
+                <v-list-item-title v-text="item.title"></v-list-item-title>
               </v-list-item>
             </v-list-group>
             <v-list-item v-else :key="menu.title">{{ menu.title }}</v-list-item>
@@ -81,6 +87,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
+import { LOCALES, Locales } from '../../i18n/locales';
 import Menus from "../../apis/menu";
 
 // 组件注入
@@ -90,14 +97,29 @@ import Menus from "../../apis/menu";
 export default class Layout extends Vue {
   // data
   menus: any = Menus;
-  // methods
+  language: any = {
+    CN: Locales.CN,
+    EN: Locales.EN
+  };
+  /* Methods */
+  // 跳转
   to(href): void {
     this.$router.push(href);
+  }
+  // 切换语言
+  setLanguage(lang: Locales): void {
+    this.$store.commit("SET_LANGUAGE", lang);
+        console.log(this.$store.state.language);
   }
 }
 </script>
 
 <style lang="less" scoped>
+button.translation {
+  position: absolute;
+  right: 15px;
+}
+
 .drawer {
   position: absolute;
   height: 100vh;
