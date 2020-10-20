@@ -4,7 +4,7 @@
       <v-container grid-list-xl fluid>
         <v-layout row wrap>
           <v-flex sm12>
-            <v-widget title="用户查询">
+            <v-widget title="查询条件">
               <template slot="widget-content">
                 <v-container grid-list-xl fluid>
                   <v-layout row wrap>
@@ -14,6 +14,7 @@
                     <v-flex md3 sm12 xs12>
                       <v-select
                         label="性别"
+                        :clearable="true"
                         v-model="user.gender"
                         :items="item.gender.list"
                         item.text="text"
@@ -26,11 +27,38 @@
                     <v-flex md3 sm12 xs12>
                       <v-text-field label="邮箱"></v-text-field>
                     </v-flex>
+                    <v-flex md12 sm12 xs12>
+                      <v-toolbar flat>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          tile
+                          color="success"
+                          class="white--text"
+                          @click="search"
+                        >
+                          <v-icon left>mdi-magnify</v-icon>
+                          查询
+                        </v-btn>
+                      </v-toolbar>
+                    </v-flex>
                   </v-layout>
                 </v-container>
               </template>
             </v-widget>
             <v-widget title="用户列表">
+              <template slot="widget-header-action">
+                <v-spacer></v-spacer>
+                <v-btn
+                  depressed
+                  color="indigo"
+                  class="white--text"
+                  fab
+                  x-small
+                  @click="add"
+                  text-right
+                  ><v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </template>
               <template slot="widget-content">
                 <v-data-table
                   :headers="headers"
@@ -55,14 +83,6 @@
                     v-model="page"
                     :length="pageCount"
                   ></v-pagination>
-                  <v-text-field
-                    :value="itemsPerPage"
-                    label="Items per page"
-                    type="number"
-                    min="-1"
-                    max="15"
-                    @input="itemsPerPage = parseInt($event, 10)"
-                  ></v-text-field>
                 </div>
               </template>
             </v-widget>
@@ -106,8 +126,8 @@ export default class Index extends Vue {
   };
   page = 1;
   pageCount = 0;
-  itemsPerPage = 10;
-  headers = [
+  itemsPerPage = 1;
+  headers: any[] = [
     {
       text: "序号",
       align: "start",
@@ -121,7 +141,7 @@ export default class Index extends Vue {
     { text: "职位", value: "iron" },
     { text: "操作", value: "actions" },
   ];
-  desserts = [
+  desserts: any[] = [
     {
       name: "Frozen Yogurt",
       calories: 159,
@@ -204,11 +224,21 @@ export default class Index extends Vue {
     },
   ];
   // Methods
-  edit(item: string): void {
-    console.log("编辑", item)
+  // 查询
+  search(): void {
+    console.log("查询");
   }
+  // 新增
+  add(): void {
+    console.log("新增");
+  }
+  // 编辑
+  edit(item: string): void {
+    console.log("编辑", item);
+  }
+  // 删除
   del(item: string): void {
-    console.log("删除", item)
+    console.log("删除", item);
   }
 }
 </script>

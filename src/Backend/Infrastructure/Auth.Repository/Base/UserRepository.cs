@@ -13,17 +13,12 @@ namespace Auth.Repository.Base
     public class UserRepository : Repository, IUserRepository
     {
         /// <summary>
-        /// IRepository
-        /// </summary>
-        private IRepository.IRepository Repository;
-
-        /// <summary>
         /// Constructor
         /// </summary>
-        public UserRepository(IRepository.IRepository repository, IUnitOfWork unitOfWork)
+        public UserRepository(IUnitOfWork unitOfWork)
             : base(unitOfWork)
         {
-            Repository = repository;
+            
         }
     }
 }

@@ -53,6 +53,9 @@ namespace Auth.Core.DI
 
             #region 批量注入仓储服务
 
+            // UnifOfWork
+            services.AddSingleton(typeof(IUnitOfWork), typeof(UnitOfWork));
+
             // 仓储类
             IEnumerable<Type> repositories = BaseUtility.GetAssembly("Auth.Repository")
                 .ExportedTypes
@@ -63,6 +66,7 @@ namespace Auth.Core.DI
             {
                 services.AddSingleton(repository.GetInterfaces().Where(s => s.Name.EndsWith(repository.Name)).FirstOrDefault() ,repository);
             }
+
             #endregion
         }
     }

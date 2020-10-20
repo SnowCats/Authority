@@ -18,6 +18,14 @@ namespace Auth.Repository
         private readonly IUnitOfWork UnitOfWork;
 
         /// <summary>
+        /// Empty Constructor
+        /// </summary>
+        public Repository()
+        {
+
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="_unitOfWork">工作单元</param>

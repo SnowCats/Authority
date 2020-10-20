@@ -2,7 +2,7 @@
 interface UserInterface {
     id: String
     name: String
-    gender: Number
+    gender: any
     userName: String
     password: String
     email: String
@@ -18,7 +18,7 @@ interface UserInterface {
 export default class User implements UserInterface {
     id: String = ''
     name: String = ''
-    gender: Number = 1
+    gender: any = null
     userName: String = ''
     password: String = ''
     email: String = ''
@@ -27,6 +27,6 @@ export default class User implements UserInterface {
     phone: String = ''
     positionID: String = ''
     address: String = ''
-    status: Number = 1
+    status: Number = 1  // 默认启用
     notes: String = ''
 }

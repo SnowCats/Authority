@@ -25,10 +25,9 @@ export default class App extends Vue {}
 
 <style lang="less" scoped>
 .v-main {
-  margin-top: 64px !important;
-
   .container.container--fluid {
     height: 100vh;
+    padding-top: 64px + 15px;
   }
 }
 </style>

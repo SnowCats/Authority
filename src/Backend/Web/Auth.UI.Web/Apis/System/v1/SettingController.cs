@@ -44,6 +44,7 @@ namespace Auth.UI.Web.Apis.System.v1
         /// </summary>
         /// <param name="settingDto"></param>
         /// <returns></returns>
+        [HttpPut]
         public async Task<bool> UpdateAsync(SettingDto settingDto)
         {
             UpdateRequest request = new UpdateRequest { SettingDto = settingDto };
@@ -57,6 +58,7 @@ namespace Auth.UI.Web.Apis.System.v1
         /// </summary>
         /// <param name="settingDto"></param>
         /// <returns></returns>
+        [HttpDelete]
         public async Task<bool> DeleteAsync(SettingDto settingDto)
         {
             DeleteRequest request = new DeleteRequest { SettingDto = settingDto };
