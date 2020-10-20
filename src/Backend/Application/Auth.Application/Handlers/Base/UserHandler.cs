@@ -44,9 +44,9 @@ namespace Auth.Application.Handlers.Base
         {
             User user = mapper.Map<User>(request.UserDto);
 
-            await UserRepository.InsertAsync(user);
+            Guid result = await UserRepository.InsertAsync(user);
 
-            return user.ID;
+            return result;
         }
     }
 }

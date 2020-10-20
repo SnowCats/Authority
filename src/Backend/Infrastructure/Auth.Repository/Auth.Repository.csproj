@@ -15,6 +15,7 @@
     <Folder Include="AppSettings\" />
     <Folder Include="Base\" />
     <Folder Include="DapperExtension\" />
+    <Folder Include="System\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\Auth.IRepository\Auth.IRepository.csproj" />

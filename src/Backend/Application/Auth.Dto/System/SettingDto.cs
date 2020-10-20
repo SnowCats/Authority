@@ -12,19 +12,19 @@ namespace Auth.Dto.System
         public Guid ID { get; set; }
 
         /// <summary>
-        /// 上级字典Key
+        /// 上级字典Value
         /// </summary>
-        public string ParentKey { get; set; }
-
-        /// <summary>
-        /// 字典Key
-        /// </summary>
-        public string CodeKey { get; set; }
+        public string ParentValue { get; set; }
 
         /// <summary>
         /// 字典Value
         /// </summary>
-        public string CodeValue { get; set; }
+        public string Value { get; set; }
+
+        /// <summary>
+        /// 字典Text
+        /// </summary>
+        public string Text { get; set; }
 
         /// <summary>
         /// 状态，0:启用，1:禁用

@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Folder Include="IBase\" />
+    <Folder Include="ISetting\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Auth.Entity\Auth.Entity.csproj" />
