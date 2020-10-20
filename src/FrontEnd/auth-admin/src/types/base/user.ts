@@ -1,5 +1,5 @@
 // User
-interface User {
+interface UserInterface {
     id: String
     name: String
     gender: Number
@@ -15,7 +15,7 @@ interface User {
     notes: String
 }
 
-export default class UserInfo implements User {
+export default class User implements UserInterface {
     id: String = ''
     name: String = ''
     gender: Number = 1

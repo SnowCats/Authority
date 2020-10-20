@@ -1,13 +1,13 @@
 <template>
-  <div id="v-widget">
+  <div class="v-widget">
     <v-card>
-      <v-toolbar color="transparent" flat dense card v-if="enableHeader">
+      <v-app-bar color="transparent" flat dense v-if="enableHeader">
         <v-toolbar-title>
-          <h4>{{ title }}</h4>
+          <span class="title">{{ title }}</span>
         </v-toolbar-title>
         <v-spacer></v-spacer>
         <slot name="widget-header-action"></slot>
-      </v-toolbar>
+      </v-app-bar>
       <v-divider v-if="enableHeader"></v-divider>
       <v-card-text :class="contentBg">
         <slot name="widget-content"></slot>
@@ -44,3 +44,13 @@ export default class VWidget extends VWidgetProps {
   // data
 }
 </script>
+
+<style lang="less" scoped>
+.v-widget {
+  margin-bottom: 15px;
+
+  .title {
+    font-size: 0.8em !important;
+  }
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
   <v-app>
+    <Layout></Layout>
     <v-main>
-      <Layout></Layout>
       <v-container fluid>
         <router-view :key="$route.fullPath"></router-view>
       </v-container>
@@ -17,19 +17,18 @@ import Layout from "./components/layouts/Layout.vue";
 // 组件注入
 @Component({
   components: {
-    Layout
-  }
+    Layout,
+  },
 })
-
-export default class App extends Vue {
-  
-}
-
+export default class App extends Vue {}
 </script>
 
 <style lang="less" scoped>
-.container.container--fluid {
-  padding-left: 256px + 12px;
-  height: 100vh - 64px;
+.v-main {
+  margin-top: 64px !important;
+
+  .container.container--fluid {
+    height: 100vh;
+  }
 }
 </style>
