@@ -14,7 +14,8 @@ namespace Auth.Application.Handlers.System
     /// </summary>
     public class SettingHandler : IRequestHandler<CreateRequest, Guid>,
         IRequestHandler<UpdateRequest, bool>,
-        IRequestHandler<DeleteRequest, bool>
+        IRequestHandler<DeleteRequest, bool>,
+        IRequestHandler<QueryRequest, string>
     {
         /// <summary>
         /// 数据字典仓储接口
@@ -73,11 +74,26 @@ namespace Auth.Application.Handlers.System
         /// <returns></returns>
         public async Task<bool> Handle(UpdateRequest request, CancellationToken cancellationToken)
         {
+            var result1 = SettingRepository.GetPagedList();
+
             Setting setting = mapper.Map<Setting>(request.SettingDto);
 
             bool result = await SettingRepository.UpdateAsync(setting);
 
             return result;
+        }
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<string> Handle(QueryRequest request, CancellationToken cancellationToken)
+        {
+            var result = SettingRepository.GetPagedList();
+
+            return await Task.FromResult("Result");
         }
     }
 }

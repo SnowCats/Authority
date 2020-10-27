@@ -59,12 +59,21 @@ namespace Auth.UI.Web.Apis.System.v1
         /// <param name="settingDto"></param>
         /// <returns></returns>
         [HttpDelete]
-        public async Task<bool> DeleteAsync(SettingDto settingDto)
+        public async Task<bool> DeleteAsync([FromBody]SettingDto settingDto)
         {
             DeleteRequest request = new DeleteRequest { SettingDto = settingDto };
             bool response = await Mediator.Send(request);
 
             return response;
+        }
+
+        [HttpPost]
+        public async Task<object> QueryAsync(SettingDto settingDto)
+        {
+            QueryRequest request = new QueryRequest { SettingDto = settingDto };
+            string result = await Mediator.Send(request);
+
+            return result;
         }
     }
 }

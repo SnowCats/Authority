@@ -10,7 +10,7 @@ namespace Auth.Repository
     /// <summary>
     /// UnitOfWork
     /// </summary>
-    public sealed class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         /// <summary>
         /// 主键

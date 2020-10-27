@@ -6,6 +6,6 @@ namespace Auth.IRepository.ISetting
     /// </summary>
     public interface ISettingRepository : IRepository
     {
-        
+        dynamic GetPagedList();
     }
 }

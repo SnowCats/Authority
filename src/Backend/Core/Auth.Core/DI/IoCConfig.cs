@@ -35,26 +35,26 @@ namespace Auth.Core.DI
             IEnumerable<Type> handlers = BaseUtility.GetAssembly("Auth.Application")
                 .ExportedTypes
                 .Where(s => s.GetInterfaces()
-                    .Where(x => x.IsClass
-                        && x.Namespace.Equals("MediatR")
+                    .Where(x => x.Namespace.Equals("MediatR")
                         && x.Name.StartsWith("IRequestHandler"))
                     .Any());
 
             // 遍历Handler类并注入
             foreach(var handler in handlers)
             {
-                services.AddTransient(handler.GetInterfaces()
+                var requests = handler.GetInterfaces()
                     .Where(s => s.Namespace.Equals("MediatR")
-                        && s.Name.StartsWith("IRequestHandler"))
-                    .FirstOrDefault(), handler);
+                        && s.Name.StartsWith("IRequestHandler"));
+
+                foreach(var request in requests)
+                {
+                    services.AddTransient(request, handler);
+                }
             }
 
             #endregion
 
             #region 批量注入仓储服务
-
-            // UnifOfWork
-            services.AddSingleton(typeof(IUnitOfWork), typeof(UnitOfWork));
 
             // 仓储类
             IEnumerable<Type> repositories = BaseUtility.GetAssembly("Auth.Repository")
