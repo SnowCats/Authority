@@ -38,7 +38,7 @@ namespace Auth.UI.Web
             services.AddAppSettingsConfiguration(Configuration);
             services.AddAutoMapperConfiguration();
             services.AddSwaggerGenConfiguration();
-            services.AddIoCConfiguration();
+            services.AddIocConfiguration();
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
         }
 

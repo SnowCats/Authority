@@ -61,12 +61,12 @@ namespace Auth.Repository
                 else if (dbType == (int)DbType.SqlServer)
                 {
                     connection = new SqlConnection(Configuration.GetConnectionString("SqlServerConnectionString:Write"));
-                    dbConnection = new MySqlConnection(Configuration.GetConnectionString("SqlServerConnectionString:Read"));
+                    dbConnection = new SqlConnection(Configuration.GetConnectionString("SqlServerConnectionString:Read"));
                 }
             }
             else
             {
-                throw new Exception("\"DefaultDB\" is incorrect, Please check your appsettings.{*}.json.");
+                throw new Exception("\"DefaultDB\" is incorrect, Please check your appsettings.{*}.json. example: \"DefaultDB\": 0");
             }
         }
 

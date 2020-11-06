@@ -18,13 +18,13 @@ namespace Auth.Core.DI
     /// <summary>
     /// AspNet Core DI Config
     /// </summary>
-    public static class IoCConfig
+    public static class IocConfig
     {
         /// <summary>
         /// AspNet Core DI Extension
         /// </summary>
         /// <param name="services"></param>
-        public static void AddIoCConfiguration(this IServiceCollection services)
+        public static void AddIocConfiguration(this IServiceCollection services)
         {
             #region MediatR注入
 

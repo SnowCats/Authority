@@ -52,7 +52,7 @@ namespace Auth.Repository.DapperExtension
         }
 
         /// <summary>
-        /// 
+        /// 根据条件获取列表
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="connection"></param>
