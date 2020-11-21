@@ -5,8 +5,8 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using Auth.SeedWork.Attributes;
+using Auth.SeedWork.DapperExtensions;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using static Dapper.Contrib.Extensions.SqlMapperExtensions;
@@ -18,73 +18,6 @@ namespace Auth.Repository.DapperExtension
     /// </summary>
     public static partial class SqlMapperExtensions
     {
-        /// <summary>
-        /// 数据库表连接类型
-        /// </summary>
-        public enum JoinType
-        {
-            Inner = -1,
-            Left = 0,
-            Right = 1
-        }
-
-        /// <summary>
-        /// Table
-        /// </summary>
-        public class Table
-        {
-            /// <summary>
-            /// 表名或者SQL
-            /// </summary>
-            public string Name { get; set; }
-
-            /// <summary>
-            /// 别名
-            /// </summary>
-            public string Alias { get; set; }
-
-            /// <summary>
-            /// 字段
-            /// </summary>
-            public List<string> Fields { get; set; }
-
-            /// <summary>
-            /// -1: Inner, 0: Left, 1: Right;
-            /// </summary>
-            public int? JoinType { get; set; }
-
-            /// <summary>
-            /// 连接，主表为空
-            /// </summary>
-            public string JoinField { get; set; } = "ID";
-
-            /// <summary>
-            /// 查询条件
-            /// </summary>
-            public List<string> Wheres { get; set; }
-        }
-
-        /// <summary>
-        /// 分页类
-        /// </summary>
-        public class Pagination
-        {
-            /// <summary>
-            /// 第几页
-            /// </summary>
-            public int Page { get; set; }
-
-            /// <summary>
-            /// 每页数量
-            /// </summary>
-            public int PageSize { get; set; }
-
-            /// <summary>
-            /// 总数
-            /// </summary>
-            public int Total { get; set; }
-        }
-
         /// <summary>
         /// 分页列表
         /// </summary>

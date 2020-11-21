@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Auth.Entity.System;
+
 namespace Auth.IRepository.ISetting
 {
     /// <summary>
@@ -6,6 +10,12 @@ namespace Auth.IRepository.ISetting
     /// </summary>
     public interface ISettingRepository : IRepository
     {
-        dynamic GetPagedList();
+        /// <summary>
+        /// 数据字典分页列表
+        /// </summary>
+        /// <param name="pagination">分页类</param>
+        /// <param name="Wheres"></param>
+        /// <returns></returns>
+        async Task<IEnumerable<Setting>> GetPagedList(Pagination pagination, List<string> Wheres);
     }
 }

@@ -5,8 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Auth.SeedWork.DapperExtensions;
 using Dapper;
-using Dapper.Contrib.Extensions;
 using static Dapper.Contrib.Extensions.SqlMapperExtensions;
 
 namespace Auth.Repository.DapperExtension
