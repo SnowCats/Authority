@@ -19,28 +19,125 @@ namespace Auth.Repository.DapperExtension
     public static partial class SqlMapperExtensions
     {
         /// <summary>
+        /// 数据库表连接类型
+        /// </summary>
+        public enum JoinType
+        {
+            Inner = -1,
+            Left = 0,
+            Right = 1
+        }
+
+        /// <summary>
+        /// Table
+        /// </summary>
+        public class Table
+        {
+            /// <summary>
+            /// 表名或者SQL
+            /// </summary>
+            public string Name { get; set; }
+
+            /// <summary>
+            /// 别名
+            /// </summary>
+            public string Alias { get; set; }
+
+            /// <summary>
+            /// 字段
+            /// </summary>
+            public List<string> Fields { get; set; }
+
+            /// <summary>
+            /// -1: Inner, 0: Left, 1: Right;
+            /// </summary>
+            public int? JoinType { get; set; }
+
+            /// <summary>
+            /// 连接，主表为空
+            /// </summary>
+            public string JoinField { get; set; } = "ID";
+
+            /// <summary>
+            /// 查询条件
+            /// </summary>
+            public List<string> Wheres { get; set; }
+        }
+
+        /// <summary>
+        /// 分页类
+        /// </summary>
+        public class Pagination
+        {
+            /// <summary>
+            /// 第几页
+            /// </summary>
+            public int Page { get; set; }
+
+            /// <summary>
+            /// 每页数量
+            /// </summary>
+            public int PageSize { get; set; }
+
+            /// <summary>
+            /// 总数
+            /// </summary>
+            public int Total { get; set; }
+        }
+
+        /// <summary>
         /// 分页列表
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="connection">数据库连接对象</param>
-        /// <param name="sql">sql语句</param>
-        /// <param name="parameters">sql参数</param>
-        /// <param name="pageIndex">第几页</param>
-        /// <param name="pageSize">每页条数</param>
-        /// <param name="transaction">事务对象</param>
-        /// <param name="commandTimeout"></param>
-        /// <param name="commandType"></param>
+        /// <param name="connection"></param>
+        /// <param name="tables"></param>
+        /// <param name="pagination"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        public static IEnumerable<T> GetPagedList<T>(this IDbConnection connection, string sql, int pageIndex, int pageSize, object parameters = null, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null) where T : class, new()
+        public static IEnumerable<T> GetPagedList<T>(this IDbConnection connection, List<Table> tables, Pagination pagination, IDbTransaction transaction = null) where T : class, new()
         {
+            string sql = "";  
+
+            if(tables != null && tables.Any())
+            {
+                int count = 0;
+
+                foreach(Table item in tables)
+                {
+                    // 别名为null，默认添加别名
+                    item.Alias = string.IsNullOrEmpty(item.Alias) ? $"var{count++}" : item.Alias;
+
+                    // 主表
+                    if (!item.JoinType.HasValue)
+                    {
+                        sql += $" (SELECT {string.Join(",", item.Fields)} FROM {item.Name} WHERE {string.Join(" AND ", item.Wheres)}) AS {item.Alias}";
+                    }
+                    // 关联表
+                    else
+                    {
+                        sql += $" {Enum.GetName(typeof(JoinType), (int)item.JoinType)} JOIN (SELECT " +
+                            $"{string.Join(",", item.Fields)} FROM {item.Name} WHERE {string.Join(" AND ", item.Wheres)}) AS {item.Alias} " +
+                            $" ON {tables[count - 1].Alias}.{tables[count - 1].JoinField} = {item.Alias}.{item.JoinField}";
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception("没有要查询的表！");
+            }
+
             // 数据连接对象名称
             var name = GetDatabaseType?.Invoke(connection).ToLower()
                        ?? connection.GetType().Name.ToLower();
 
+            // 返回结果
+            IEnumerable<T> list = new List<T>();
+
             // mysql数据库
             if(name.Equals("mysqlconnection"))
             {
-
+                long timestamp= (long)connection.ExecuteScalar($"SELECT IFNULL(MIN(Timestamp), UNIX_TIMESTAMP()) FROM ({sql} LIMIT {(pagination.Page - 1) * pagination.PageSize}, 1) AS aluneth");
+                list = connection.Query<T>($"SELECT * FROM ({sql}) AS aluneth WHERE createdTime <= {timestamp} LIMIT {pagination.PageSize}");
             }
             // sqlserver数据库
             else if(name.Equals("sqlconnection"))
@@ -48,7 +145,7 @@ namespace Auth.Repository.DapperExtension
 
             }
 
-            return connection.GetAll<T>();
+            return list;
         }
 
         /// <summary>

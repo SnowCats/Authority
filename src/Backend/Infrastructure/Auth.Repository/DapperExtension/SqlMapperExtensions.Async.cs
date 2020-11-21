@@ -21,19 +21,62 @@ namespace Auth.Repository.DapperExtension
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="connection"></param>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="tables"></param>
+        /// <param name="pagination"></param>
         /// <param name="transaction"></param>
-        /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        public async static Task<IEnumerable<T>> GetPagedListAsync<T>(this IDbConnection connection, string sql, int pageIndex, int pageSize, object parameters = null, IDbTransaction transaction = null, int? commandTimeout = null) where T : class, new()
+        public static async Task<IEnumerable<T>> GetPagedListAsync<T>(this IDbConnection connection, List<Table> tables, Pagination pagination, IDbTransaction transaction = null) where T : class, new()
         {
+            string sql = "";
+
+            if (tables != null && tables.Any())
+            {
+                int count = 0;
+
+                foreach (Table item in tables)
+                {
+                    // 别名为null，默认添加别名
+                    item.Alias = string.IsNullOrEmpty(item.Alias) ? $"var{count++}" : item.Alias;
+
+                    // 主表
+                    if (!item.JoinType.HasValue)
+                    {
+                        sql += $" (SELECT {string.Join(",", item.Fields)} FROM {item.Name} WHERE {string.Join(" AND ", item.Wheres)}) AS {item.Alias}";
+                    }
+                    // 关联表
+                    else
+                    {
+                        sql += $" {Enum.GetName(typeof(JoinType), (int)item.JoinType)} JOIN (SELECT " +
+                            $"{string.Join(",", item.Fields)} FROM {item.Name} WHERE {string.Join(" AND ", item.Wheres)}) AS {item.Alias} " +
+                            $" ON {tables[count - 1].Alias}.{tables[count - 1].JoinField} = {item.Alias}.{item.JoinField}";
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception("没有要查询的表！");
+            }
+
+            // 数据连接对象名称
             var name = GetDatabaseType?.Invoke(connection).ToLower()
                        ?? connection.GetType().Name.ToLower();
 
-            return await connection.GetAllAsync<T>();
+            // 返回结果
+            IEnumerable<T> list = new List<T>();
+
+            // mysql数据库
+            if (name.Equals("mysqlconnection"))
+            {
+                long timestamp = (long)await connection.ExecuteScalarAsync($"SELECT IFNULL(MIN(Timestamp), UNIX_TIMESTAMP()) FROM ({sql} LIMIT {(pagination.Page - 1) * pagination.PageSize}, 1) AS aluneth");
+                list = await connection.QueryAsync<T>($"SELECT * FROM ({sql}) AS aluneth WHERE createdTime <= {timestamp} LIMIT {pagination.PageSize}");
+            }
+            // sqlserver数据库
+            else if (name.Equals("sqlconnection"))
+            {
+
+            }
+
+            return list;
         }
 
         /// <summary>

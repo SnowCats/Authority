@@ -68,7 +68,7 @@ namespace Auth.Entity.Base
         /// <summary>
         /// 数据时间戳
         /// </summary>
-        public long TimeStamp { get; set; }
+        public long Timestamp{ get; set; }
 
         /// <summary>
         /// 备注

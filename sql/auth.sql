@@ -126,9 +126,9 @@ CREATE TABLE `sys_permissions`  (
 
 CREATE TABLE `sys_settings`  (
   `ID` char(36) NOT NULL COMMENT '主键',
-  `ParentKey` varchar(50) NULL COMMENT '上级Key',
-  `CodeKey` varchar(50) NULL COMMENT '字典Key',
-  `CodeValue` text NULL COMMENT '字典Value',
+  `ParentValue` varchar(50) NULL COMMENT '上级Key',
+  `Value` varchar(50) NULL COMMENT '字典Value',
+  `Text` text NULL COMMENT '字典Text',
   `Status` tinyint NULL COMMENT '状态',
   `Notes` text NULL COMMENT '备注',
   `TimeStamp` bigint NULL COMMENT '数据时间戳',

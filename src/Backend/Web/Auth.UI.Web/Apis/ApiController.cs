@@ -26,8 +26,8 @@ namespace Auth.UI.Web.Apis
             {
                 dateTime = DateTime.Now;
             }
-            long unixTimestamp = dateTime.Value.Ticks - new DateTime(1970, 1, 1).Ticks;
-            unixTimestamp /= TimeSpan.TicksPerSecond;
+            long unixTimestamp= dateTime.Value.Ticks - new DateTime(1970, 1, 1).Ticks;
+            unixTimestamp/= TimeSpan.TicksPerSecond;
 
             return unixTimestamp;
         }
@@ -40,7 +40,7 @@ namespace Auth.UI.Web.Apis
         protected static DateTime TimeFromUnixTimestamp(int unixTimestamp)
         {
             DateTime unixYear0 = new DateTime(1970, 1, 1);
-            long unixTimeStampInTicks = unixTimestamp * TimeSpan.TicksPerSecond;
+            long unixTimeStampInTicks = unixTimestamp* TimeSpan.TicksPerSecond;
             DateTime dateTime = new DateTime(unixYear0.Ticks + unixTimeStampInTicks);
             return dateTime;
         }

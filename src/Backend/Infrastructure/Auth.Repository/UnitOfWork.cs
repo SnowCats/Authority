@@ -25,17 +25,17 @@ namespace Auth.Repository
         /// <summary>
         /// 数据库连接对象(写)
         /// </summary>
-        IDbConnection connection = null;
+        IDbConnection connection;
 
         /// <summary>
         /// 数据库连接对象(读)
         /// </summary>
-        IDbConnection dbConnection = null;
+        IDbConnection dbConnection;
 
         /// <summary>
         /// 数据库事务对象
         /// </summary>
-        IDbTransaction transaction = null;
+        IDbTransaction transaction;
 
         /// <summary>
         /// Constructor
@@ -49,9 +49,8 @@ namespace Auth.Repository
             id = Guid.NewGuid();
 
             // 初始化数据库连接
-            int dbType;
 
-            if (int.TryParse(Configuration.GetConnectionString("DefaultDB"), out dbType))
+            if (int.TryParse(Configuration.GetConnectionString("DefaultDB"), out int dbType))
             {
                 if (dbType == (int)DbType.MySql)
                 {
