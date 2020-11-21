@@ -67,6 +67,10 @@ namespace Auth.Repository.DapperExtension
             // mysql数据库
             if (name.Equals("mysqlconnection"))
             {
+                // total
+                pagination.Total = (int)await connection.ExecuteScalarAsync($"SELECT COUNT(*) FROM({sql}) AS aluneth");
+
+                // paged list
                 long timestamp = (long)await connection.ExecuteScalarAsync($"SELECT IFNULL(MIN(Timestamp), UNIX_TIMESTAMP()) FROM ({sql} LIMIT {(pagination.Page - 1) * pagination.PageSize}, 1) AS aluneth");
                 list = await connection.QueryAsync<T>($"SELECT * FROM ({sql}) AS aluneth WHERE createdTime <= {timestamp} LIMIT {pagination.PageSize}");
             }
