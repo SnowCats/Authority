@@ -25,7 +25,11 @@ namespace Auth.Repository.DapperExtension
         /// <param name="pagination"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<T>> GetPagedListAsync<T>(this IDbConnection connection, List<Table> tables, Pagination pagination, IDbTransaction transaction = null) where T : class, new()
+        public static async Task<IEnumerable<T>> GetPagedListAsync<T>(this IDbConnection connection,
+            List<Table> tables,
+            Pagination pagination,
+            object parameters= null,
+            IDbTransaction transaction = null) where T : class, new()
         {
             string sql = "";
 
@@ -68,11 +72,11 @@ namespace Auth.Repository.DapperExtension
             if (name.Equals("mysqlconnection"))
             {
                 // total
-                pagination.Total = (int)await connection.ExecuteScalarAsync($"SELECT COUNT(*) FROM({sql}) AS aluneth");
+                pagination.Total = (int)await connection.ExecuteScalarAsync($"SELECT COUNT(*) FROM({sql}) AS aluneth", parameters);
 
                 // paged list
-                long timestamp = (long)await connection.ExecuteScalarAsync($"SELECT IFNULL(MIN(Timestamp), UNIX_TIMESTAMP()) FROM ({sql} LIMIT {(pagination.Page - 1) * pagination.PageSize}, 1) AS aluneth");
-                list = await connection.QueryAsync<T>($"SELECT * FROM ({sql}) AS aluneth WHERE createdTime <= {timestamp} LIMIT {pagination.PageSize}");
+                long timestamp = (long)await connection.ExecuteScalarAsync($"SELECT IFNULL(MIN(Timestamp), UNIX_TIMESTAMP()) FROM ({sql} LIMIT {(pagination.Page - 1) * pagination.PageSize}, 1) AS aluneth", parameters);
+                list = await connection.QueryAsync<T>($"SELECT * FROM ({sql}) AS aluneth WHERE createdTime <= {timestamp} LIMIT {pagination.PageSize}", parameters);
             }
             // sqlserver数据库
             else if (name.Equals("sqlconnection"))
@@ -84,6 +88,31 @@ namespace Auth.Repository.DapperExtension
         }
 
         /// <summary>
+        /// 根据条件获取列表
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="where"></param>
+        /// <param name="parameters"></param>
+        /// <param name="transaction"></param>
+        /// <param name="commandTimeout"></param>
+        /// <returns></returns>
+        public static async Task<IEnumerable<T>> GetListByWhereAsync<T>(
+            this IDbConnection connection,
+            List<string> fields,
+            string where,
+            object parameters = null,
+            IDbTransaction transaction = null,
+            int? commandTimeout = null,
+            CommandType? commandType = null) where T : class, new()
+        {
+            string tableName = GetAttributeTableName<T>();
+            string sql = $"SELECT {string.Join(",", fields)} FROM {tableName} {where}";
+
+            return await connection.QueryAsync<T>(sql, parameters, transaction: transaction, commandTimeout: commandTimeout, commandType: commandType);
+        }
+
+        /// <summary>
         /// Updates entity in table "Ts", checks if the entity is modified if the entity is tracked by the Get() extension.
         /// </summary>
         /// <typeparam name="T">Type to be updated</typeparam>
@@ -92,7 +121,10 @@ namespace Auth.Repository.DapperExtension
         /// <param name="transaction">The transaction to run under, null (the default) if none</param>
         /// <param name="commandTimeout">Number of seconds before command execution timeout</param>
         /// <returns>true if updated, false if not found or not modified (tracked entities)</returns>
-        public static async Task<bool> UpdateAsync<T>(this IDbConnection connection, T entityToUpdate, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        public static async Task<bool> UpdateAsync<T>(
+            this IDbConnection connection,
+            T entityToUpdate,
+            IDbTransaction transaction = null) where T : class
         {
             if (entityToUpdate is IProxy proxy && !proxy.IsDirty)
             {
@@ -151,7 +183,7 @@ namespace Auth.Repository.DapperExtension
                 if (i < keyProperties.Count - 1)
                     sb.Append(" and ");
             }
-            var updated = await connection.ExecuteAsync(sb.ToString(), entityToUpdate, commandTimeout: commandTimeout, transaction: transaction);
+            var updated = await connection.ExecuteAsync(sb.ToString(), entityToUpdate, transaction: transaction);
             return updated > 0;
         }
 

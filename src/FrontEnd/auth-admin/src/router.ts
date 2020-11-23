@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Index from './pages/Index.vue'
+import Index from './pages/index.vue'
 // 基础数据组件
 import OrganizationList from './pages/base/organization/index.vue';
 import UserList from './pages/base/user/index.vue'
@@ -11,6 +11,7 @@ import ModuleList from './pages/system/module/index.vue';
 import ApiList from './pages/system/api/index.vue'
 import PermissionList from './pages/system/permission/index.vue'
 import SettingList from './pages/system/setting/index.vue'
+import SettingAdd from './pages/system/setting/add.vue'
 
 Vue.use(Router);
 
@@ -65,5 +66,10 @@ export default new Router({
             name: 'setting-list',
             component: SettingList
         },
+        {
+            path: '/system/setting/add',
+            name: 'setting-add',
+            component: SettingAdd
+        }
     ]
 });

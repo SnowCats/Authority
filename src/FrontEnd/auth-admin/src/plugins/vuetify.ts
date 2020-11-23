@@ -6,5 +6,5 @@ Vue.use(Vuetify);
 Vue.use(VueI18n);
 
 export default new Vuetify({
-
+    
 });

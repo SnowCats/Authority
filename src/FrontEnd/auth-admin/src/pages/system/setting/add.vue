@@ -4,26 +4,48 @@
       <v-container grid-list-xl fluid>
         <v-layout row wrap>
           <v-flex sm12>
-            <v-widget title="数据字典查询">
+            <v-widget title="数据字典新增">
               <template slot="widget-content">
                 <v-container grid-list-xl fluid>
                   <v-layout row wrap>
-                    <v-flex md3 sm12 xs12>
-                      <v-text-field label="姓名"></v-text-field>
+                    <v-flex md3 sm6 xs12>
+                      <v-select
+                        label="上级字典值"
+                        :clearable="true"
+                        v-model="setting"
+                        :items="item.value.list"
+                        item.text="text"
+                        item.value="value"
+                      ></v-select>
+                    </v-flex>
+                    <v-flex md3 sm6 xs12>
+                      <v-text-field label="字典值"></v-text-field>
+                    </v-flex>
+                    <v-flex md3 sm6 xs12>
+                      <v-text-field label="字典文本"></v-text-field>
                     </v-flex>
                     <v-flex md12 sm12 xs12>
-                      <v-toolbar flat>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                          tile
-                          color="success"
-                          class="white--text"
-                          @click="search"
-                        >
-                          <v-icon left>mdi-magnify</v-icon>
-                          查询
-                        </v-btn>
-                      </v-toolbar>
+                      <v-textarea label="备注"></v-textarea>
+                    </v-flex>
+                    <v-flex md12 sm12 xs12 class="btns">
+                      <v-btn
+                        tile
+                        color="success"
+                        class="white--text"
+                        @click="submit()"
+                      >
+                        <v-icon left>mdi-content-save</v-icon>
+                        新增
+                      </v-btn>
+                      <v-btn
+                        tile
+                        color="default"
+                        class="grey--text"
+                        @click="back()"
+                      >
+                        <v-icon left>mdi-bookmark-remove</v-icon>
+                        返回
+                      </v-btn>
                     </v-flex>
                   </v-layout>
                 </v-container>
@@ -37,10 +59,45 @@
 </template>
 
 <script lang="ts">
+import Setting from "@/types/system/setting";
 import Vue from "vue";
+import Component from "vue-class-component";
+import VWidget from "../../../components/VWidget.vue";
 
-export default Vue.extend({});
+// 组件注入
+@Component({
+  components: {
+    VWidget,
+  },
+})
+
+// Vue
+export default class Index extends Vue {
+  // data
+  setting: Setting = new Setting();
+  private item = {
+    value: {
+      list: [],
+    },
+  };
+
+  // Methods
+  submit(): void {
+    console.log("提交数据");
+  }
+  back(): void {
+    // 返回上一级
+    this.$router.push(".");
+  }
+}
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+.btns {
+  text-align: center;
+
+  .v-btn {
+    margin-right: 15px;
+  }
+}
 </style>

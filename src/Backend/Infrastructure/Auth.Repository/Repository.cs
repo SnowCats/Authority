@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Data;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Auth.IRepository;
+using Auth.Repository.DapperExtension;
 using Dapper.Contrib.Extensions;
-using Microsoft.Extensions.Configuration;
 
 namespace Auth.Repository
 {
@@ -130,7 +131,7 @@ namespace Auth.Repository
             {
                 UnitOfWork.Begin();
 
-                var result = UnitOfWork.Connection.Update(t);
+                bool result = UnitOfWork.Connection.Update(t, UnitOfWork.Transaction);
 
                 UnitOfWork.Commit();
 
@@ -150,11 +151,27 @@ namespace Auth.Repository
             {
                 UnitOfWork.Begin();
 
-                var result = await UnitOfWork.Connection.UpdateAsync(t);
+                var result = await UnitOfWork.Connection.UpdateAsync(t, UnitOfWork.Transaction);
 
                 UnitOfWork.Commit();
 
                 return result;
+            }
+        }
+
+        /// <summary>
+        /// 某字段的值是否存在重复
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public async Task<bool> HasValueAsync<T>(string field, string value) where T : class, new()
+        {
+            using (UnitOfWork.DbConnection)
+            {
+                var list = await UnitOfWork.DbConnection.GetListByWhereAsync<T>(new List<string> { field }, $"WHERE {field}=@Value", new { Value = value });
+
+                return list != null && list.Any();
             }
         }
     }

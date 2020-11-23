@@ -55,5 +55,13 @@ namespace Auth.IRepository
         /// <param name="t">实体实例</param>
         /// <returns></returns>
         Task<bool> DeleteAsync<T>(T t) where T : class, new();
+
+        /// <summary>
+        /// 某字段的值是否存在重复
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        Task<bool> HasValueAsync<T>(string field, string value) where T : class, new();
     }
 }

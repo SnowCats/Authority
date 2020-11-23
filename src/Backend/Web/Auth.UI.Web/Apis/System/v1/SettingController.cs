@@ -31,10 +31,10 @@ namespace Auth.UI.Web.Apis.System.v1
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<dynamic> InsertAsync(SettingDto settingDto)
+        public async Task<Guid?> InsertAsync(SettingDto settingDto)
         {
             CreateRequest request = new CreateRequest { SettingDto = settingDto };
-            Guid response = await Mediator.Send(request);
+            Guid? response = await Mediator.Send(request);
 
             return response;
         }

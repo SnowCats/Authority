@@ -1,18 +1,18 @@
 // Setting
 interface SettingInterface {
-    id: String
-    parentValue: String
-    value: String
-    text: String
-    status: Number
-    notes: String
+    id: string
+    parentValue: string
+    value: string
+    text: string
+    status: number
+    notes: string
 }
 
 export default class Setting implements SettingInterface {
-    id: String = ''
-    parentValue: String = ''
-    value: String = ''
-    text: String = ''
-    status: Number = 1  // 默认启用
-    notes: String = ''
+    id: string = ''
+    parentValue: string = ''
+    value: string = ''
+    text: string = ''
+    status: number = 1  // 默认启用
+    notes: string = ''
 } 

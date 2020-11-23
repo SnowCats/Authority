@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Auth.Entity.System;
+using Auth.SeedWork.DapperExtensions;
 
 namespace Auth.IRepository.ISetting
 {
@@ -16,6 +17,6 @@ namespace Auth.IRepository.ISetting
         /// <param name="pagination">分页类</param>
         /// <param name="Wheres"></param>
         /// <returns></returns>
-        async Task<IEnumerable<Setting>> GetPagedList(Pagination pagination, List<string> Wheres);
+        Task<IEnumerable<Setting>> GetPagedList(Pagination pagination, List<string> Wheres, object parameters);
     }
 }

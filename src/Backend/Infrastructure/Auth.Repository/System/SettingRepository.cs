@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Auth.Entity.System;
 using Auth.IRepository;
 using Auth.IRepository.ISetting;
 using Auth.Repository.DapperExtension;
+using Auth.SeedWork.DapperExtensions;
+using static Auth.Repository.DapperExtension.SqlMapperExtensions;
 
 namespace Auth.Repository.System
 {
@@ -21,17 +26,38 @@ namespace Auth.Repository.System
             UnitOfWork = unitOfWork;
         }
 
-        public dynamic GetPagedList()
+        /// <summary>
+        /// 数据字典分页列表
+        /// </summary>
+        /// <param name="pagination">分页类</param>
+        /// <param name="Wheres"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<Setting>> GetPagedList(Pagination pagination, List<string> Wheres, object parameters)
         {
             using (UnitOfWork.Connection)
             {
-                UnitOfWork.Begin();
+                List<Table> tables = new List<Table>();
 
-                var result = UnitOfWork.Connection.GetPagedList<dynamic>("", 10, 1, transaction: UnitOfWork.Transaction);
+                tables.Add(new Table
+                {
+                     Name = $"sys_setting",
+                     Alias = "st",
+                     Fields = new List<string> {
+                         nameof(Setting.ID),
+                         nameof(Setting.ParentValue),
+                         nameof(Setting.Value),
+                         nameof(Setting.Text),
+                         nameof(Setting.Status),
+                         nameof(Setting.Notes),
+                         nameof(Setting.CreatedOn),
+                         nameof(Setting.CreatedBy)
+                     },
+                     Wheres = Wheres
+                });
 
-                UnitOfWork.Commit();
+                var list = await UnitOfWork.Connection.GetPagedListAsync<Setting>(tables, pagination);
 
-                return result;
+                return list;
             }
         }
     }

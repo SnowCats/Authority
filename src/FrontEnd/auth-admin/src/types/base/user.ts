@@ -1,32 +1,32 @@
 // User
 interface UserInterface {
     id: String
-    name: String
+    name: string
     gender: any
-    userName: String
-    password: String
-    email: String
-    wechat: String
-    telephone: String
-    phone: String
-    positionID: String
-    address: String
-    status: Number
-    notes: String
+    userName: string
+    password: string
+    email: string
+    wechat: string
+    telephone: string
+    phone: string
+    positionID: string
+    address: string
+    status: number
+    notes: string
 }
 
 export default class User implements UserInterface {
-    id: String = ''
-    name: String = ''
+    id: string = ''
+    name: string = ''
     gender: any = null
-    userName: String = ''
-    password: String = ''
-    email: String = ''
-    wechat: String = ''
-    telephone: String = ''
-    phone: String = ''
-    positionID: String = ''
-    address: String = ''
-    status: Number = 1  // 默认启用
-    notes: String = ''
+    userName: string = ''
+    password: string = ''
+    email: string = ''
+    wechat: string = ''
+    telephone: string = ''
+    phone: string = ''
+    positionID: string = ''
+    address: string = ''
+    status: number = 1  // 默认启用
+    notes: string = ''
 }

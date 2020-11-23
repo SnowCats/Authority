@@ -8,28 +8,28 @@
               <template slot="widget-content">
                 <v-container grid-list-xl fluid>
                   <v-layout row wrap>
-                    <v-flex md3 sm12 xs12>
-                      <v-text-field label="字典文本"></v-text-field>
-                    </v-flex>
-                    <v-flex md3 sm12 xs12>
-                      <v-text-field label="字典值"></v-text-field>
-                    </v-flex>
-                    <v-flex md3 sm12 xs12>
+                    <v-flex md3 sm6 xs12>
                       <v-select
                         label="上级字典值"
                         :clearable="true"
-                        v-model="user.gender"
-                        :items="item.gender.list"
+                        v-model="setting.value"
+                        :items="item.value.list"
                         item.text="text"
                         item.value="value"
                       ></v-select>
+                    </v-flex>
+                    <v-flex md3 sm6 xs12>
+                      <v-text-field label="字典文本"></v-text-field>
+                    </v-flex>
+                    <v-flex md3 sm6 xs12>
+                      <v-text-field label="字典值"></v-text-field>
                     </v-flex>
                     <v-flex md12 sm12 xs12>
                       <v-toolbar flat>
                         <v-spacer></v-spacer>
                         <v-btn
                           tile
-                          color="success"
+                          color="#01579B"
                           class="white--text"
                           @click="search"
                         >
@@ -91,6 +91,7 @@
 </template>
 
 <script lang="ts">
+import Setting from '@/types/system/setting';
 import Vue from "vue";
 import Component from "vue-class-component";
 import VWidget from "../../../components/VWidget.vue";
@@ -106,24 +107,24 @@ import User from "../../../types/base/user";
 // 用户Vue
 export default class Index extends Vue {
   // data
-  user: User = new User();
+  setting: Setting = new Setting();
   private item = {
-    gender: {
+    value: {
       list: [
         {
           value: 0,
-          text: "女",
+          text: "禁用",
         },
         {
           value: 1,
-          text: "男",
+          text: "启用",
         },
       ],
     },
   };
   page = 1;
   pageCount = 0;
-  itemsPerPage = 1;
+  itemsPerPage = 5;
   headers: any[] = [
     {
       text: "序号",
@@ -227,6 +228,7 @@ export default class Index extends Vue {
   }
   // 新增
   add(): void {
+    this.$router.push("./setting/add");
     console.log("新增");
   }
   // 编辑

@@ -12,7 +12,7 @@ namespace Auth.Application.Handlers.System
     /// <summary>
     /// 数据字典处理服务
     /// </summary>
-    public class SettingHandler : IRequestHandler<CreateRequest, Guid>,
+    public class SettingHandler : IRequestHandler<CreateRequest, Guid?>,
         IRequestHandler<UpdateRequest, bool>,
         IRequestHandler<DeleteRequest, bool>,
         IRequestHandler<QueryRequest, string>
@@ -42,13 +42,20 @@ namespace Auth.Application.Handlers.System
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<Guid> Handle(CreateRequest request, CancellationToken cancellationToken)
+        public async Task<Guid?> Handle(CreateRequest request, CancellationToken cancellationToken)
         {
             Setting setting = mapper.Map<Setting>(request.SettingDto);
 
-            Guid result = await SettingRepository.InsertAsync(setting);
-
-            return result;
+            // 判断Value是否已存在
+            if(await SettingRepository.HasValueAsync<Setting>(nameof(setting.Value), setting.Value))
+            {
+                return null;
+            }
+            else
+            {
+                Guid result = await SettingRepository.InsertAsync(setting);
+                return result;
+            }
         }
 
         /// <summary>
@@ -74,7 +81,7 @@ namespace Auth.Application.Handlers.System
         /// <returns></returns>
         public async Task<bool> Handle(UpdateRequest request, CancellationToken cancellationToken)
         {
-            var result1 = SettingRepository.GetPagedList();
+            //var result1 = SettingRepository.GetPagedList();
 
             Setting setting = mapper.Map<Setting>(request.SettingDto);
 
@@ -91,7 +98,7 @@ namespace Auth.Application.Handlers.System
         /// <returns></returns>
         public async Task<string> Handle(QueryRequest request, CancellationToken cancellationToken)
         {
-            var result = SettingRepository.GetPagedList();
+            //var result = SettingRepository.GetPagedList();
 
             return await Task.FromResult("Result");
         }
