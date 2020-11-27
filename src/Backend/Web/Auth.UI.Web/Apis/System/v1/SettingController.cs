@@ -68,7 +68,7 @@ namespace Auth.UI.Web.Apis.System.v1
         }
 
         [HttpPost]
-        public async Task<object> QueryAsync(SettingDto settingDto)
+        public async Task<object> GetListAsync(SettingDto settingDto)
         {
             QueryRequest request = new QueryRequest { SettingDto = settingDto };
             string result = await Mediator.Send(request);

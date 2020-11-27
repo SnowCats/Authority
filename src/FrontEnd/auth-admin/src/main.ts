@@ -2,7 +2,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify';
 import router from './router';
-import axios from 'axios';
 
 Vue.config.productionTip = false;
 
@@ -10,9 +9,6 @@ Vue.config.productionTip = false;
 import VueI18n from 'vue-i18n';
 
 Vue.use(VueI18n);
-
-// Axiox
-Vue.prototype.$axios = axios;
 
 // i18n
 import { messages, defaultLocale } from '@/i18n';

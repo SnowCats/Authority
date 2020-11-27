@@ -54,12 +54,11 @@ namespace Auth.UI.Web
 
             app.UseRouting();
 
-            app.UseCors(c =>
-            {
-                c.AllowAnyHeader();
-                c.AllowAnyMethod();
-                c.AllowAnyOrigin();
+            app.UseCors(c => {
+                c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
             });
+
+            app.UseCookiePolicy();
 
             app.UseEndpoints(endpoints =>
             {

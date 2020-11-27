@@ -1,17 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Index from './pages/index.vue'
-// 基础数据组件
-import OrganizationList from './pages/base/organization/index.vue';
-import UserList from './pages/base/user/index.vue'
-import PositionList from './pages/base/position/index.vue'
-import RoleList from './pages/base/role/index.vue'
-// 系统设置组件
-import ModuleList from './pages/system/module/index.vue';
-import ApiList from './pages/system/api/index.vue'
-import PermissionList from './pages/system/permission/index.vue'
-import SettingList from './pages/system/setting/index.vue'
-import SettingAdd from './pages/system/setting/add.vue'
 
 Vue.use(Router);
 
@@ -22,54 +10,63 @@ export default new Router({
         {
             path: '/',
             name: 'index',
-            component: Index
+            component: () => import('./pages/index.vue')
         },
         // 基础数据
         {
+            // 组织信息
             path: '/base/organization',
             name: 'organization-list',
-            component: OrganizationList
+            component: () => import('./pages/base/organization/index.vue')
         },
         {
+            // 用户信息
             path: '/base/user',
             name: 'user-list',
-            component: UserList
+            component: () => import('./pages/base/user/index.vue')
         },
         {
+            // 岗位信息
             path: '/base/position',
             name: 'position-list',
-            component: PositionList
+            component: () => import('./pages/base/position/index.vue')
         },
         {
+            // 角色信息
             path: '/base/role',
             name: 'role-list',
-            component: RoleList
+            component: () => import('./pages/base/role/index.vue')
         },
         // 系统设置
         {
+            // 模块信息
             path: '/system/module',
             name: 'module-list',
-            component: ModuleList
+            component: () => import('./pages/system/module/index.vue')
         },
         {
+            // Api信息
             path: '/system/api',
             name: 'api-list',
-            component: ApiList
+            component: () => import('./pages/system/api/index.vue')
         },
         {
+            // 权限信息
             path: '/system/permission',
             name: 'permission-list',
-            component: PermissionList
+            component: () => import('./pages/system/permission/index.vue')
         },
         {
+            // 数据字典信息
             path: '/system/setting',
             name: 'setting-list',
-            component: SettingList
+            component: () => import('./pages/system/setting/index.vue')
         },
         {
+            // 数据字典新增
             path: '/system/setting/add',
             name: 'setting-add',
-            component: SettingAdd
+            component: () => import('./pages/system/setting/add.vue')
         }
     ]
 });

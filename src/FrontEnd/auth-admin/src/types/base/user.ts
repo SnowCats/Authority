@@ -1,6 +1,6 @@
 // User
-interface UserInterface {
-    id: String
+interface IUser {
+    id?: String
     name: string
     gender: any
     userName: string
@@ -15,8 +15,8 @@ interface UserInterface {
     notes: string
 }
 
-export default class User implements UserInterface {
-    id: string = ''
+export default class User implements IUser {
+    id?: string = ''
     name: string = ''
     gender: any = null
     userName: string = ''

@@ -19,13 +19,13 @@
                       ></v-select>
                     </v-flex>
                     <v-flex md3 sm6 xs12>
-                      <v-text-field label="字典值"></v-text-field>
+                      <v-text-field label="字典值" v-model="setting.value"></v-text-field>
                     </v-flex>
                     <v-flex md3 sm6 xs12>
-                      <v-text-field label="字典文本"></v-text-field>
+                      <v-text-field label="字典文本" v-model="setting.text"></v-text-field>
                     </v-flex>
                     <v-flex md12 sm12 xs12>
-                      <v-textarea label="备注"></v-textarea>
+                      <v-textarea label="备注" v-model="setting.notes"></v-textarea>
                     </v-flex>
                     <v-flex md12 sm12 xs12 class="btns">
                       <v-btn
@@ -63,6 +63,7 @@ import Setting from "@/types/system/setting";
 import Vue from "vue";
 import Component from "vue-class-component";
 import VWidget from "../../../components/VWidget.vue";
+import axios from '../../../plugins/axios';
 
 // 组件注入
 @Component({
@@ -84,6 +85,11 @@ export default class Index extends Vue {
   // Methods
   submit(): void {
     console.log("提交数据");
+    axios.axios.post('/api/Setting/Insert', this.setting).then(res => {
+      console.log(res);
+    }).catch(function(error) {
+      console.log(error.response)
+    });
   }
   back(): void {
     // 返回上一级

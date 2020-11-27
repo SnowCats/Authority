@@ -1,6 +1,6 @@
 // Setting
-interface SettingInterface {
-    id: string
+interface ISetting {
+    id?: string
     parentValue: string
     value: string
     text: string
@@ -8,8 +8,8 @@ interface SettingInterface {
     notes: string
 }
 
-export default class Setting implements SettingInterface {
-    id: string = ''
+export default class Setting implements ISetting {
+    id?: string = ''
     parentValue: string = ''
     value: string = ''
     text: string = ''
