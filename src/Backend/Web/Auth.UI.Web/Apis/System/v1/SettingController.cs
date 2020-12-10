@@ -67,6 +67,11 @@ namespace Auth.UI.Web.Apis.System.v1
             return response;
         }
 
+        /// <summary>
+        /// 获取字典列表
+        /// </summary>
+        /// <param name="settingDto"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<object> GetListAsync(SettingDto settingDto)
         {

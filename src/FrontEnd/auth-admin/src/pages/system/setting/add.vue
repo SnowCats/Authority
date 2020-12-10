@@ -63,7 +63,7 @@ import Setting from "@/types/system/setting";
 import Vue from "vue";
 import Component from "vue-class-component";
 import VWidget from "../../../components/VWidget.vue";
-import axios from '../../../plugins/axios';
+import $axios from '../../../plugins/axios';
 
 // 组件注入
 @Component({
@@ -85,7 +85,7 @@ export default class Index extends Vue {
   // Methods
   submit(): void {
     console.log("提交数据");
-    axios.axios.post('/api/Setting/Insert', this.setting).then(res => {
+    $axios.axios.post('/api/Setting/Insert', this.setting).then(res => {
       console.log(res);
     }).catch(function(error) {
       console.log(error.response)

@@ -34,6 +34,13 @@ namespace Auth.UI.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(c => c.AddPolicy("auth-admin",
+                option => option
+                    .AllowAnyHeader()
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    )
+            );
             services.AddControllers().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Latest);
             services.AddAppSettingsConfiguration(Configuration);
             services.AddAutoMapperConfiguration();
@@ -54,9 +61,7 @@ namespace Auth.UI.Web
 
             app.UseRouting();
 
-            app.UseCors(c => {
-                c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-            });
+            app.UseCors("auth-admin");
 
             app.UseCookiePolicy();
 

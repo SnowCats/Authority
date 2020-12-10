@@ -9,7 +9,7 @@ namespace Auth.Dto.System
         /// <summary>
         /// 主键
         /// </summary>
-        public Guid ID { get; set; }
+        public Guid? ID { get; set; }
 
         /// <summary>
         /// 上级字典Value
@@ -35,6 +35,11 @@ namespace Auth.Dto.System
         /// 备注
         /// </summary>
         public string Notes { get; set; }
+
+        /// <summary>
+        /// 数据时间戳
+        /// </summary>
+        public long Timestamp { get; set; }
 
         /// <summary>
         /// 创建时间

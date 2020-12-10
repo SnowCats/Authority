@@ -9,7 +9,7 @@ namespace Auth.Dto.Base
         /// <summary>
         /// 主键
         /// </summary>
-        public Guid ID { get; set; }
+        public Guid? ID { get; set; }
 
         /// <summary>
         /// 角色ID
