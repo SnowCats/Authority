@@ -11,7 +11,7 @@ namespace Auth.SeedWork.DapperExtensions
         /// <summary>
         /// 表名或者SQL
         /// </summary>
-        public string Name { get; set; }
+        public dynamic Name { get; set; }
 
         /// <summary>
         /// 别名

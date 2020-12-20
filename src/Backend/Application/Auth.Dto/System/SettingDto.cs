@@ -60,5 +60,19 @@ namespace Auth.Dto.System
         /// 修改人
         /// </summary>
         public Guid? ModifiedBy { get; set; }
+
+        #region 值对象
+
+        /// <summary>
+        /// 上级节点值
+        /// </summary>
+        public string SuperiorValue { get; }
+
+        /// <summary>
+        /// 上级节点文本
+        /// </summary>
+        public string SuperiorText { get; }
+
+        #endregion
     }
 }

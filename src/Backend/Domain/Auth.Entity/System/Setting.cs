@@ -1,4 +1,5 @@
 ﻿using System;
+using Auth.ValueObjects;
 using Dapper.Contrib.Extensions;
 
 namespace Auth.Entity.System
@@ -58,5 +59,14 @@ namespace Auth.Entity.System
         /// 修改人
         /// </summary>
         public Guid? ModifiedBy { get; set; }
+
+        #region ValueObjects
+
+        /// <summary>
+        /// 上级节点
+        /// </summary>
+        public Coupling Superior { get; set; }
+
+        #endregion
     }
 }

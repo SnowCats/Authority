@@ -13,5 +13,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Auth.SeedWork\Auth.SeedWork.csproj" />
+    <ProjectReference Include="..\Auth.ValueObjects\Auth.ValueObjects.csproj" />
   </ItemGroup>
 </Project>

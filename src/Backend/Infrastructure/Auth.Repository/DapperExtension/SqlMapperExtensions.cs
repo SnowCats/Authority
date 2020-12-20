@@ -42,12 +42,12 @@ namespace Auth.Repository.DapperExtension
                 foreach(Table item in tables)
                 {
                     // 别名为null，默认添加别名
-                    item.Alias = string.IsNullOrEmpty(item.Alias) ? $"var{count++}" : item.Alias;
+                    item.Alias = string.IsNullOrEmpty(item.Alias) ? $"{item.Name}{count++}" : item.Alias;
 
                     // 主表
                     if (!item.JoinType.HasValue)
                     {
-                        sql += $" (SELECT {string.Join(",", item.Fields)} FROM {item.Name} WHERE {string.Join(" AND ", item.Wheres)}) AS {item.Alias}";
+                        sql += $" (SELECT {string.Join(",", item.Fields)}, Timestamp FROM {item.Name} WHERE 1=1 {string.Join(" AND ", item.Wheres)}) AS {item.Alias}";
                     }
                     // 关联表
                     else
@@ -60,7 +60,7 @@ namespace Auth.Repository.DapperExtension
             }
             else
             {
-                throw new Exception("没有要查询的表！");
+                throw new Exception("No table to query！");
             }
 
             // 数据连接对象名称
@@ -74,11 +74,11 @@ namespace Auth.Repository.DapperExtension
             if(name.Equals("mysqlconnection"))
             {
                 // total
-                pagination.Total = (int)connection.ExecuteScalar($"SELECT COUNT(*) FROM({sql}) AS aluneth", parameters);
+                pagination.Total = (long)connection.ExecuteScalar($"SELECT COUNT(*) FROM {sql}", parameters);
 
                 // paged list
-                long timestamp= (long)connection.ExecuteScalar($"SELECT IFNULL(MIN(Timestamp), UNIX_TIMESTAMP()) FROM ({sql} LIMIT {(pagination.Page - 1) * pagination.PageSize}, 1) AS aluneth", parameters);
-                list = connection.Query<T>($"SELECT * FROM ({sql}) AS aluneth WHERE createdTime <= {timestamp} LIMIT {pagination.PageSize}", parameters);
+                long timestamp= (long)connection.ExecuteScalar($"SELECT IFNULL(MIN(Timestamp), UNIX_TIMESTAMP()) FROM ({sql} LIMIT {(pagination.Page - 1) * pagination.ItemsPerPage}, 1) AS aluneth", parameters);
+                list = connection.Query<T>($"SELECT * FROM ({sql}) AS aluneth WHERE createdTime <= {timestamp} LIMIT {pagination.ItemsPerPage}", parameters);
             }
             // sqlserver数据库
             else if(name.Equals("sqlconnection"))

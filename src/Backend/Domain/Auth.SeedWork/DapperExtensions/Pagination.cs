@@ -14,11 +14,11 @@ namespace Auth.SeedWork.DapperExtensions
         /// <summary>
         /// 每页数量
         /// </summary>
-        public int PageSize { get; set; }
+        public int ItemsPerPage { get; set; }
 
         /// <summary>
         /// 总数
         /// </summary>
-        public int Total { get; set; }
+        public long Total { get; set; }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Auth.Application.Commands.System.Setting;
 using Auth.Entity.System;
 using Auth.IRepository.ISetting;
+using Auth.SeedWork.DapperExtensions;
 using AutoMapper;
 using MediatR;
 
@@ -98,9 +100,9 @@ namespace Auth.Application.Handlers.System
         /// <returns></returns>
         public async Task<string> Handle(QueryRequest request, CancellationToken cancellationToken)
         {
-            //var result = SettingRepository.GetPagedList();
+            IEnumerable<Setting> list = await SettingRepository.GetPagedList(new Pagination(), new List<string>(), new { });
 
-            return await Task.FromResult("Result");
+            return await Task.FromResult("查询成功");
         }
     }
 }

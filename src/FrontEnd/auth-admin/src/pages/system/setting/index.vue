@@ -19,10 +19,10 @@
                       ></v-select>
                     </v-flex>
                     <v-flex md3 sm6 xs12>
-                      <v-text-field label="字典文本"></v-text-field>
+                      <v-text-field label="字典文本" v-model="setting.text"></v-text-field>
                     </v-flex>
                     <v-flex md3 sm6 xs12>
-                      <v-text-field label="字典值"></v-text-field>
+                      <v-text-field label="字典值" v-model="setting.value"></v-text-field>
                     </v-flex>
                     <v-flex md12 sm12 xs12>
                       <v-toolbar flat>
@@ -122,9 +122,15 @@ export default class Index extends Vue {
       ],
     },
   };
-  page = 1;
-  pageCount = 0;
-  itemsPerPage = 5;
+  query = {
+    page: 1,
+    pageCount: 0,
+    itemsPerPage: 5,
+    model: {
+      text: this.setting.text,
+      value: this.setting.value
+    }
+  };
   headers: any[] = [
     {
       text: "序号",

@@ -40,25 +40,25 @@ namespace Auth.Repository.DapperExtension
                 foreach (Table item in tables)
                 {
                     // 别名为null，默认添加别名
-                    item.Alias = string.IsNullOrEmpty(item.Alias) ? $"var{count++}" : item.Alias;
+                    item.Alias = string.IsNullOrEmpty(item.Alias) ? $"{item.Name}{count++}" : item.Alias;
 
                     // 主表
                     if (!item.JoinType.HasValue)
                     {
-                        sql += $" (SELECT {string.Join(",", item.Fields)} FROM {item.Name} WHERE {string.Join(" AND ", item.Wheres)}) AS {item.Alias}";
+                        sql += $" (SELECT {string.Join(",", item.Fields)}, Timestamp FROM {item.Name} WHERE 1=1 {string.Join(" AND ", item.Wheres)}) AS {item.Alias}";
                     }
                     // 关联表
                     else
                     {
                         sql += $" {Enum.GetName(typeof(JoinType), (int)item.JoinType)} JOIN (SELECT " +
-                            $"{string.Join(",", item.Fields)} FROM {item.Name} WHERE {string.Join(" AND ", item.Wheres)}) AS {item.Alias} " +
+                            $"{string.Join(",", item.Fields)} FROM {item.Name} WHERE 1=1 {string.Join(" AND ", item.Wheres)}) AS {item.Alias} " +
                             $" ON {tables[count - 1].Alias}.{tables[count - 1].JoinField} = {item.Alias}.{item.JoinField}";
                     }
                 }
             }
             else
             {
-                throw new Exception("没有要查询的表！");
+                throw new Exception("No table to query！");
             }
 
             // 数据连接对象名称
@@ -72,11 +72,11 @@ namespace Auth.Repository.DapperExtension
             if (name.Equals("mysqlconnection"))
             {
                 // total
-                pagination.Total = (int)await connection.ExecuteScalarAsync($"SELECT COUNT(*) FROM({sql}) AS aluneth", parameters);
+                pagination.Total = (long)await connection.ExecuteScalarAsync($"SELECT COUNT(*) FROM(SELECT * FROM ({sql}) AS `sql`) AS source", parameters);
 
                 // paged list
-                long timestamp = (long)await connection.ExecuteScalarAsync($"SELECT IFNULL(MIN(Timestamp), UNIX_TIMESTAMP()) FROM ({sql} LIMIT {(pagination.Page - 1) * pagination.PageSize}, 1) AS aluneth", parameters);
-                list = await connection.QueryAsync<T>($"SELECT * FROM ({sql}) AS aluneth WHERE createdTime <= {timestamp} LIMIT {pagination.PageSize}", parameters);
+                long timestamp = (long)await connection.ExecuteScalarAsync($"SELECT IFNULL(MIN(Timestamp), UNIX_TIMESTAMP()) FROM (SELECT * FROM ({sql}) AS `sql` LIMIT {(pagination.Page - 1) * pagination.ItemsPerPage}, 1) AS source", parameters);
+                list = await connection.QueryAsync<T>($"SELECT * FROM ({sql}) AS aluneth WHERE createdTime <= {timestamp} LIMIT {pagination.ItemsPerPage}", parameters);
             }
             // sqlserver数据库
             else if (name.Equals("sqlconnection"))

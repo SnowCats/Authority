@@ -40,7 +40,7 @@ namespace Auth.Repository.System
 
                 tables.Add(new Table
                 {
-                     Name = $"sys_setting",
+                     Name = $"sys_settings",
                      Alias = "st",
                      Fields = new List<string> {
                          nameof(Setting.ID),
@@ -55,7 +55,7 @@ namespace Auth.Repository.System
                      Wheres = Wheres
                 });
 
-                var list = await UnitOfWork.Connection.GetPagedListAsync<Setting>(tables, pagination);
+                var list = await UnitOfWork.Connection.GetPagedListAsync<Setting>(tables, pagination, parameters);
 
                 return list;
             }
