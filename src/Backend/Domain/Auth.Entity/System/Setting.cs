@@ -1,6 +1,6 @@
 ﻿using System;
 using Auth.ValueObjects;
-using Dapper.Contrib.Extensions;
+using Dapper.Contrib.Plus;
 
 namespace Auth.Entity.System
 {

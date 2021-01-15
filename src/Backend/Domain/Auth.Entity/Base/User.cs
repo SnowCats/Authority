@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Dapper.Contrib.Extensions;
+using Dapper.Contrib.Plus;
 
 namespace Auth.Entity.Base
 {

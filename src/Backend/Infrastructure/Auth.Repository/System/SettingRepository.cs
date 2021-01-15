@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 using Auth.Entity.System;
 using Auth.IRepository;
 using Auth.IRepository.ISetting;
-using Auth.Repository.DapperExtension;
 using Auth.SeedWork.DapperExtensions;
-using static Auth.Repository.DapperExtension.SqlMapperExtensions;
+using Dapper.Contrib.Plus;
 
 namespace Auth.Repository.System
 {
@@ -55,9 +54,9 @@ namespace Auth.Repository.System
                      Wheres = Wheres
                 });
 
-                var list = await UnitOfWork.Connection.GetPagedListAsync<Setting>(tables, pagination, parameters);
+                //var list = await UnitOfWork.Connection.GetListAsync<Setting>(tables, pagination, parameters);
 
-                return list;
+                return new List<Setting>();
             }
         }
     }

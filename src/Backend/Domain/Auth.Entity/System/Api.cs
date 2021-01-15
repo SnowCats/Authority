@@ -1,5 +1,5 @@
 ﻿using System;
-using Dapper.Contrib.Extensions;
+using Dapper.Contrib.Plus;
 
 namespace Auth.Entity.System
 {
@@ -47,6 +47,7 @@ namespace Auth.Entity.System
         /// <summary>
         /// 创建人
         /// </summary>
+        [IgnoreUpdate]
         public Guid? CreatedBy { get; set; }
 
         /// <summary>

@@ -13,11 +13,6 @@ namespace Auth.Repository
     public class UnitOfWork : IUnitOfWork
     {
         /// <summary>
-        /// 主键
-        /// </summary>
-        Guid id = Guid.Empty;
-
-        /// <summary>
         /// 配置对象
         /// </summary>
         private IConfiguration Configuration;
@@ -25,17 +20,17 @@ namespace Auth.Repository
         /// <summary>
         /// 数据库连接对象(写)
         /// </summary>
-        IDbConnection connection;
+        public static IDbConnection connection;
 
         /// <summary>
         /// 数据库连接对象(读)
         /// </summary>
-        IDbConnection dbConnection;
+        public static IDbConnection dbConnection;
 
         /// <summary>
         /// 数据库事务对象
         /// </summary>
-        IDbTransaction transaction;
+        public static IDbTransaction transaction;
 
         /// <summary>
         /// Constructor
@@ -45,11 +40,7 @@ namespace Auth.Repository
             // 配置对象
             Configuration = configuration;
 
-            // 主键
-            id = Guid.NewGuid();
-
             // 初始化数据库连接
-
             if (int.TryParse(Configuration.GetConnectionString("DefaultDB"), out int dbType))
             {
                 if (dbType == (int)DbType.MySql)
@@ -76,7 +67,7 @@ namespace Auth.Repository
         {
             get
             {
-                return id;
+                return Guid.NewGuid();
             }
         }
 

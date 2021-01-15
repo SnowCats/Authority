@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Auth.IRepository;
-using Auth.Repository.DapperExtension;
-using Dapper.Contrib.Extensions;
+using Dapper.Contrib.Plus;
 
 namespace Auth.Repository
 {
@@ -169,7 +168,7 @@ namespace Auth.Repository
         {
             using (UnitOfWork.DbConnection)
             {
-                var list = await UnitOfWork.DbConnection.GetListByWhereAsync<T>(new List<string> { field }, $"WHERE {field}=@Value", new { Value = value });
+                var list = await UnitOfWork.DbConnection.GetListAsync<T>($"WHERE {field}=@Value", new { Value = value }, new List<string> { field });
 
                 return list != null && list.Any();
             }
