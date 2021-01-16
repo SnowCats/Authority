@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Auth.IRepository;
+using Dapper;
 using Dapper.Contrib.Plus;
 
 namespace Auth.Repository
@@ -171,6 +173,41 @@ namespace Auth.Repository
                 var list = await UnitOfWork.DbConnection.GetListAsync<T>($"WHERE {field}=@Value", new { Value = value }, new List<string> { field });
 
                 return list != null && list.Any();
+            }
+        }
+
+        /// <summary>
+        /// GetPagedList
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="page">页码</param>
+        /// <param name="itemsPerPage">页数</param>
+        /// <param name="fields">字段</param>
+        /// <param name="conditions">条件</param>
+        /// <param name="parameters">参数</param>
+        /// <param name="defaultField">默认分页字段</param>
+        /// <param name="transaction">事务</param>
+        /// <param name="commandTimeout">超时</param>
+        /// <returns></returns>
+        public async Task<IEnumerable<T>> GetPagedListAsync<T>(IDbConnection connection, int page, int itemsPerPage, List<string> fields = null,
+            string conditions = "", object parameters = null, string defaultField = "timestamp", string orderBy = "timestamp desc", IDbTransaction transaction = null, int? commandTimeout = null)
+            where T : class, new()
+        {
+            try
+            {
+                string name = (typeof(T).GetCustomAttributes(false).FirstOrDefault(attr => attr.GetType().Name == "TableAttribute") as dynamic)?.Name;
+                string field = fields == null ? "*" : string.Join(",", fields);
+
+                // mysql数据库
+                long timestamp = (long)connection.ExecuteScalar($"select ifnull(min({defaultField}), unix_timestamp()) from {name} where 1=1 {conditions} limit {(page - 1) * itemsPerPage}, 1", parameters);
+                var list = await UnitOfWork.Connection.QueryAsync<T>($"select {field} from {name} where 1=1 {conditions} and {defaultField} <= {timestamp} limit {(page - 1) * itemsPerPage}, {itemsPerPage}", parameters, transaction, commandTimeout: commandTimeout);
+
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }

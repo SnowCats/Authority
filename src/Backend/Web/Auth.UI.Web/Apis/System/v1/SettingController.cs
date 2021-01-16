@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Auth.Application.Commands.System.Setting;
 using Auth.Dto.System;
@@ -75,7 +77,7 @@ namespace Auth.UI.Web.Apis.System.v1
         [HttpPost]
         public async Task<object> GetPagedListAsync(QueryRequest request)
         {
-            string result = await Mediator.Send(request);
+            IEnumerable<SettingDto> result = await Mediator.Send(request);
 
             return result;
         }

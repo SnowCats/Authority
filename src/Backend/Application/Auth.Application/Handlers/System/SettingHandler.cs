@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Auth.Application.Commands.System.Setting;
+using Auth.Dto.System;
 using Auth.Entity.System;
 using Auth.IRepository.ISetting;
 using Auth.SeedWork.DapperExtensions;
@@ -17,7 +18,7 @@ namespace Auth.Application.Handlers.System
     public class SettingHandler : IRequestHandler<CreateRequest, Guid?>,
         IRequestHandler<UpdateRequest, bool>,
         IRequestHandler<DeleteRequest, bool>,
-        IRequestHandler<QueryRequest, string>
+        IRequestHandler<QueryRequest, IEnumerable<SettingDto>>
     {
         /// <summary>
         /// 数据字典仓储接口
@@ -83,10 +84,7 @@ namespace Auth.Application.Handlers.System
         /// <returns></returns>
         public async Task<bool> Handle(UpdateRequest request, CancellationToken cancellationToken)
         {
-            //var result1 = SettingRepository.GetPagedList();
-
             Setting setting = mapper.Map<Setting>(request.SettingDto);
-
             bool result = await SettingRepository.UpdateAsync(setting);
 
             return result;
@@ -98,11 +96,12 @@ namespace Auth.Application.Handlers.System
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<string> Handle(QueryRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SettingDto>> Handle(QueryRequest request, CancellationToken cancellationToken)
         {
-            IEnumerable<Setting> list = await SettingRepository.GetPagedList(new Pagination(), new List<string>(), new { });
+            IEnumerable<Setting> list = await SettingRepository.GetPagedList(request, new List<string>(), new { });
+            IEnumerable<SettingDto> dtos = mapper.Map<IEnumerable<SettingDto>>(list);
 
-            return await Task.FromResult("查询成功");
+            return dtos;
         }
     }
 }

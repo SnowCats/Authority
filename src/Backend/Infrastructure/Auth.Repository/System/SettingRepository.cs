@@ -33,30 +33,11 @@ namespace Auth.Repository.System
         /// <returns></returns>
         public async Task<IEnumerable<Setting>> GetPagedList(Pagination pagination, List<string> Wheres, object parameters)
         {
-            using (UnitOfWork.Connection)
+            using(UnitOfWork.Connection)
             {
-                List<Table> tables = new List<Table>();
+                var list = await GetPagedListAsync<Setting>(UnitOfWork.Connection, pagination.Page, pagination.ItemsPerPage);
 
-                tables.Add(new Table
-                {
-                     Name = $"sys_settings",
-                     Alias = "st",
-                     Fields = new List<string> {
-                         nameof(Setting.ID),
-                         nameof(Setting.ParentValue),
-                         nameof(Setting.Value),
-                         nameof(Setting.Text),
-                         nameof(Setting.Status),
-                         nameof(Setting.Notes),
-                         nameof(Setting.CreatedOn),
-                         nameof(Setting.CreatedBy)
-                     },
-                     Wheres = Wheres
-                });
-
-                //var list = await UnitOfWork.Connection.GetListAsync<Setting>(tables, pagination, parameters);
-
-                return new List<Setting>();
+                return list;
             }
         }
     }
