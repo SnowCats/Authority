@@ -1,15 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Loader;
-using Auth.Application.Commands.Base.User;
-using Auth.Application.Handlers.Base;
-using Auth.Core.Utility;
-using Auth.IRepository;
-using Auth.IRepository.IBase;
-using Auth.Repository;
-using Auth.Repository.Base;
+using Auth.Utility;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -32,7 +24,7 @@ namespace Auth.Core.DI
             services.AddTransient<IMediator, Mediator>();
 
             // MediatR Handler服务程序注入
-            IEnumerable<Type> handlers = BaseUtility.GetAssembly("Auth.Application")
+            IEnumerable<Type> handlers = AssemblyUtility.GetAssembly("Auth.Application")
                 .ExportedTypes
                 .Where(s => s.GetInterfaces()
                     .Where(x => x.Namespace.Equals("MediatR")
@@ -57,7 +49,7 @@ namespace Auth.Core.DI
             #region 批量注入仓储服务
 
             // 仓储类
-            IEnumerable<Type> repositories = BaseUtility.GetAssembly("Auth.Repository")
+            IEnumerable<Type> repositories = AssemblyUtility.GetAssembly("Auth.Repository")
                 .ExportedTypes
                 .Where(s => s.IsClass && !s.IsSealed);
 

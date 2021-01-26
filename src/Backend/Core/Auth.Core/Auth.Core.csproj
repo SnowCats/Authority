@@ -9,7 +9,6 @@
     <Folder Include="IdentityServer4\" />
     <Folder Include="Swagger\" />
     <Folder Include="AutoMapper\" />
-    <Folder Include="Utility\" />
     <Folder Include="DI\" />
   </ItemGroup>
   <ItemGroup>
@@ -21,5 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\Auth.Repository\Auth.Repository.csproj" />
     <ProjectReference Include="..\..\Application\Auth.Application\Auth.Application.csproj" />
+    <ProjectReference Include="..\Auth.Utility\Auth.Utility.csproj" />
   </ItemGroup>
 </Project>

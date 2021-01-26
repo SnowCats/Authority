@@ -1,4 +1,6 @@
 ﻿using System;
+using Auth.Utility;
+
 namespace Auth.Dto.System
 {
     /// <summary>
@@ -29,12 +31,12 @@ namespace Auth.Dto.System
         /// <summary>
         /// 数据时间戳
         /// </summary>
-        public long Timestamp { get; set; }
+        public long Timestamp { get; set; } = DateUtility.UnixTimestampFromTime();
 
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime? CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; set; } = DateTime.Now;
 
         /// <summary>
         /// 创建人
@@ -44,7 +46,7 @@ namespace Auth.Dto.System
         /// <summary>
         /// 修改时间
         /// </summary>
-        public DateTime? ModifiedOn { get; set; }
+        public DateTime? ModifiedOn { get; set; } = DateTime.Now;
 
         /// <summary>
         /// 修改人

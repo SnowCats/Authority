@@ -34,7 +34,7 @@ namespace Auth.Dto.System
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime? CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; set; } = DateTime.Now;
 
         /// <summary>
         /// 创建人
@@ -44,7 +44,7 @@ namespace Auth.Dto.System
         /// <summary>
         /// 修改时间
         /// </summary>
-        public DateTime? ModifiedOn { get; set; }
+        public DateTime? ModifiedOn { get; set; } = DateTime.Now;
 
         /// <summary>
         /// 修改人

@@ -1,4 +1,6 @@
 ﻿using System;
+using Auth.Utility;
+
 namespace Auth.Dto.Base
 {
     /// <summary>
@@ -29,7 +31,7 @@ namespace Auth.Dto.Base
         /// <summary>
         /// 数据时间戳
         /// </summary>
-        public long Timestamp { get; set; }
+        public long Timestamp { get; set; } = DateUtility.UnixTimestampFromTime();
 
         /// <summary>
         /// 创建时间
