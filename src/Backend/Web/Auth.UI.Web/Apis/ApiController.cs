@@ -15,6 +15,7 @@ namespace Auth.UI.Web.Apis
     /// </summary>
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [ApiExplorerSettings(GroupName = "v1")]
     [EnableCors("auth-admin")]
     public class ApiController : Controller
     {

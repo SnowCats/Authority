@@ -19,10 +19,6 @@
     <Folder Include="Apis\" />
     <Folder Include="Apis\Base\" />
     <Folder Include="Apis\System\" />
-    <Folder Include="Apis\Base\v1\" />
-    <Folder Include="Apis\System\v1\" />
-    <Folder Include="Apis\Base\v2\" />
-    <Folder Include="Apis\System\v2\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MediatR" Version="9.0.0" />

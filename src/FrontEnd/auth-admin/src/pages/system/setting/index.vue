@@ -60,8 +60,8 @@
                 <v-data-table
                   :headers="headers"
                   :items="desserts"
-                  :page.sync="page"
-                  :items-per-page="itemsPerPage"
+                  :page.sync="pagination.page"
+                  :items-per-page="pagination.itemsPerPage"
                   hide-default-footer
                   class="elevation-1"
                   @page-count="pageCount = $event"
@@ -77,8 +77,8 @@
                 </v-data-table>
                 <div class="text-center pt-2">
                   <v-pagination
-                    v-model="page"
-                    :length="pageCount"
+                    v-model="pagination.page"
+                    :length="pagination.pageCount"
                   ></v-pagination>
                 </div>
               </template>
@@ -94,7 +94,7 @@
 import Setting from '@/types/system/setting';
 import Vue from "vue";
 import Component from "vue-class-component";
-import VWidget from "../../../components/VWidget.vue";
+import VWidget from "../../../components/v-widget.vue";
 import User from "../../../types/base/user";
 
 // 组件注入
@@ -121,6 +121,11 @@ export default class Index extends Vue {
         },
       ],
     },
+  };
+  pagination = {
+    page: 1,
+    pageCount: 0,
+    itemsPerPage: 5,
   };
   query = {
     page: 1,

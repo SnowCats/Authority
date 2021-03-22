@@ -106,7 +106,9 @@ export default class Layout extends Vue {
   /* Methods */
   // 跳转
   to(href: string): void {
-    this.$router.push(href);
+    if(this.$route.name !== 'navbar') {
+      this.$router.push(href);
+    }
   }
   // 切换语言
   setLanguage(lang: Locales): void {

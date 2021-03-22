@@ -7,7 +7,7 @@ using Auth.Dto.System;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Auth.UI.Web.Apis.System.v1
+namespace Auth.UI.Web.Apis.System
 {
     /// <summary>
     /// 数据字典接口

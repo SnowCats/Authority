@@ -96,7 +96,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import VWidget from "../../../components/VWidget.vue";
+import VWidget from "../../../components/v-widget.vue";
 import User from "../../../types/base/user";
 
 // 组件注入

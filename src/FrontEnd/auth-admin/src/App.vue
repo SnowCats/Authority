@@ -12,7 +12,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import Layout from "./components/layouts/Layout.vue";
+import Layout from "./components/layouts/layout.vue";
 
 // 组件注入
 @Component({
