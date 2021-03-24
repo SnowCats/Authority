@@ -5,12 +5,11 @@ import Router from 'vue-router';
 Vue.use(Router);
 
 // 解决路由重复控制台报错问题
-const originalPush = VueRouter.prototype.push
+const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function (location: string): any {
-  return (originalPush.call(this, location) as any).catch((err: any) => err);
+    return (originalPush.call(this, location) as any).catch((err: any) => err);
 };
 
-// 路由
 export default new Router({
     mode: 'history',
     base: process.env.BASE_URL,

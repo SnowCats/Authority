@@ -29,6 +29,15 @@
                         <v-spacer></v-spacer>
                         <v-btn
                           tile
+                          color="indigo"
+                          class="white--text"
+                          @click="add"
+                        >
+                          <v-icon left>mdi-plus</v-icon>
+                          新增
+                        </v-btn>
+                        <v-btn
+                          tile
                           color="#01579B"
                           class="white--text"
                           @click="search"
@@ -43,19 +52,6 @@
               </template>
             </v-widget>
             <v-widget title="数据字典列表">
-              <template slot="widget-header-action">
-                <v-spacer></v-spacer>
-                <v-btn
-                  depressed
-                  color="indigo"
-                  class="white--text"
-                  fab
-                  x-small
-                  @click="add"
-                  text-right
-                  ><v-icon>mdi-plus</v-icon>
-                </v-btn>
-              </template>
               <template slot="widget-content">
                 <v-data-table
                   :headers="headers"
