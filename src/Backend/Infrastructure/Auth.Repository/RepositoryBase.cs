@@ -42,9 +42,9 @@ namespace Auth.Repository
         /// <typeparam name="T">返回实体类型</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        public bool Delete<T>(T t) where T : class, new()
+        public bool Delete<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            var result = UnitOfWork.WriteConnection.Delete(t);
+            var result = UnitOfWork.WriteConnection.Delete(t, transaction);
 
             return result;
         }
@@ -55,9 +55,9 @@ namespace Auth.Repository
         /// <typeparam name="T">返回实体类型</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        public async Task<bool> DeleteAsync<T>(T t) where T : class, new()
+        public async Task<bool> DeleteAsync<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            var result = await UnitOfWork.WriteConnection.DeleteAsync(t, UnitOfWork.Transaction);
+            var result = await UnitOfWork.WriteConnection.DeleteAsync(t, transaction);
 
             return result;
         }
@@ -68,10 +68,10 @@ namespace Auth.Repository
         /// <typeparam name="T">返回实体类型</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        public Guid Insert<T>(T t) where T : SeedWork.Entity
+        public Guid Insert<T>(T t, IDbTransaction transaction = null) where T : SeedWork.Entity
         {
             t.ID = UnitOfWork.Id;
-            UnitOfWork.WriteConnection.Insert(t, UnitOfWork.Transaction);
+            UnitOfWork.WriteConnection.Insert(t, transaction);
 
             return t.ID;
         }
@@ -82,10 +82,10 @@ namespace Auth.Repository
         /// <typeparam name="T">返回实体类型</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        public async Task<Guid> InsertAsync<T>(T t) where T : SeedWork.Entity
+        public async Task<Guid> InsertAsync<T>(T t, IDbTransaction transaction = null) where T : SeedWork.Entity
         {
             t.ID = UnitOfWork.Id;
-            await UnitOfWork.WriteConnection.InsertAsync(t);
+            await UnitOfWork.WriteConnection.InsertAsync(t, transaction);
 
             return t.ID;
         }
@@ -96,9 +96,9 @@ namespace Auth.Repository
         /// <typeparam name="T">返回实体类型</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        public bool Update<T>(T t) where T : class, new()
+        public bool Update<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            bool result = UnitOfWork.WriteConnection.Update(t, UnitOfWork.Transaction);
+            bool result = UnitOfWork.WriteConnection.Update(t, transaction);
 
             return result;
         }
@@ -109,9 +109,9 @@ namespace Auth.Repository
         /// <typeparam name="T">返回实体类型</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        public async Task<bool> UpdateAsync<T>(T t) where T : class, new()
+        public async Task<bool> UpdateAsync<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            var result = await UnitOfWork.WriteConnection.UpdateAsync(t, UnitOfWork.Transaction);
+            var result = await UnitOfWork.WriteConnection.UpdateAsync(t, transaction);
 
             return result;
         }
@@ -122,9 +122,9 @@ namespace Auth.Repository
         /// <typeparam name="T"></typeparam>
         /// <param name="t"></param>
         /// <returns></returns>
-        public async Task<bool> HasValueAsync<T>(string field, string value) where T : class, new()
+        public async Task<bool> HasValueAsync<T>(string field, string value, IDbTransaction transaction = null) where T : class, new()
         {
-            var list = await UnitOfWork.ReadConnection.GetListAsync<T>($"WHERE {field}=@Value", new { Value = value }, new List<string> { field });
+            var list = await UnitOfWork.ReadConnection.GetListAsync<T>($"WHERE {field}=@Value", new { Value = value }, new List<string> { field }, transaction);
 
             return list != null && list.Any();
         }
@@ -153,8 +153,10 @@ namespace Auth.Repository
                 string field = fields == null ? "*" : string.Join(",", fields);
 
                 // mysql数据库
-                long timestamp = (long)connection.ExecuteScalar($"select ifnull(min({defaultField}), unix_timestamp()) from {name} where 1=1 {conditions} limit {(page - 1) * itemsPerPage}, 1", parameters);
-                var list = await connection.QueryAsync<T>($"select {field} from {name} where 1=1 {conditions} and {defaultField} <= {timestamp} limit {(page - 1) * itemsPerPage}, {itemsPerPage}", parameters, transaction, commandTimeout: commandTimeout);
+                long timestamp = (long)connection.ExecuteScalar($"select ifnull(min({defaultField}), unix_timestamp()) from {name} where 1=1 {conditions} limit {(page - 1) * itemsPerPage}, 1",
+                    parameters, transaction, commandTimeout);
+                var list = await connection.QueryAsync<T>($"select {field} from {name} where 1=1 {conditions} and {defaultField} <= {timestamp} limit {(page - 1) * itemsPerPage}, {itemsPerPage}",
+                    parameters, transaction, commandTimeout: commandTimeout);
 
                 return list;
             }
