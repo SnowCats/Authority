@@ -33,12 +33,9 @@ namespace Auth.Repository.System
         /// <returns></returns>
         public async Task<IEnumerable<Setting>> GetPagedList(Pagination pagination, List<string> Wheres, object parameters)
         {
-            using(UnitOfWork.Connection)
-            {
-                var list = await GetPagedListAsync<Setting>(UnitOfWork.Connection, pagination.Page, pagination.ItemsPerPage);
+            var list = await GetPagedListAsync<Setting>(UnitOfWork.ReadConnection, pagination.Page, pagination.ItemsPerPage);
 
-                return list;
-            }
+            return list;
         }
     }
 }

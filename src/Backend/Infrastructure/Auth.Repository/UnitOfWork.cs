@@ -20,12 +20,12 @@ namespace Auth.Repository
         /// <summary>
         /// 数据库连接对象(写)
         /// </summary>
-        public static IDbConnection connection;
+        public static IDbConnection writeConnection;
 
         /// <summary>
         /// 数据库连接对象(读)
         /// </summary>
-        public static IDbConnection dbConnection;
+        public static IDbConnection readConnection;
 
         /// <summary>
         /// 数据库事务对象
@@ -45,13 +45,13 @@ namespace Auth.Repository
             {
                 if (dbType == (int)DbType.MySql)
                 {
-                    connection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString:Write"));
-                    dbConnection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString:Read"));
+                    writeConnection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString:Write"));
+                    readConnection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString:Read"));
                 }
                 else if (dbType == (int)DbType.SqlServer)
                 {
-                    connection = new SqlConnection(Configuration.GetConnectionString("SqlServerConnectionString:Write"));
-                    dbConnection = new SqlConnection(Configuration.GetConnectionString("SqlServerConnectionString:Read"));
+                    writeConnection = new SqlConnection(Configuration.GetConnectionString("SqlServerConnectionString:Write"));
+                    readConnection = new SqlConnection(Configuration.GetConnectionString("SqlServerConnectionString:Read"));
                 }
             }
             else
@@ -74,22 +74,22 @@ namespace Auth.Repository
         /// <summary>
         /// IUnitOfWork数据库连接对象(写)
         /// </summary>
-        IDbConnection IUnitOfWork.Connection
+        IDbConnection IUnitOfWork.WriteConnection
         {
             get
             {
-                return connection;
+                return writeConnection;
             }
         }
 
         /// <summary>
         /// IUnitOfWork数据库连接对象(读)
         /// </summary>
-        IDbConnection IUnitOfWork.DbConnection
+        IDbConnection IUnitOfWork.ReadConnection
         {
             get
             {
-                return dbConnection;
+                return readConnection;
             }
         }
 
@@ -111,18 +111,18 @@ namespace Auth.Repository
         /// </summary>
         public void Begin()
         {
-            if(connection.State == ConnectionState.Closed)
+            if(writeConnection.State == ConnectionState.Closed)
             {
-                connection.Open();
+                writeConnection.Open();
             }
 
-            transaction = connection.BeginTransaction();
+            transaction = writeConnection.BeginTransaction();
         }
 
         /// <summary>
         /// 提交事务
         /// </summary>
-        public void Commit()
+        public void Complete()
         {
             try
             {

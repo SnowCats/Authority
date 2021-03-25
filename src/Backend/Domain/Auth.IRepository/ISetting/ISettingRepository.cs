@@ -9,7 +9,7 @@ namespace Auth.IRepository.ISetting
     /// <summary>
     /// 数据字典仓储接口
     /// </summary>
-    public interface ISettingRepository : IRepository
+    public interface ISettingRepository : IRepositoryBase
     {
         /// <summary>
         /// 数据字典分页列表

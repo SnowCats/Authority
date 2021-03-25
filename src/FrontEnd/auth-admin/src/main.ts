@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify';
 import router from './router';
+import './assets/variables/app.scss';
+import './assets/mixins/mixins.scss';
 
 Vue.config.productionTip = false;
 

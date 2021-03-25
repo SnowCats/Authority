@@ -12,7 +12,7 @@ namespace Auth.Repository
     /// <summary>
     /// 仓储类
     /// </summary>
-    public class Repository : IRepository.IRepository
+    public class RepositoryBase : IRepositoryBase
     {
         /// <summary>
         /// UnitOfWork
@@ -22,7 +22,7 @@ namespace Auth.Repository
         /// <summary>
         /// Empty Constructor
         /// </summary>
-        public Repository()
+        public RepositoryBase()
         {
 
         }
@@ -31,7 +31,7 @@ namespace Auth.Repository
         /// Constructor
         /// </summary>
         /// <param name="_unitOfWork">工作单元</param>
-        public Repository(IUnitOfWork unitOfWork)
+        public RepositoryBase(IUnitOfWork unitOfWork)
         {
             UnitOfWork = unitOfWork;
         }
@@ -44,16 +44,9 @@ namespace Auth.Repository
         /// <returns></returns>
         public bool Delete<T>(T t) where T : class, new()
         {
-            using(UnitOfWork.Connection)
-            {
-                UnitOfWork.Begin();
+            var result = UnitOfWork.WriteConnection.Delete(t);
 
-                var result = UnitOfWork.Connection.Delete(t, UnitOfWork.Transaction);
-
-                UnitOfWork.Commit();
-
-                return result;
-            }
+            return result;
         }
 
         /// <summary>
@@ -64,16 +57,9 @@ namespace Auth.Repository
         /// <returns></returns>
         public async Task<bool> DeleteAsync<T>(T t) where T : class, new()
         {
-            using (UnitOfWork.Connection)
-            {
-                UnitOfWork.Begin();
+            var result = await UnitOfWork.WriteConnection.DeleteAsync(t, UnitOfWork.Transaction);
 
-                var result = await UnitOfWork.Connection.DeleteAsync(t, UnitOfWork.Transaction);
-
-                UnitOfWork.Commit();
-
-                return result;
-            }
+            return result;
         }
 
         /// <summary>
@@ -85,17 +71,9 @@ namespace Auth.Repository
         public Guid Insert<T>(T t) where T : SeedWork.Entity
         {
             t.ID = UnitOfWork.Id;
+            UnitOfWork.WriteConnection.Insert(t, UnitOfWork.Transaction);
 
-            using (UnitOfWork.Connection)
-            {
-                UnitOfWork.Begin();
-
-                UnitOfWork.Connection.Insert(t, UnitOfWork.Transaction);
-
-                UnitOfWork.Commit();
-
-                return t.ID;
-            }
+            return t.ID;
         }
 
         /// <summary>
@@ -107,17 +85,9 @@ namespace Auth.Repository
         public async Task<Guid> InsertAsync<T>(T t) where T : SeedWork.Entity
         {
             t.ID = UnitOfWork.Id;
+            await UnitOfWork.WriteConnection.InsertAsync(t);
 
-            using (UnitOfWork.Connection)
-            {
-                UnitOfWork.Begin();
-
-                await UnitOfWork.Connection.InsertAsync(t);
-
-                UnitOfWork.Commit();
-
-                return t.ID;
-            }
+            return t.ID;
         }
 
         /// <summary>
@@ -128,16 +98,9 @@ namespace Auth.Repository
         /// <returns></returns>
         public bool Update<T>(T t) where T : class, new()
         {
-            using (UnitOfWork.Connection)
-            {
-                UnitOfWork.Begin();
+            bool result = UnitOfWork.WriteConnection.Update(t, UnitOfWork.Transaction);
 
-                bool result = UnitOfWork.Connection.Update(t, UnitOfWork.Transaction);
-
-                UnitOfWork.Commit();
-
-                return result;
-            }
+            return result;
         }
 
         /// <summary>
@@ -148,16 +111,9 @@ namespace Auth.Repository
         /// <returns></returns>
         public async Task<bool> UpdateAsync<T>(T t) where T : class, new()
         {
-            using (UnitOfWork.Connection)
-            {
-                UnitOfWork.Begin();
+            var result = await UnitOfWork.WriteConnection.UpdateAsync(t, UnitOfWork.Transaction);
 
-                var result = await UnitOfWork.Connection.UpdateAsync(t, UnitOfWork.Transaction);
-
-                UnitOfWork.Commit();
-
-                return result;
-            }
+            return result;
         }
 
         /// <summary>
@@ -168,12 +124,9 @@ namespace Auth.Repository
         /// <returns></returns>
         public async Task<bool> HasValueAsync<T>(string field, string value) where T : class, new()
         {
-            using (UnitOfWork.DbConnection)
-            {
-                var list = await UnitOfWork.DbConnection.GetListAsync<T>($"WHERE {field}=@Value", new { Value = value }, new List<string> { field });
+            var list = await UnitOfWork.ReadConnection.GetListAsync<T>($"WHERE {field}=@Value", new { Value = value }, new List<string> { field });
 
-                return list != null && list.Any();
-            }
+            return list != null && list.Any();
         }
 
         /// <summary>
@@ -201,7 +154,7 @@ namespace Auth.Repository
 
                 // mysql数据库
                 long timestamp = (long)connection.ExecuteScalar($"select ifnull(min({defaultField}), unix_timestamp()) from {name} where 1=1 {conditions} limit {(page - 1) * itemsPerPage}, 1", parameters);
-                var list = await UnitOfWork.Connection.QueryAsync<T>($"select {field} from {name} where 1=1 {conditions} and {defaultField} <= {timestamp} limit {(page - 1) * itemsPerPage}, {itemsPerPage}", parameters, transaction, commandTimeout: commandTimeout);
+                var list = await connection.QueryAsync<T>($"select {field} from {name} where 1=1 {conditions} and {defaultField} <= {timestamp} limit {(page - 1) * itemsPerPage}, {itemsPerPage}", parameters, transaction, commandTimeout: commandTimeout);
 
                 return list;
             }

@@ -1,4 +1,4 @@
-# vuetify-admin
+# aluneth-admin
 
 ## Project setup
 ```

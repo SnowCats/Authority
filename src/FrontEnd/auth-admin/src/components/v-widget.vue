@@ -45,7 +45,7 @@ export default class VWidget extends VWidgetProps {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .v-widget {
   margin-bottom: 15px;
 

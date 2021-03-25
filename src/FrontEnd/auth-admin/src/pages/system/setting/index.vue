@@ -19,33 +19,36 @@
                       ></v-select>
                     </v-flex>
                     <v-flex md3 sm6 xs12>
-                      <v-text-field label="字典文本" v-model="setting.text"></v-text-field>
+                      <v-text-field
+                        label="字典文本"
+                        v-model="setting.text"
+                      ></v-text-field>
                     </v-flex>
                     <v-flex md3 sm6 xs12>
-                      <v-text-field label="字典值" v-model="setting.value"></v-text-field>
+                      <v-text-field
+                        label="字典值"
+                        v-model="setting.value"
+                      ></v-text-field>
                     </v-flex>
                     <v-flex md12 sm12 xs12>
-                      <v-toolbar flat>
-                        <v-spacer></v-spacer>
+                      <div class="text-right">
                         <v-btn
-                          tile
-                          color="indigo"
-                          class="white--text"
+                          color="green darken-2"
+                          class="white--text ma-2"
                           @click="add"
                         >
                           <v-icon left>mdi-plus</v-icon>
                           新增
                         </v-btn>
                         <v-btn
-                          tile
-                          color="#01579B"
-                          class="white--text"
+                          color="light-blue darken-2"
+                          class="white--text ma-2"
                           @click="search"
                         >
                           <v-icon left>mdi-magnify</v-icon>
                           查询
                         </v-btn>
-                      </v-toolbar>
+                      </div>
                     </v-flex>
                   </v-layout>
                 </v-container>
@@ -87,7 +90,7 @@
 </template>
 
 <script lang="ts">
-import Setting from '@/types/system/setting';
+import Setting from "@/types/system/setting";
 import Vue from "vue";
 import Component from "vue-class-component";
 import VWidget from "../../../components/v-widget.vue";
@@ -129,8 +132,8 @@ export default class Index extends Vue {
     itemsPerPage: 5,
     model: {
       text: this.setting.text,
-      value: this.setting.value
-    }
+      value: this.setting.value,
+    },
   };
   headers: any[] = [
     {

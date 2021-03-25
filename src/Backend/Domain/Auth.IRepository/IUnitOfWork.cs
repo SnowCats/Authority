@@ -16,12 +16,12 @@ namespace Auth.IRepository
         /// <summary>
         /// 数据库连接对象(读)
         /// </summary>
-        public IDbConnection DbConnection { get; }
+        public IDbConnection ReadConnection { get; }
 
         /// <summary>
         /// 数据库连接对象(写)
         /// </summary>
-        public IDbConnection Connection { get; }
+        public IDbConnection WriteConnection { get; }
 
         /// <summary>
         /// 数据库事务对象
@@ -36,7 +36,7 @@ namespace Auth.IRepository
         /// <summary>
         /// 提交事务
         /// </summary>
-        public void Commit();
+        public void Complete();
 
         /// <summary>
         /// 回滚事务

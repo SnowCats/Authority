@@ -118,7 +118,7 @@ export default class Layout extends Vue {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 button.translation {
   position: absolute;
   right: 15px;

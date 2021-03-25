@@ -29,18 +29,16 @@
                     </v-flex>
                     <v-flex md12 sm12 xs12 class="btns">
                       <v-btn
-                        tile
-                        color="success"
-                        class="white--text"
+                        color="green darken-2"
+                        class="white--text ma-2"
                         @click="submit()"
                       >
                         <v-icon left>mdi-content-save</v-icon>
                         新增
                       </v-btn>
                       <v-btn
-                        tile
-                        color="default"
-                        class="grey--text"
+                        color="blue-grey lighten-2"
+                        class="white--text ma-2"
                         @click="back()"
                       >
                         <v-icon left>mdi-bookmark-remove</v-icon>
@@ -98,7 +96,7 @@ export default class Index extends Vue {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .btns {
   text-align: center;
 

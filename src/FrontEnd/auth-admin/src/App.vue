@@ -23,7 +23,7 @@ import Layout from './components/layouts/layout.vue';
 export default class App extends Vue {}
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .v-main {
   .container.container--fluid {
     height: 100vh;

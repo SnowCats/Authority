@@ -8,7 +8,7 @@ namespace Auth.IRepository
     /// <summary>
     /// 仓储接口
     /// </summary>
-    public interface IRepository
+    public interface IRepositoryBase
     {
         /// <summary>
         /// 新增接口
