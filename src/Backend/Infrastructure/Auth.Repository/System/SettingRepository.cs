@@ -9,7 +9,7 @@ using Dapper.Contrib.Plus;
 
 namespace Auth.Repository.System
 {
-    public class SettingRepository : Repository, ISettingRepository
+    public class SettingRepository : RepositoryBase, ISettingRepository
     {
         /// <summary>
         /// UnitOfWork

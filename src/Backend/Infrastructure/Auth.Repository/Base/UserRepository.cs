@@ -10,7 +10,7 @@ namespace Auth.Repository.Base
     /// <summary>
     /// /Base/User
     /// </summary>
-    public class UserRepository : Repository, IUserRepository
+    public class UserRepository : RepositoryBase, IUserRepository
     {
         /// <summary>
         /// Constructor
