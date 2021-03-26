@@ -112,7 +112,7 @@ export default class Layout extends Vue {
   }
   // 切换语言
   setLanguage(lang: Locales): void {
-    this.$store.commit("SET_LANGUAGE", lang);
+    this.$store.commit("setLanguage", lang);
     console.log(this.$store.state.language);
   }
 }

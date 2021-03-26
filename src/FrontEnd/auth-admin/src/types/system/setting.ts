@@ -1,5 +1,5 @@
 // Setting
-interface SettingInterface {
+interface ISetting {
     parentValue: string;
     value: string;
     text: string;
@@ -7,7 +7,7 @@ interface SettingInterface {
     notes: string;
 }
 
-export default class Setting implements SettingInterface {
+export default class Setting implements ISetting {
     parentValue = '';
     value = '';
     text = '';

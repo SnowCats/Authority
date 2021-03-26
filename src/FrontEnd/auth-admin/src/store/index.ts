@@ -8,12 +8,12 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        language: defaultLocale
+        language: defaultLocale,
     },
     mutations: {
-        SET_LANGUAGE: (state, playload: Locales) => {
-            state.language = playload
-        }
+        setLanguage: (state, playload: Locales) => {
+            state.language = playload;
+        },
     },
     actions: {
         
