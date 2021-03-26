@@ -93,7 +93,7 @@
 import Setting from "@/types/system/setting";
 import Vue from "vue";
 import Component from "vue-class-component";
-import VWidget from "../../../components/v-widget.vue";
+import VWidget from "../../../components/VWidget.vue";
 import User from "../../../types/base/user";
 
 // 组件注入
