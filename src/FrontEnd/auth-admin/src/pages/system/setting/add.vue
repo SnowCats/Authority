@@ -34,7 +34,7 @@
                         @click="submit()"
                       >
                         <v-icon left>mdi-content-save</v-icon>
-                        新增
+                        提交
                       </v-btn>
                       <v-btn
                         color="blue-grey lighten-2"
