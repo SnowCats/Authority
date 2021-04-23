@@ -9,11 +9,6 @@ namespace Auth.IRepository
     public interface IUnitOfWork : IDisposable
     {
         /// <summary>
-        /// 新增记录后返回的主键
-        /// </summary>
-        Guid Id { get; }
-
-        /// <summary>
         /// 数据库连接对象(读)
         /// </summary>
         public IDbConnection ReadConnection { get; }

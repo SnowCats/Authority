@@ -61,17 +61,6 @@ namespace Auth.Repository
         }
 
         /// <summary>
-        /// 主键
-        /// </summary>
-        Guid IUnitOfWork.Id
-        {
-            get
-            {
-                return Guid.NewGuid();
-            }
-        }
-
-        /// <summary>
         /// IUnitOfWork数据库连接对象(写)
         /// </summary>
         IDbConnection IUnitOfWork.WriteConnection
@@ -152,12 +141,9 @@ namespace Auth.Repository
         /// </summary>
         public void Dispose()
         {
-            if(transaction != null)
-            {
-                transaction.Dispose();
-            }
-
-            transaction = null;
+            transaction?.Dispose();
+            readConnection.Dispose();
+            writeConnection.Dispose();
         }
 
         #endregion

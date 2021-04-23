@@ -56,8 +56,8 @@ namespace Auth.Application.Handlers.System
             }
             else
             {
-                Guid result = await SettingRepository.InsertAsync(setting);
-                return result;
+                await SettingRepository.InsertAsync(setting);
+                return setting.ID;
             }
         }
 

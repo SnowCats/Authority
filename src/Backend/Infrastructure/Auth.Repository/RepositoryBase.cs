@@ -68,12 +68,11 @@ namespace Auth.Repository
         /// <typeparam name="T">返回实体类型</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        public Guid Insert<T>(T t, IDbTransaction transaction = null) where T : SeedWork.Entity
+        public long Insert<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            t.ID = UnitOfWork.Id;
-            UnitOfWork.WriteConnection.Insert(t, transaction);
+            var result = UnitOfWork.WriteConnection.Insert(t, transaction);
 
-            return t.ID;
+            return result;
         }
 
         /// <summary>
@@ -82,12 +81,11 @@ namespace Auth.Repository
         /// <typeparam name="T">返回实体类型</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        public async Task<Guid> InsertAsync<T>(T t, IDbTransaction transaction = null) where T : SeedWork.Entity
+        public async Task<long> InsertAsync<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            t.ID = UnitOfWork.Id;
-            await UnitOfWork.WriteConnection.InsertAsync(t, transaction);
+            var result = await UnitOfWork.WriteConnection.InsertAsync(t, transaction);
 
-            return t.ID;
+            return result;
         }
 
         /// <summary>

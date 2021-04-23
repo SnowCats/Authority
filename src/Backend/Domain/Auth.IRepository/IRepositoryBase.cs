@@ -16,7 +16,7 @@ namespace Auth.IRepository
         /// <typeparam name="T">返回类型</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        Guid Insert<T>(T t) where T : SeedWork.Entity;
+        long Insert<T>(T t, IDbTransaction transaction = null) where T : class, new();
 
         /// <summary>
         /// 新增接口
@@ -24,7 +24,7 @@ namespace Auth.IRepository
         /// <typeparam name="T">返回类型</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        Task<Guid> InsertAsync<T>(T t) where T : SeedWork.Entity;
+        Task<long> InsertAsync<T>(T t, IDbTransaction transaction = null) where T : class, new();
 
         /// <summary>
         /// 更新接口
@@ -32,7 +32,7 @@ namespace Auth.IRepository
         /// <typeparam name="T">实体类</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        bool Update<T>(T t) where T : class, new();
+        bool Update<T>(T t, IDbTransaction transaction = null) where T : class, new();
 
         /// <summary>
         /// 更新接口
@@ -40,7 +40,7 @@ namespace Auth.IRepository
         /// <typeparam name="T">实体类</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        Task<bool> UpdateAsync<T>(T t) where T : class, new();
+        Task<bool> UpdateAsync<T>(T t, IDbTransaction transaction = null) where T : class, new();
 
         /// <summary>
         /// 删除接口
@@ -48,7 +48,7 @@ namespace Auth.IRepository
         /// <typeparam name="T">返回类型</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        bool Delete<T>(T t) where T : class, new();
+        bool Delete<T>(T t, IDbTransaction transaction = null) where T : class, new();
 
         /// <summary>
         /// 删除接口
@@ -56,7 +56,7 @@ namespace Auth.IRepository
         /// <typeparam name="T">返回类型</typeparam>
         /// <param name="t">实体实例</param>
         /// <returns></returns>
-        Task<bool> DeleteAsync<T>(T t) where T : class, new();
+        Task<bool> DeleteAsync<T>(T t, IDbTransaction transaction = null) where T : class, new();
 
         /// <summary>
         /// 某字段的值是否存在重复
@@ -64,7 +64,7 @@ namespace Auth.IRepository
         /// <typeparam name="T"></typeparam>
         /// <param name="t"></param>
         /// <returns></returns>
-        Task<bool> HasValueAsync<T>(string field, string value) where T : class, new();
+        Task<bool> HasValueAsync<T>(string field, string value, IDbTransaction transaction = null) where T : class, new();
 
         /// <summary>
         /// 
