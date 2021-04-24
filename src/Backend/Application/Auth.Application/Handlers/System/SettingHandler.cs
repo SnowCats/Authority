@@ -18,7 +18,8 @@ namespace Auth.Application.Handlers.System
     public class SettingHandler : IRequestHandler<CreateRequest, Guid?>,
         IRequestHandler<UpdateRequest, bool>,
         IRequestHandler<DeleteRequest, bool>,
-        IRequestHandler<QueryRequest, IEnumerable<SettingDto>>
+        IRequestHandler<PagedRequest, IEnumerable<SettingDto>>,
+        IRequestHandler<QueryListRequest, IEnumerable<SettingDto>>
     {
         /// <summary>
         /// 数据字典仓储接口
@@ -96,9 +97,23 @@ namespace Auth.Application.Handlers.System
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<SettingDto>> Handle(QueryRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SettingDto>> Handle(PagedRequest request, CancellationToken cancellationToken)
         {
             IEnumerable<Setting> list = await SettingRepository.GetPagedList(request, new List<string>(), new { });
+            IEnumerable<SettingDto> dtos = mapper.Map<IEnumerable<SettingDto>>(list);
+
+            return dtos;
+        }
+
+        /// <summary>
+        /// 查询所有记录
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<SettingDto>> Handle(QueryListRequest request, CancellationToken cancellationToken)
+        {
+            IEnumerable<Setting> list = await SettingRepository.GetListAsync<Setting>("");
             IEnumerable<SettingDto> dtos = mapper.Map<IEnumerable<SettingDto>>(list);
 
             return dtos;

@@ -115,6 +115,38 @@ namespace Auth.Repository
         }
 
         /// <summary>
+        /// 查询所有记录
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="conditions"></param>
+        /// <param name="parameters"></param>
+        /// <param name="fields"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public IEnumerable<T> GetList<T>(string conditions = "", object parameters = null, List<string> fields = null, IDbTransaction transaction = null) where T : class, new()
+        {
+            var list = UnitOfWork.ReadConnection.GetList<T>(conditions, parameters, fields, transaction);
+
+            return list;
+        }
+
+        /// <summary>
+        /// 查询所有记录
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="conditions"></param>
+        /// <param name="parameters"></param>
+        /// <param name="fields"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<T>> GetListAsync<T>(string conditions = "", object parameters = null, List<string> fields = null, IDbTransaction transaction = null) where T : class, new()
+        {
+            var list = await UnitOfWork.ReadConnection.GetListAsync<T>(conditions, parameters, fields, transaction);
+
+            return list;
+        }
+
+        /// <summary>
         /// 某字段的值是否存在重复
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -122,9 +154,21 @@ namespace Auth.Repository
         /// <returns></returns>
         public async Task<bool> HasValueAsync<T>(string field, string value, IDbTransaction transaction = null) where T : class, new()
         {
-            var list = await UnitOfWork.ReadConnection.GetListAsync<T>($"WHERE {field}=@Value", new { Value = value }, new List<string> { field }, transaction);
+            var list = await UnitOfWork.ReadConnection.GetListAsync<T>($"AND {field}=@Value", new { Value = value }, new List<string> { field }, transaction);
 
             return list != null && list.Any();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public async Task<IEnumerable<T>> GetTestListAsync<T, U>()
+            where T : class, new()
+            where U : class, new()
+        {
+            return null;
         }
 
         /// <summary>
@@ -141,8 +185,17 @@ namespace Auth.Repository
         /// <param name="transaction">事务</param>
         /// <param name="commandTimeout">超时</param>
         /// <returns></returns>
-        public async Task<IEnumerable<T>> GetPagedListAsync<T>(IDbConnection connection, int page, int itemsPerPage, List<string> fields = null,
-            string conditions = "", object parameters = null, string defaultField = "timestamp", string orderBy = "timestamp desc", IDbTransaction transaction = null, int? commandTimeout = null)
+        public async Task<IEnumerable<T>> GetPagedListAsync<T>(
+            IDbConnection connection,
+            int page,
+            int itemsPerPage,
+            string conditions = "",
+            object parameters = null,
+            List<string> fields = null,
+            string defaultField = "timestamp",
+            string orderBy = "timestamp desc",
+            IDbTransaction transaction = null,
+            int? commandTimeout = null)
             where T : class, new()
         {
             try
@@ -162,6 +215,11 @@ namespace Auth.Repository
             {
                 throw ex;
             }
+        }
+
+        public Task<IEnumerable<T>> GetPagedListAsync<T>(IDbConnection connection, int page, int itemsPerPage, List<string> fields = null, string conditions = "", object parameters = null, string defaultField = "timestamp", string orderBy = "timestamp desc", IDbTransaction transaction = null, int? commandTimeout = null) where T : class, new()
+        {
+            throw new NotImplementedException();
         }
     }
 }

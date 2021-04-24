@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify';
+import axios from './plugins/axios';
+import VueAxios from 'vue-axios';
 import router from './router';
 import './assets/variables/app.scss';
 import './assets/mixins/mixins.scss';
@@ -11,7 +13,7 @@ Vue.config.productionTip = false;
 import VueI18n from 'vue-i18n';
 
 Vue.use(VueI18n);
-
+Vue.use(VueAxios, axios);
 // i18n
 import { messages, defaultLocale } from '@/i18n';
 import store from './store';

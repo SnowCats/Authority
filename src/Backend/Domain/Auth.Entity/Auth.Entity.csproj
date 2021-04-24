@@ -9,10 +9,10 @@
     <Folder Include="System\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dapper.Contrib.Plus" Version="1.0.0" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Auth.SeedWork\Auth.SeedWork.csproj" />
     <ProjectReference Include="..\Auth.ValueObjects\Auth.ValueObjects.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Auth.Repository\Dapper.Contrib.Plus\Dapper.Contrib.Plus.csproj">
+      <ReferenceSourceTarget>ProjectReference</ReferenceSourceTarget>
+    </ProjectReference>
   </ItemGroup>
 </Project>

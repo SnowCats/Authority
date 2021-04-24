@@ -9,7 +9,7 @@ namespace Auth.Application.Commands.System.Setting
     /// <summary>
     /// 更新数据字典请求
     /// </summary>
-    public class QueryRequest : Pagination, IRequest<IEnumerable<SettingDto>>
+    public class PagedRequest : Pagination, IRequest<IEnumerable<SettingDto>>
     {
         /// <summary>
         /// 上级字典值

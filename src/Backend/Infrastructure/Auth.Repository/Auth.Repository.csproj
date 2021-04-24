@@ -5,11 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.78" />
     <PackageReference Include="MySql.Data" Version="8.0.21" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.8" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
-    <PackageReference Include="Dapper.Contrib.Plus" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Base\" />
@@ -17,5 +15,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\Auth.IRepository\Auth.IRepository.csproj" />
+    <ProjectReference Include="..\Dapper.Contrib.Plus\Dapper.Contrib.Plus.csproj" />
   </ItemGroup>
 </Project>

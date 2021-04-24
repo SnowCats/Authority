@@ -8,6 +8,6 @@
     <Folder Include="DapperExtensions\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dapper.Contrib.Plus" Version="1.0.0" />
+    <ProjectReference Include="..\..\Infrastructure\Dapper.Contrib.Plus\Dapper.Contrib.Plus.csproj" />
   </ItemGroup>
 </Project>
