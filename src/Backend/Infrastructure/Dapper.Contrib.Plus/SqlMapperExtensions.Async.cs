@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -94,12 +95,64 @@ namespace Dapper.Contrib.Plus
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="model"></param>
+        /// <param name="fields"></param>
+        /// <param name="transaction"></param>
+        /// <param name="commandTimeout"></param>
+        /// <returns></returns>
+        public static async Task<IEnumerable<TEntity>> GetListWithParams<TEntity, TModel>(
+            this IDbConnection connection,
+            TModel model = null,
+            IList<string> fields = null,
+            IDbTransaction transaction = null,
+            int? commandTimeout = null)
+            where TEntity : class, new()
+            where TModel : class, new()
+        {
+            var name = GetTableName(typeof(TEntity));
+            var columns = fields == null ? "*" : string.Join(",", fields);
+            var allProperties = TypePropertiesCache(typeof(TModel));
+            var sb = new StringBuilder();
+            var adapter = GetFormatter(connection);
+
+            IDictionary<string, object> parameters = new ExpandoObject();
+
+            for (int i = 0; i < allProperties.Count(); i++)
+            {
+                string propertyName;
+                if (allProperties[i].GetCustomAttribute(typeof(FieldNameAttribute)) as FieldNameAttribute == null)
+                {
+                    propertyName = allProperties[i].Name;
+                }
+                else
+                {
+                    propertyName = (allProperties[i].GetCustomAttribute(typeof(FieldNameAttribute)) as FieldNameAttribute).Name;
+                }
+
+                if (allProperties[i].GetValue(model, null) != null && !string.IsNullOrWhiteSpace(allProperties[i].GetValue(model, null).ToString()))
+                {
+                    adapter.AppendColumnNameEqualsValue(sb, propertyName, ConditionalType.Equal);
+                    parameters.Add(propertyName, allProperties[i].GetValue(model, null));
+                }
+            }
+
+            string sql = $"select {columns} from {name} where 1=1 {sb}";
+
+            return await connection.QueryAsync<TEntity>(sql, parameters, transaction, commandTimeout: commandTimeout);
+        }
+
+        /// <summary>
         /// Update any field
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public static async Task<bool> UpdateAnyAsync<T>(IDbConnection connection,
-            List<KeyValuePair<string, string>> fields, string conditions, object parameters,
+            List<string> fields, string conditions, object parameters,
             IDbTransaction transaction = null, int? commandTimeout = null)
         {
             if (fields == null || !fields.Any())
@@ -112,7 +165,7 @@ namespace Dapper.Contrib.Plus
 
             foreach (var field in fields)
             {
-                list.Add($"{field.Key}={field.Value}");
+                list.Add($"{field}=@{field}");
             }
 
             string sql = $"update {name} set {string.Join(",", list)} where 1=1 {conditions}";

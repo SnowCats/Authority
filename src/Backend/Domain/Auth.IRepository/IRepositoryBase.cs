@@ -108,5 +108,17 @@ namespace Auth.IRepository
             string defaultField = "timestamp", string orderBy = "timestamp desc", IDbTransaction transaction = null,
             int? commandTimeout = null)
             where T : class, new();
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TModel"></typeparam>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        Task<IEnumerable<TEntity>> GetListWithParamsAsync<TEntity, TModel>(TModel model)
+            where TEntity : class, new()
+            where TModel : class, new();
     }
 }

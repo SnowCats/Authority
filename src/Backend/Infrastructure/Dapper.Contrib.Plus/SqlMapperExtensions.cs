@@ -57,6 +57,7 @@ namespace Dapper.Contrib.Plus
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> TypeProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> ComputedProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> IgnoreUpdateProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
+        private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> FieldNameProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, string> GetQueries = new ConcurrentDictionary<RuntimeTypeHandle, string>();
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, string> TypeTableName = new ConcurrentDictionary<RuntimeTypeHandle, string>();
 
@@ -71,6 +72,19 @@ namespace Dapper.Contrib.Plus
                 ["mysqlconnection"] = new MySqlAdapter(),
                 ["fbconnection"] = new FbAdapter()
             };
+
+        private static List<PropertyInfo> FieldNamePropertiesCache(Type type)
+        {
+            if (FieldNameProperties.TryGetValue(type.TypeHandle, out IEnumerable<PropertyInfo> pi))
+            {
+                return pi.ToList();
+            }
+
+            var fieldProperties = TypePropertiesCache(type).Where(p => p.GetCustomAttributes(true).Any(a => a is FieldNameAttribute)).ToList();
+
+            FieldNameProperties[type.TypeHandle] = fieldProperties;
+            return fieldProperties;
+        }
 
         private static List<PropertyInfo> ComputedPropertiesCache(Type type)
         {
@@ -906,6 +920,49 @@ namespace Dapper.Contrib.Plus
     {
 
     }
+
+    /// <summary>
+    /// Map to the name of column name to use in Dapper.Contrib.Plus commands.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
+    public class FieldNameAttribute : Attribute
+    {
+        /// <summary>
+        /// Creates a field mapping to a specific name for Dapper.Contrib.Plus commands.
+        /// </summary>
+        /// <param name="name">The name of a table's column in the database</param>
+        public FieldNameAttribute(string name, ConditionalType type)
+        {
+            Name = name;
+            Type = type;
+        }
+
+        public string Name { get; set; }
+
+        public ConditionalType Type { get; set; }
+    }
+}
+
+/// <summary>
+/// 查询条件类型
+/// </summary>
+public enum ConditionalType
+{
+    Equal = 0,
+    Like = 1,
+    GreaterThan = 2,
+    GreaterThanOrEqual = 3,
+    LessThan = 4,
+    LessThanOrEqual = 5,
+    In = 6,
+    NotIn = 7,
+    LikeLeft = 8,
+    LikeRight = 9,
+    NoEqual = 10,
+    IsNullOrEmpty = 11,
+    IsNot = 12,
+    NoLike = 13,
+    EqualNull = 14,
 }
 
 /// <summary>
@@ -940,6 +997,12 @@ public partial interface ISqlAdapter
     /// <param name="sb">The string builder  to append to.</param>
     /// <param name="columnName">The column name.</param>
     void AppendColumnNameEqualsValue(StringBuilder sb, string columnName);
+    /// <summary>
+    /// Adds a column equality to a parameter.
+    /// </summary>
+    /// <param name="sb">The string builder  to append to.</param>
+    /// <param name="columnName">The column name.</param>
+    void AppendColumnNameEqualsValue(StringBuilder sb, string columnName, ConditionalType conditionalType);
 }
 
 /// <summary>
@@ -995,6 +1058,20 @@ public partial class SqlServerAdapter : ISqlAdapter
     public void AppendColumnNameEqualsValue(StringBuilder sb, string columnName)
     {
         sb.AppendFormat("[{0}] = @{1}", columnName, columnName);
+    }
+
+    /// <summary>
+    /// Adds a column equality to a parameter.
+    /// </summary>
+    /// <param name="sb"></param>
+    /// <param name="columnName"></param>
+    /// <param name="conditionalType"></param>
+    public void AppendColumnNameEqualsValue(StringBuilder sb, string columnName, ConditionalType conditionalType)
+    {
+        if(conditionalType.Equals(ConditionalType.Equal))
+        {
+            sb.AppendFormat("[{0}] = @{1}", columnName, columnName);
+        }
     }
 }
 
@@ -1052,6 +1129,20 @@ public partial class SqlCeServerAdapter : ISqlAdapter
     {
         sb.AppendFormat("[{0}] = @{1}", columnName, columnName);
     }
+
+    /// <summary>
+    /// Adds a column equality to a parameter.
+    /// </summary>
+    /// <param name="sb"></param>
+    /// <param name="columnName"></param>
+    /// <param name="conditionalType"></param>
+    public void AppendColumnNameEqualsValue(StringBuilder sb, string columnName, ConditionalType conditionalType)
+    {
+        if (conditionalType.Equals(ConditionalType.Equal))
+        {
+            sb.AppendFormat("[{0}] = @{1}", columnName, columnName);
+        }
+    }
 }
 
 /// <summary>
@@ -1106,6 +1197,76 @@ public partial class MySqlAdapter : ISqlAdapter
     public void AppendColumnNameEqualsValue(StringBuilder sb, string columnName)
     {
         sb.AppendFormat("`{0}` = @{1}", columnName, columnName);
+    }
+
+    /// <summary>
+    /// Adds a column equality to a parameter.
+    /// </summary>
+    /// <param name="sb"></param>
+    /// <param name="columnName"></param>
+    /// <param name="conditionalType"></param>
+    public void AppendColumnNameEqualsValue(StringBuilder sb, string columnName, ConditionalType conditionalType)
+    {
+        if (conditionalType.Equals(ConditionalType.Like))
+        {
+            sb.AppendFormat(" and `{0}` like '%@{1}%'", columnName, columnName);
+        }
+        else if(conditionalType.Equals(ConditionalType.GreaterThan))
+        {
+            sb.AppendFormat(" and `{0}` > @{1}", columnName, columnName);
+        }
+        else if (conditionalType.Equals(ConditionalType.GreaterThanOrEqual))
+        {
+            sb.AppendFormat(" and `{0}` >= @{1}", columnName, columnName);
+        }
+        else if (conditionalType.Equals(ConditionalType.LessThan))
+        {
+            sb.AppendFormat(" and `{0}` < @{1}", columnName, columnName);
+        }
+        else if (conditionalType.Equals(ConditionalType.LessThanOrEqual))
+        {
+            sb.AppendFormat(" and `{0}` <= @{1}", columnName, columnName);
+        }
+        else if (conditionalType.Equals(ConditionalType.In))
+        {
+            sb.AppendFormat(" and `{0}` in ('@{1}')", columnName, columnName);
+        }
+        else if (conditionalType.Equals(ConditionalType.NotIn))
+        {
+            sb.AppendFormat(" and `{0}` not in ('@{1}')", columnName, columnName);
+        }
+        else if (conditionalType.Equals(ConditionalType.LikeLeft))
+        {
+            sb.AppendFormat(" and `{0}` like '%@{1}'", columnName, columnName);
+        }
+        else if (conditionalType.Equals(ConditionalType.LikeRight))
+        {
+            sb.AppendFormat(" and `{0}` like '@{1}%'", columnName, columnName);
+        }
+        else if (conditionalType.Equals(ConditionalType.NoEqual))
+        {
+            sb.AppendFormat(" and `{0}` <> @{1}", columnName, columnName);
+        }
+        else if (conditionalType.Equals(ConditionalType.IsNullOrEmpty))
+        {
+            sb.AppendFormat(" and ifnull(`{0}`, '') = ''", columnName);
+        }
+        else if (conditionalType.Equals(ConditionalType.IsNot))
+        {
+            sb.AppendFormat(" and ifnull(`{0}`, '') <> ''", columnName);
+        }
+        else if (conditionalType.Equals(ConditionalType.NoLike))
+        {
+            sb.AppendFormat(" and `{0}` not like '%@{1}%'", columnName, columnName);
+        }
+        else if (conditionalType.Equals(ConditionalType.EqualNull))
+        {
+            sb.AppendFormat(" and `{0}` is null", columnName);
+        }
+        else
+        {
+            sb.AppendFormat(" and `{0}` = @{1}", columnName, columnName);
+        }
     }
 }
 
@@ -1183,6 +1344,20 @@ public partial class PostgresAdapter : ISqlAdapter
     {
         sb.AppendFormat("\"{0}\" = @{1}", columnName, columnName);
     }
+
+    /// <summary>
+    /// Adds a column equality to a parameter.
+    /// </summary>
+    /// <param name="sb"></param>
+    /// <param name="columnName"></param>
+    /// <param name="conditionalType"></param>
+    public void AppendColumnNameEqualsValue(StringBuilder sb, string columnName, ConditionalType conditionalType)
+    {
+        if (conditionalType.Equals(ConditionalType.Equal))
+        {
+            sb.AppendFormat("\"{0}\" = @{1}", columnName, columnName);
+        }
+    }
 }
 
 /// <summary>
@@ -1235,6 +1410,20 @@ public partial class SQLiteAdapter : ISqlAdapter
     public void AppendColumnNameEqualsValue(StringBuilder sb, string columnName)
     {
         sb.AppendFormat("\"{0}\" = @{1}", columnName, columnName);
+    }
+
+    /// <summary>
+    /// Adds a column equality to a parameter.
+    /// </summary>
+    /// <param name="sb"></param>
+    /// <param name="columnName"></param>
+    /// <param name="conditionalType"></param>
+    public void AppendColumnNameEqualsValue(StringBuilder sb, string columnName, ConditionalType conditionalType)
+    {
+        if (conditionalType.Equals(ConditionalType.Equal))
+        {
+            sb.AppendFormat("\"{0}\" = @{1}", columnName, columnName);
+        }
     }
 }
 
@@ -1292,5 +1481,19 @@ public partial class FbAdapter : ISqlAdapter
     public void AppendColumnNameEqualsValue(StringBuilder sb, string columnName)
     {
         sb.AppendFormat("{0} = @{1}", columnName, columnName);
+    }
+
+    /// <summary>
+    /// Adds a column equality to a parameter.
+    /// </summary>
+    /// <param name="sb"></param>
+    /// <param name="columnName"></param>
+    /// <param name="conditionalType"></param>
+    public void AppendColumnNameEqualsValue(StringBuilder sb, string columnName, ConditionalType conditionalType)
+    {
+        if (conditionalType.Equals(ConditionalType.Equal))
+        {
+            sb.AppendFormat("{0} = @{1}", columnName, columnName);
+        }
     }
 }

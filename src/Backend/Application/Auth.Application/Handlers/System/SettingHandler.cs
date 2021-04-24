@@ -18,7 +18,7 @@ namespace Auth.Application.Handlers.System
     public class SettingHandler : IRequestHandler<CreateRequest, Guid?>,
         IRequestHandler<UpdateRequest, bool>,
         IRequestHandler<DeleteRequest, bool>,
-        IRequestHandler<PagedRequest, IEnumerable<SettingDto>>,
+        IRequestHandler<QueryPagedListRequest, IEnumerable<SettingDto>>,
         IRequestHandler<QueryListRequest, IEnumerable<SettingDto>>
     {
         /// <summary>
@@ -97,7 +97,7 @@ namespace Auth.Application.Handlers.System
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<SettingDto>> Handle(PagedRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SettingDto>> Handle(QueryPagedListRequest request, CancellationToken cancellationToken)
         {
             IEnumerable<Setting> list = await SettingRepository.GetPagedList(request, new List<string>(), new { });
             IEnumerable<SettingDto> dtos = mapper.Map<IEnumerable<SettingDto>>(list);
@@ -113,7 +113,7 @@ namespace Auth.Application.Handlers.System
         /// <returns></returns>
         public async Task<IEnumerable<SettingDto>> Handle(QueryListRequest request, CancellationToken cancellationToken)
         {
-            IEnumerable<Setting> list = await SettingRepository.GetListAsync<Setting>("");
+            IEnumerable<Setting> list = await SettingRepository.GetListWithParamsAsync<Setting, QueryListRequest>(request);
             IEnumerable<SettingDto> dtos = mapper.Map<IEnumerable<SettingDto>>(list);
 
             return dtos;

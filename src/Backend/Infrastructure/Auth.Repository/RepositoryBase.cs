@@ -162,13 +162,17 @@ namespace Auth.Repository
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TModel">查询类</typeparam>
+        /// <typeparam name="TResult">返回实体</typeparam>
+        /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<T>> GetTestListAsync<T, U>()
-            where T : class, new()
-            where U : class, new()
+        public async Task<IEnumerable<TEntity>> GetListWithParamsAsync<TEntity, TModel>(TModel model)
+            where TEntity : class, new()
+            where TModel : class, new()
         {
-            return null;
+            var list = await UnitOfWork.ReadConnection.GetListWithParams<TEntity, TModel>(model);
+
+            return list;
         }
 
         /// <summary>
@@ -215,11 +219,6 @@ namespace Auth.Repository
             {
                 throw ex;
             }
-        }
-
-        public Task<IEnumerable<T>> GetPagedListAsync<T>(IDbConnection connection, int page, int itemsPerPage, List<string> fields = null, string conditions = "", object parameters = null, string defaultField = "timestamp", string orderBy = "timestamp desc", IDbTransaction transaction = null, int? commandTimeout = null) where T : class, new()
-        {
-            throw new NotImplementedException();
         }
     }
 }

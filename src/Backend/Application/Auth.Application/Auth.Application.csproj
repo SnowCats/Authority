@@ -19,6 +19,7 @@
     <ProjectReference Include="..\Auth.Dto\Auth.Dto.csproj" />
     <ProjectReference Include="..\..\Domain\Auth.Entity\Auth.Entity.csproj" />
     <ProjectReference Include="..\..\Domain\Auth.IRepository\Auth.IRepository.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Dapper.Contrib.Plus\Dapper.Contrib.Plus.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MediatR" Version="9.0.0" />

@@ -81,5 +81,18 @@ namespace Auth.UI.Web.Apis.System
 
             return result;
         }
+
+        /// <summary>
+        /// 查询字典列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<dynamic> GetListWithParamsAsync(QueryListRequest request)
+        {
+            IEnumerable<SettingDto> result = await Mediator.Send(request);
+
+            return result;
+        }
     }
 }
