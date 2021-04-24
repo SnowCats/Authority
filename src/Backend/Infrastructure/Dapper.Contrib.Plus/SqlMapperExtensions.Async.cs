@@ -95,7 +95,7 @@ namespace Dapper.Contrib.Plus
         }
 
         /// <summary>
-        /// 
+        /// 查询记录
         /// </summary>
         /// <typeparam name="TModel"></typeparam>
         /// <typeparam name="TResult"></typeparam>
@@ -105,7 +105,7 @@ namespace Dapper.Contrib.Plus
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<TEntity>> GetListWithParams<TEntity, TModel>(
+        public static async Task<IEnumerable<TEntity>> GetListAsync<TEntity, TModel>(
             this IDbConnection connection,
             TModel model = null,
             IList<string> fields = null,
@@ -125,18 +125,37 @@ namespace Dapper.Contrib.Plus
             for (int i = 0; i < allProperties.Count(); i++)
             {
                 string propertyName;
-                if (allProperties[i].GetCustomAttribute(typeof(FieldNameAttribute)) as FieldNameAttribute == null)
+                ConditionalType conditionalType;
+                if (allProperties[i].GetCustomAttribute<FieldNameAttribute>() == null)
                 {
                     propertyName = allProperties[i].Name;
                 }
                 else
                 {
-                    propertyName = (allProperties[i].GetCustomAttribute(typeof(FieldNameAttribute)) as FieldNameAttribute).Name;
+                    propertyName = allProperties[i].GetCustomAttribute<FieldNameAttribute>().Name;
+                }
+
+                if (allProperties[i].GetCustomAttribute<ConditionalAttribute>() == null)
+                {
+                    // If object is list or array. Set default conditionalType
+                    if (allProperties[i].PropertyType.IsArray || allProperties[i].PropertyType.IsGenericType)
+                    {
+                        conditionalType = ConditionalType.In;
+                    }
+                    else
+                    {
+                        conditionalType = ConditionalType.Equal;
+                    }
+                }
+                else
+                {
+                    conditionalType = allProperties[i].GetCustomAttribute<ConditionalAttribute>().ConditionalType;
                 }
 
                 if (allProperties[i].GetValue(model, null) != null && !string.IsNullOrWhiteSpace(allProperties[i].GetValue(model, null).ToString()))
                 {
-                    adapter.AppendColumnNameEqualsValue(sb, propertyName, ConditionalType.Equal);
+                    adapter.AppendColumnNameEqualsValue(sb, propertyName, conditionalType);
+
                     parameters.Add(propertyName, allProperties[i].GetValue(model, null));
                 }
             }

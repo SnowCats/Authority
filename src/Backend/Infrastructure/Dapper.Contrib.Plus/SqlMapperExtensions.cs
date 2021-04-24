@@ -9,6 +9,7 @@ using System.Reflection.Emit;
 using System.Threading;
 
 using Dapper;
+using System.Dynamic;
 
 namespace Dapper.Contrib.Plus
 {
@@ -267,6 +268,77 @@ namespace Dapper.Contrib.Plus
             var list = connection.Query<T>(sql, parameters, transaction, commandTimeout: commandTimeout);
 
             return list;
+        }
+
+        /// <summary>
+        /// 查询记录
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="model"></param>
+        /// <param name="fields"></param>
+        /// <param name="transaction"></param>
+        /// <param name="commandTimeout"></param>
+        /// <returns></returns>
+        public static IEnumerable<TEntity> GetList<TEntity, TModel>(
+            this IDbConnection connection,
+            TModel model = null,
+            IList<string> fields = null,
+            IDbTransaction transaction = null,
+            int? commandTimeout = null)
+            where TEntity : class, new()
+            where TModel : class, new()
+        {
+            var name = GetTableName(typeof(TEntity));
+            var columns = fields == null ? "*" : string.Join(",", fields);
+            var allProperties = TypePropertiesCache(typeof(TModel));
+            var sb = new StringBuilder();
+            var adapter = GetFormatter(connection);
+
+            IDictionary<string, object> parameters = new ExpandoObject();
+
+            for (int i = 0; i < allProperties.Count(); i++)
+            {
+                string propertyName;
+                ConditionalType conditionalType;
+                if (allProperties[i].GetCustomAttribute<FieldNameAttribute>() == null)
+                {
+                    propertyName = allProperties[i].Name;
+                }
+                else
+                {
+                    propertyName = allProperties[i].GetCustomAttribute<FieldNameAttribute>().Name;
+                }
+
+                if (allProperties[i].GetCustomAttribute<ConditionalAttribute>() == null)
+                {
+                    // If object is list or array. Set default conditionalType
+                    if (allProperties[i].PropertyType.IsArray || allProperties[i].PropertyType.IsGenericType)
+                    {
+                        conditionalType = ConditionalType.In;
+                    }
+                    else
+                    {
+                        conditionalType = ConditionalType.Equal;
+                    }
+                }
+                else
+                {
+                    conditionalType = allProperties[i].GetCustomAttribute<ConditionalAttribute>().ConditionalType;
+                }
+
+                if (allProperties[i].GetValue(model, null) != null && !string.IsNullOrWhiteSpace(allProperties[i].GetValue(model, null).ToString()))
+                {
+                    adapter.AppendColumnNameEqualsValue(sb, propertyName, conditionalType);
+
+                    parameters.Add(propertyName, allProperties[i].GetValue(model, null));
+                }
+            }
+
+            string sql = $"select {columns} from {name} where 1=1 {sb}";
+
+            return connection.Query<TEntity>(sql, parameters, transaction, commandTimeout: commandTimeout);
         }
 
         /// <summary>
@@ -931,15 +1003,26 @@ namespace Dapper.Contrib.Plus
         /// Creates a field mapping to a specific name for Dapper.Contrib.Plus commands.
         /// </summary>
         /// <param name="name">The name of a table's column in the database</param>
-        public FieldNameAttribute(string name, ConditionalType type)
+        public FieldNameAttribute(string name)
         {
             Name = name;
-            Type = type;
         }
 
         public string Name { get; set; }
+    }
 
-        public ConditionalType Type { get; set; }
+    /// <summary>
+    /// 查询条件类型特性
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
+    public class ConditionalAttribute : Attribute
+    {
+        public ConditionalAttribute(ConditionalType conditionalType)
+        {
+            ConditionalType = conditionalType;
+        }
+
+        public ConditionalType ConditionalType { get; set; }
     }
 }
 
@@ -1209,63 +1292,63 @@ public partial class MySqlAdapter : ISqlAdapter
     {
         if (conditionalType.Equals(ConditionalType.Like))
         {
-            sb.AppendFormat(" and `{0}` like '%@{1}%'", columnName, columnName);
+            sb.Append($" and `{columnName}` like CONCAT('%',@{columnName},'%')");
         }
         else if(conditionalType.Equals(ConditionalType.GreaterThan))
         {
-            sb.AppendFormat(" and `{0}` > @{1}", columnName, columnName);
+            sb.Append($" and `{columnName}` > @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.GreaterThanOrEqual))
         {
-            sb.AppendFormat(" and `{0}` >= @{1}", columnName, columnName);
+            sb.Append($" and `{columnName}` >= @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.LessThan))
         {
-            sb.AppendFormat(" and `{0}` < @{1}", columnName, columnName);
+            sb.Append($" and `{columnName}` < @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.LessThanOrEqual))
         {
-            sb.AppendFormat(" and `{0}` <= @{1}", columnName, columnName);
+            sb.Append($" and `{columnName}` <= @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.In))
         {
-            sb.AppendFormat(" and `{0}` in ('@{1}')", columnName, columnName);
+            sb.Append($" and `{columnName}` in ('@{columnName}')");
         }
         else if (conditionalType.Equals(ConditionalType.NotIn))
         {
-            sb.AppendFormat(" and `{0}` not in ('@{1}')", columnName, columnName);
+            sb.Append($" and `{columnName}` not in ('@{columnName}')");
         }
         else if (conditionalType.Equals(ConditionalType.LikeLeft))
         {
-            sb.AppendFormat(" and `{0}` like '%@{1}'", columnName, columnName);
+            sb.Append($" and `{columnName}` like CONCAT('%',@{columnName})");
         }
         else if (conditionalType.Equals(ConditionalType.LikeRight))
         {
-            sb.AppendFormat(" and `{0}` like '@{1}%'", columnName, columnName);
+            sb.Append($" and `{columnName}` like CONCAT(@{columnName},'%')");
         }
         else if (conditionalType.Equals(ConditionalType.NoEqual))
         {
-            sb.AppendFormat(" and `{0}` <> @{1}", columnName, columnName);
+            sb.Append($" and `{columnName}` <> @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.IsNullOrEmpty))
         {
-            sb.AppendFormat(" and ifnull(`{0}`, '') = ''", columnName);
+            sb.Append($" and ifnull(`{columnName}`, '') = ''");
         }
         else if (conditionalType.Equals(ConditionalType.IsNot))
         {
-            sb.AppendFormat(" and ifnull(`{0}`, '') <> ''", columnName);
+            sb.Append($" and ifnull(`{columnName}`, '') <> ''");
         }
         else if (conditionalType.Equals(ConditionalType.NoLike))
         {
-            sb.AppendFormat(" and `{0}` not like '%@{1}%'", columnName, columnName);
+            sb.Append($" and `{columnName}` not like '%@{columnName}%'");
         }
         else if (conditionalType.Equals(ConditionalType.EqualNull))
         {
-            sb.AppendFormat(" and `{0}` is null", columnName);
+            sb.Append($" and `{columnName}` is null");
         }
         else
         {
-            sb.AppendFormat(" and `{0}` = @{1}", columnName, columnName);
+            sb.Append($" and `{columnName}` = @{columnName}");
         }
     }
 }

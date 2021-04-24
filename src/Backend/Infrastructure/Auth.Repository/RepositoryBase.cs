@@ -170,7 +170,7 @@ namespace Auth.Repository
             where TEntity : class, new()
             where TModel : class, new()
         {
-            var list = await UnitOfWork.ReadConnection.GetListWithParams<TEntity, TModel>(model);
+            var list = await UnitOfWork.ReadConnection.GetListAsync<TEntity, TModel>(model);
 
             return list;
         }

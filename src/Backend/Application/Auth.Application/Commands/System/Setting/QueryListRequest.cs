@@ -11,24 +11,13 @@ namespace Auth.Application.Commands.System.Setting
         /// <summary>
         /// Value
         /// </summary>
+        [Conditional(ConditionalType.LikeLeft)]
         public string Value { get; set; }
 
         /// <summary>
         /// Text
         /// </summary>
-        [FieldName("Text", ConditionalType.Equal)]
-        public string _Text { get; set; }
-
-        /// <summary>
-        /// List
-        /// </summary>
-        public IList<string> List { get; set; }
-
-        /// <summary>
-        /// List
-        /// </summary>
-        public string[] StrList { get; set; }
-
-        public IEnumerable<string> EnumerableList { get; set; }
+        [Conditional(ConditionalType.LikeLeft)]
+        public string Text { get; set; }
     }
 }
