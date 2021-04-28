@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Auth.IRepository;
 using Dapper;
@@ -115,110 +116,87 @@ namespace Auth.Repository
         }
 
         /// <summary>
-        /// 查询所有记录
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="conditions"></param>
-        /// <param name="parameters"></param>
-        /// <param name="fields"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        public IEnumerable<T> GetList<T>(string conditions = "", object parameters = null, List<string> fields = null, IDbTransaction transaction = null) where T : class, new()
-        {
-            var list = UnitOfWork.ReadConnection.GetList<T>(conditions, parameters, fields, transaction);
-
-            return list;
-        }
-
-        /// <summary>
-        /// 查询所有记录
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="conditions"></param>
-        /// <param name="parameters"></param>
-        /// <param name="fields"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        public async Task<IEnumerable<T>> GetListAsync<T>(string conditions = "", object parameters = null, List<string> fields = null, IDbTransaction transaction = null) where T : class, new()
-        {
-            var list = await UnitOfWork.ReadConnection.GetListAsync<T>(conditions, parameters, fields, transaction);
-
-            return list;
-        }
-
-        /// <summary>
         /// 某字段的值是否存在重复
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="t"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="expression"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        public async Task<bool> HasValueAsync<T>(string field, string value, IDbTransaction transaction = null) where T : class, new()
+        public async Task<bool> HasValueAsync<T>(string key, string value, Expression<Func<T, dynamic>> expression = null, IDbTransaction transaction = null) where T : class, new()
         {
-            var list = await UnitOfWork.ReadConnection.GetListAsync<T>($"AND {field}=@Value", new { Value = value }, new List<string> { field }, transaction);
+            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs = new List<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>>
+            {
+                new KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>(new KeyValuePair<string, dynamic>(key, value), ConditionalType.Equal)
+            };
+
+            var list = await UnitOfWork.ReadConnection.GetListAsync(keyValuePairs, expression, transaction);
 
             return list != null && list.Any();
         }
 
         /// <summary>
-        /// 
+        /// 查询列表
         /// </summary>
         /// <typeparam name="TModel">查询类</typeparam>
         /// <typeparam name="TResult">返回实体</typeparam>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<TEntity>> GetListWithParamsAsync<TEntity, TModel>(TModel model)
+        public async Task<IEnumerable<TEntity>> GetListAsync<TEntity, TModel>(
+            TModel model,
+            Expression<Func<TEntity, dynamic>> expression = null,
+            IDbTransaction transaction = null)
             where TEntity : class, new()
             where TModel : class, new()
         {
-            var list = await UnitOfWork.ReadConnection.GetListAsync<TEntity, TModel>(model);
+            var list = await UnitOfWork.ReadConnection.GetListAsync(model, expression, transaction);
 
             return list;
         }
 
         /// <summary>
-        /// GetPagedList
+        /// 查询列表
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="page">页码</param>
-        /// <param name="itemsPerPage">页数</param>
-        /// <param name="fields">字段</param>
-        /// <param name="conditions">条件</param>
-        /// <param name="parameters">参数</param>
-        /// <param name="defaultField">默认分页字段</param>
-        /// <param name="transaction">事务</param>
-        /// <param name="commandTimeout">超时</param>
+        /// <param name="conditions"></param>
+        /// <param name="parameters"></param>
+        /// <param name="fields"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<T>> GetPagedListAsync<T>(
-            IDbConnection connection,
-            int page,
-            int itemsPerPage,
-            string conditions = "",
-            object parameters = null,
-            List<string> fields = null,
+        public async Task<IEnumerable<T>> GetListAsync<T>(
+            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs,
+            Expression<Func<T, dynamic>> expression = null,
+            IDbTransaction transaction = null) where T : class, new()
+        {
+            var list = await UnitOfWork.ReadConnection.GetListAsync(keyValuePairs, expression, transaction);
+
+            return list;
+        }
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="page"></param>
+        /// <param name="itemsPerPage"></param>
+        /// <param name="keyValuePairs"></param>
+        /// <param name="expression"></param>
+        /// <param name="defaultField"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<T>> GetPagedListAsync<T>(int page, int itemsPerPage,
+            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs,
+            Expression<Func<T, dynamic>> expression = null,
             string defaultField = "timestamp",
             string orderBy = "timestamp desc",
-            IDbTransaction transaction = null,
-            int? commandTimeout = null)
+            IDbTransaction transaction = null)
             where T : class, new()
         {
-            try
-            {
-                string name = (typeof(T).GetCustomAttributes(false).FirstOrDefault(attr => attr.GetType().Name == "TableAttribute") as dynamic)?.Name;
-                string field = fields == null ? "*" : string.Join(",", fields);
+            var list = await UnitOfWork.ReadConnection.GetPagedListAsync<T>(page, itemsPerPage, keyValuePairs, expression, defaultField, orderBy, transaction);
 
-                // mysql数据库
-                long timestamp = (long)connection.ExecuteScalar($"select ifnull(min({defaultField}), unix_timestamp()) from {name} where 1=1 {conditions} limit {(page - 1) * itemsPerPage}, 1",
-                    parameters, transaction, commandTimeout);
-                var list = await connection.QueryAsync<T>($"select {field} from {name} where 1=1 {conditions} and {defaultField} <= {timestamp} limit {(page - 1) * itemsPerPage}, {itemsPerPage}",
-                    parameters, transaction, commandTimeout: commandTimeout);
-
-                return list;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return list;
         }
     }
 }

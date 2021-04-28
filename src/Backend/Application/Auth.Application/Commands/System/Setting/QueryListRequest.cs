@@ -11,13 +11,13 @@ namespace Auth.Application.Commands.System.Setting
         /// <summary>
         /// Value
         /// </summary>
-        [Conditional(ConditionalType.LikeLeft)]
+        [Conditional(ConditionalType.Equal)]
         public string Value { get; set; }
 
         /// <summary>
         /// Text
         /// </summary>
-        [Conditional(ConditionalType.LikeLeft)]
+        [Conditional(ConditionalType.Equal)]
         public string Text { get; set; }
     }
 }

@@ -33,7 +33,8 @@ namespace Auth.Repository.System
         /// <returns></returns>
         public async Task<IEnumerable<Setting>> GetPagedList(Pagination pagination, List<string> Wheres, object parameters)
         {
-            var list = await GetPagedListAsync<Setting>(UnitOfWork.ReadConnection, pagination.Page, pagination.ItemsPerPage, "", "", null);
+            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs = new List<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>>();
+            var list = await GetPagedListAsync<Setting>(pagination.Page, pagination.ItemsPerPage, keyValuePairs);
 
             return list;
         }

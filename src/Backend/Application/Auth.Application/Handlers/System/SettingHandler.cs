@@ -113,7 +113,7 @@ namespace Auth.Application.Handlers.System
         /// <returns></returns>
         public async Task<IEnumerable<SettingDto>> Handle(QueryListRequest request, CancellationToken cancellationToken)
         {
-            IEnumerable<Setting> list = await SettingRepository.GetListWithParamsAsync<Setting, QueryListRequest>(request);
+            IEnumerable<Setting> list = await SettingRepository.GetListAsync<Setting, QueryListRequest>(request);
             IEnumerable<SettingDto> dtos = mapper.Map<IEnumerable<SettingDto>>(list);
 
             return dtos;

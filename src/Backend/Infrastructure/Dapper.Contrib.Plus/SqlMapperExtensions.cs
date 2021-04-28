@@ -10,6 +10,7 @@ using System.Threading;
 
 using Dapper;
 using System.Dynamic;
+using System.Linq.Expressions;
 
 namespace Dapper.Contrib.Plus
 {
@@ -58,7 +59,6 @@ namespace Dapper.Contrib.Plus
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> TypeProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> ComputedProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> IgnoreUpdateProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
-        private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> FieldNameProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, string> GetQueries = new ConcurrentDictionary<RuntimeTypeHandle, string>();
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, string> TypeTableName = new ConcurrentDictionary<RuntimeTypeHandle, string>();
 
@@ -73,19 +73,6 @@ namespace Dapper.Contrib.Plus
                 ["mysqlconnection"] = new MySqlAdapter(),
                 ["fbconnection"] = new FbAdapter()
             };
-
-        private static List<PropertyInfo> FieldNamePropertiesCache(Type type)
-        {
-            if (FieldNameProperties.TryGetValue(type.TypeHandle, out IEnumerable<PropertyInfo> pi))
-            {
-                return pi.ToList();
-            }
-
-            var fieldProperties = TypePropertiesCache(type).Where(p => p.GetCustomAttributes(true).Any(a => a is FieldNameAttribute)).ToList();
-
-            FieldNameProperties[type.TypeHandle] = fieldProperties;
-            return fieldProperties;
-        }
 
         private static List<PropertyInfo> ComputedPropertiesCache(Type type)
         {
@@ -248,30 +235,55 @@ namespace Dapper.Contrib.Plus
         }
 
         /// <summary>
-        /// GetList
+        /// 查询列表
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="connection"></param>
-        /// <param name="conditions"></param>
-        /// <param name="parameters"></param>
-        /// <param name="fields"></param>
+        /// <param name="keyValuePairs"></param>
+        /// <param name="expression"></param>
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        public static IEnumerable<T> GetList<T>(this IDbConnection connection, string conditions, object parameters,
-            List<string> fields = null, IDbTransaction transaction = null, int? commandTimeout = null) where T : class, new()
+        public static IEnumerable<T> GetList<T>(this IDbConnection connection,
+            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs,
+            Expression<Func<T, dynamic>> columnExp = null,
+            IDbTransaction transaction = null, int? commandTimeout = null) where T : class, new()
         {
             var name = GetTableName(typeof(T));
-            string t = fields == null ? "*" : string.Join(",", fields);
-            string sql = $"select {t} from {name} where 1=1 {conditions}";
+            var adapter = GetFormatter(connection);
+            var columns = new StringBuilder();
+            var query = new StringBuilder();
+            IDictionary<string, object> parameters = new ExpandoObject();
 
-            var list = connection.Query<T>(sql, parameters, transaction, commandTimeout: commandTimeout);
+            // 查询返回的列名
+            if (columnExp is null)
+            {
+                for (int i = 0; i < ((NewExpression)columnExp.Body).Members.Count; i++)
+                {
+                    adapter.AppendColumnName(columns, ((NewExpression)columnExp.Body).Members[i].Name);
+                    if (i < ((NewExpression)columnExp.Body).Members.Count - 1)
+                        columns.Append(", ");
+                }
+            }
+            else
+            {
+                columns.Append("*");
+            }
 
-            return list;
+            // 参数
+            for (int i = 0; i < keyValuePairs.Count(); i++)
+            {
+                adapter.AppendColumnNameEqualsValue(query, keyValuePairs[i].Key.Key, keyValuePairs[i].Value);
+                parameters.Add(keyValuePairs[i].Key.Key, keyValuePairs[i].Key.Value);
+            }
+
+            string sql = $"select {columns} from {name} where 1=1 {query}";
+
+            return connection.Query<T>(sql, parameters, transaction, commandTimeout: commandTimeout);
         }
 
         /// <summary>
-        /// 查询记录
+        /// 查询列表
         /// </summary>
         /// <typeparam name="TModel"></typeparam>
         /// <typeparam name="TResult"></typeparam>
@@ -284,20 +296,35 @@ namespace Dapper.Contrib.Plus
         public static IEnumerable<TEntity> GetList<TEntity, TModel>(
             this IDbConnection connection,
             TModel model = null,
-            IList<string> fields = null,
+            Expression<Func<TEntity, dynamic>> columnExp = null,
             IDbTransaction transaction = null,
             int? commandTimeout = null)
             where TEntity : class, new()
             where TModel : class, new()
         {
             var name = GetTableName(typeof(TEntity));
-            var columns = fields == null ? "*" : string.Join(",", fields);
+            var columns = new StringBuilder();
             var allProperties = TypePropertiesCache(typeof(TModel));
-            var sb = new StringBuilder();
+            var query = new StringBuilder();
             var adapter = GetFormatter(connection);
-
             IDictionary<string, object> parameters = new ExpandoObject();
 
+            // 查询返回的列名
+            if (columnExp is null)
+            {
+                for (int i = 0; i < ((NewExpression)columnExp.Body).Members.Count; i++)
+                {
+                    adapter.AppendColumnName(columns, ((NewExpression)columnExp.Body).Members[i].Name);
+                    if (i < ((NewExpression)columnExp.Body).Members.Count - 1)
+                        columns.Append(", ");
+                }
+            }
+            else
+            {
+                columns.Append("*");
+            }
+
+            // 查询条件
             for (int i = 0; i < allProperties.Count(); i++)
             {
                 string propertyName;
@@ -330,15 +357,78 @@ namespace Dapper.Contrib.Plus
 
                 if (allProperties[i].GetValue(model, null) != null && !string.IsNullOrWhiteSpace(allProperties[i].GetValue(model, null).ToString()))
                 {
-                    adapter.AppendColumnNameEqualsValue(sb, propertyName, conditionalType);
+                    adapter.AppendColumnNameEqualsValue(query, propertyName, conditionalType);
 
                     parameters.Add(propertyName, allProperties[i].GetValue(model, null));
                 }
             }
 
-            string sql = $"select {columns} from {name} where 1=1 {sb}";
+            string sql = $"select {columns} from {name} where 1=1 {query}";
 
             return connection.Query<TEntity>(sql, parameters, transaction, commandTimeout: commandTimeout);
+        }
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <typeparam name="T">实体</typeparam>
+        /// <param name="connection">数据库对象</param>
+        /// <param name="page">页数</param>
+        /// <param name="itemsPerPage">每页条数</param>
+        /// <param name="keyValuePairs">查询条件</param>
+        /// <param name="expression">查询字段</param>
+        /// <param name="defaultField"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="transaction"></param>
+        /// <param name="commandTimeout"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> GetPagedList<T>(
+            this IDbConnection connection,
+            int page,
+            int itemsPerPage,
+            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs,
+            Expression<Func<T, dynamic>> queryExp = null,
+            string defaultField = "timestamp",
+            string orderBy = "timestamp desc",
+            IDbTransaction transaction = null,
+            int? commandTimeout = null)
+            where T : class, new()
+        {
+            var name = GetTableName(typeof(T));
+            var adapter = GetFormatter(connection);
+            var columns = new StringBuilder();
+            var query = new StringBuilder();
+            IDictionary<string, object> parameters = new ExpandoObject();
+
+            // 查询返回的列名
+            if (queryExp is null)
+            {
+                // 参数
+                for (int i = 0; i < keyValuePairs.Count(); i++)
+                {
+                    adapter.AppendColumnNameEqualsValue(query, keyValuePairs[i].Key.Key, keyValuePairs[i].Value);
+                    parameters.Add(keyValuePairs[i].Key.Key, keyValuePairs[i].Key.Value);
+                }
+            }
+            else
+            {
+                columns.Append("*");
+            }
+
+            // 参数
+            for (int i = 0; i < keyValuePairs.Count(); i++)
+            {
+                adapter.AppendColumnNameEqualsValue(query, keyValuePairs[i].Key.Key, keyValuePairs[i].Value);
+                parameters.Add(keyValuePairs[i].Key.Key, keyValuePairs[i].Key.Value);
+            }
+
+            // mysql数据库, 需要改为适配所有数据库
+            long timestamp = (long)connection.ExecuteScalar($"select ifnull(min({defaultField}), unix_timestamp()) from {name} where 1=1 {query} order by {orderBy} limit {(page - 1) * itemsPerPage}, 1",
+                parameters, transaction, commandTimeout);
+            var list = connection.Query<T>($"select {columns} from {name} where 1=1 {query} and {defaultField} <= {timestamp} order by {orderBy} limit {(page - 1) * itemsPerPage}, {itemsPerPage}",
+                parameters, transaction, commandTimeout: commandTimeout);
+
+            return list;
         }
 
         /// <summary>
@@ -346,29 +436,49 @@ namespace Dapper.Contrib.Plus
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static bool UpdateAny<T>(IDbConnection connection,
-            List<KeyValuePair<string, string>> fields, string conditions, object parameters,
+        public static bool UpdateAny<T>(
+            IDbConnection connection,
+            Expression<Func<T, dynamic>> columnExp,
+            Expression<Func<T, dynamic>> queryExp,
+            object parameters,
             IDbTransaction transaction = null, int? commandTimeout = null)
         {
-            if (fields == null || !fields.Any())
-            {
-                throw new ArgumentException("Parameter <fields> have at least one value.");
-            }
-
             var name = GetTableName(typeof(T));
-            List<string> list = new List<string>();
+            var columns = new StringBuilder();
+            var query = new StringBuilder();
+            var adapter = GetFormatter(connection);
 
-            foreach (var field in fields)
+            if (columnExp is null)
             {
-                list.Add($"{field.Key}={field.Value}");
+                for (int i = 0; i < ((NewExpression)columnExp.Body).Members.Count; i++)
+                {
+                    adapter.AppendColumnNameEqualsValue(columns, ((NewExpression)columnExp.Body).Members[i].Name);
+                    if (i < ((NewExpression)columnExp.Body).Members.Count - 1)
+                        columns.Append(", ");
+                }
+            }
+            else
+            {
+                throw new Exception("parameter 'expression' can not be null");
             }
 
-            string sql = $"update {name} set {string.Join(",", list)} where 1=1 {conditions}";
+            if (queryExp is null)
+            {
+                for (int i = 0; i < ((NewExpression)queryExp.Body).Members.Count; i++)
+                {
+                    adapter.AppendColumnNameEqualsValue(query, ((NewExpression)queryExp.Body).Members[i].Name);
+                    if (i < ((NewExpression)queryExp.Body).Members.Count - 1)
+                        query.Append(" and ");
+                }
+            }
+
+            string sql = $"update {name} set {columns} where 1=1 {query}";
 
             var result = connection.Execute(sql, parameters, transaction, commandTimeout);
 
             return result > 0;
         }
+
 
         /// <summary>
         /// Delete by any conditions
@@ -380,59 +490,30 @@ namespace Dapper.Contrib.Plus
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        public static bool DeleteAny<T>(IDbConnection connection, string conditions, object parameters, IDbTransaction transaction, int? commandTimeout = null)
+        public static bool DeleteAny<T>(
+            IDbConnection connection,
+            Expression<Func<T, dynamic>> queryExp,
+            object parameters,
+            IDbTransaction transaction,
+            int? commandTimeout = null)
         {
-            if (string.IsNullOrWhiteSpace(conditions))
+            var name = GetTableName(typeof(T));
+            var query = new StringBuilder();
+            var adapter = GetFormatter(connection);
+            if (queryExp is null)
             {
-                throw new ArgumentException("Parameter <conditions> have at least value.");
+                for (int i = 0; i < ((NewExpression)queryExp.Body).Members.Count; i++)
+                {
+                    adapter.AppendColumnNameEqualsValue(query, ((NewExpression)queryExp.Body).Members[i].Name);
+                    if (i < ((NewExpression)queryExp.Body).Members.Count - 1)
+                        query.Append(" and ");
+                }
             }
 
-            var name = GetTableName(typeof(T));
-
-            string sql = $"delete from {name} where 1=1 {conditions}";
+            string sql = $"delete from {name} where 1=1 {query}";
             var result = connection.Execute(sql, parameters, transaction, commandTimeout);
 
             return result > 0;
-        }
-
-        /// <summary>
-        /// GetPagedList
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="page">页码</param>
-        /// <param name="itemsPerPage">页数</param>
-        /// <param name="fields">字段</param>
-        /// <param name="conditions">条件</param>
-        /// <param name="parameters">参数</param>
-        /// <param name="defaultField">默认分页字段</param>
-        /// <param name="transaction">事务</param>
-        /// <param name="commandTimeout">超时</param>
-        /// <returns></returns>
-        public static IEnumerable<T> GetPagedList<T>(this IDbConnection connection, int page, int itemsPerPage, List<string> fields = null,
-            string conditions = "", object parameters = null, string defaultField = "timestamp", string orderBy = "timestamp desc", IDbTransaction transaction = null, int? commandTimeout = null)
-            where T : class
-        {
-            string name = GetTableName(typeof(T));
-            string field = fields == null ? "*" : string.Join(",", fields);
-
-            // mysql数据库
-            if (name.Equals("mysqlconnection"))
-            {
-                long timestamp = (long)connection.ExecuteScalar($"select ifnull(min({defaultField}), unix_timestamp()) from {name} where 1=1 {conditions} limit {(page - 1) * itemsPerPage}, 1", parameters);
-                var list = connection.Query<T>($"select {field} from {name} where 1=1 {conditions} and {defaultField} <= {timestamp} limit {itemsPerPage}", parameters, transaction, commandTimeout: commandTimeout);
-
-                return list;
-            }
-            // sqlserver数据库
-            else if (name.Equals("sqlconnection"))
-            {
-                var list = connection.Query<T>($"select {field}, row_number() over(order by {orderBy}) as row from {name} where 1=1 {conditions} between {itemsPerPage * page} and {itemsPerPage * (page + 1)}", parameters, transaction, commandTimeout: commandTimeout);
-
-                return list;
-            }
-
-            return null;
         }
 
         /// <summary>
@@ -1151,9 +1232,65 @@ public partial class SqlServerAdapter : ISqlAdapter
     /// <param name="conditionalType"></param>
     public void AppendColumnNameEqualsValue(StringBuilder sb, string columnName, ConditionalType conditionalType)
     {
-        if(conditionalType.Equals(ConditionalType.Equal))
+        if (conditionalType.Equals(ConditionalType.Like))
         {
-            sb.AppendFormat("[{0}] = @{1}", columnName, columnName);
+            sb.Append($" and [{columnName}] like CONCAT('%',@{columnName},'%')");
+        }
+        else if (conditionalType.Equals(ConditionalType.GreaterThan))
+        {
+            sb.Append($" and [{columnName}] > @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.GreaterThanOrEqual))
+        {
+            sb.Append($" and [{columnName}] >= @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.LessThan))
+        {
+            sb.Append($" and [{columnName}] < @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.LessThanOrEqual))
+        {
+            sb.Append($" and [{columnName}] <= @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.In))
+        {
+            sb.Append($" and [{columnName}] in ('@{columnName}')");
+        }
+        else if (conditionalType.Equals(ConditionalType.NotIn))
+        {
+            sb.Append($" and [{columnName}] not in ('@{columnName}')");
+        }
+        else if (conditionalType.Equals(ConditionalType.LikeLeft))
+        {
+            sb.Append($" and [{columnName}] like CONCAT('%',@{columnName})");
+        }
+        else if (conditionalType.Equals(ConditionalType.LikeRight))
+        {
+            sb.Append($" and [{columnName}] like CONCAT(@{columnName},'%')");
+        }
+        else if (conditionalType.Equals(ConditionalType.NoEqual))
+        {
+            sb.Append($" and [{columnName}] <> @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.IsNullOrEmpty))
+        {
+            sb.Append($" and ifnull([{columnName}], '') = ''");
+        }
+        else if (conditionalType.Equals(ConditionalType.IsNot))
+        {
+            sb.Append($" and ifnull([{columnName}], '') <> ''");
+        }
+        else if (conditionalType.Equals(ConditionalType.NoLike))
+        {
+            sb.Append($" and [{columnName}] not like '%@{columnName}%'");
+        }
+        else if (conditionalType.Equals(ConditionalType.EqualNull))
+        {
+            sb.Append($" and [{columnName}] is null");
+        }
+        else
+        {
+            sb.Append($" and [{columnName}] = @{columnName}");
         }
     }
 }
@@ -1221,9 +1358,65 @@ public partial class SqlCeServerAdapter : ISqlAdapter
     /// <param name="conditionalType"></param>
     public void AppendColumnNameEqualsValue(StringBuilder sb, string columnName, ConditionalType conditionalType)
     {
-        if (conditionalType.Equals(ConditionalType.Equal))
+        if (conditionalType.Equals(ConditionalType.Like))
         {
-            sb.AppendFormat("[{0}] = @{1}", columnName, columnName);
+            sb.Append($" and [{columnName}] like CONCAT('%',@{columnName},'%')");
+        }
+        else if (conditionalType.Equals(ConditionalType.GreaterThan))
+        {
+            sb.Append($" and [{columnName}] > @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.GreaterThanOrEqual))
+        {
+            sb.Append($" and [{columnName}] >= @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.LessThan))
+        {
+            sb.Append($" and [{columnName}] < @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.LessThanOrEqual))
+        {
+            sb.Append($" and [{columnName}] <= @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.In))
+        {
+            sb.Append($" and [{columnName}] in ('@{columnName}')");
+        }
+        else if (conditionalType.Equals(ConditionalType.NotIn))
+        {
+            sb.Append($" and [{columnName}] not in ('@{columnName}')");
+        }
+        else if (conditionalType.Equals(ConditionalType.LikeLeft))
+        {
+            sb.Append($" and [{columnName}] like CONCAT('%',@{columnName})");
+        }
+        else if (conditionalType.Equals(ConditionalType.LikeRight))
+        {
+            sb.Append($" and [{columnName}] like CONCAT(@{columnName},'%')");
+        }
+        else if (conditionalType.Equals(ConditionalType.NoEqual))
+        {
+            sb.Append($" and [{columnName}] <> @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.IsNullOrEmpty))
+        {
+            sb.Append($" and ifnull([{columnName}], '') = ''");
+        }
+        else if (conditionalType.Equals(ConditionalType.IsNot))
+        {
+            sb.Append($" and ifnull([{columnName}], '') <> ''");
+        }
+        else if (conditionalType.Equals(ConditionalType.NoLike))
+        {
+            sb.Append($" and [{columnName}] not like '%@{columnName}%'");
+        }
+        else if (conditionalType.Equals(ConditionalType.EqualNull))
+        {
+            sb.Append($" and [{columnName}] is null");
+        }
+        else
+        {
+            sb.Append($" and [{columnName}] = @{columnName}");
         }
     }
 }
@@ -1436,9 +1629,65 @@ public partial class PostgresAdapter : ISqlAdapter
     /// <param name="conditionalType"></param>
     public void AppendColumnNameEqualsValue(StringBuilder sb, string columnName, ConditionalType conditionalType)
     {
-        if (conditionalType.Equals(ConditionalType.Equal))
+        if (conditionalType.Equals(ConditionalType.Like))
         {
-            sb.AppendFormat("\"{0}\" = @{1}", columnName, columnName);
+            sb.Append($" and \"{columnName}\" like CONCAT('%',@{columnName},'%')");
+        }
+        else if (conditionalType.Equals(ConditionalType.GreaterThan))
+        {
+            sb.Append($" and \"{columnName}\" > @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.GreaterThanOrEqual))
+        {
+            sb.Append($" and \"{columnName}\" >= @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.LessThan))
+        {
+            sb.Append($" and \"{columnName}\" < @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.LessThanOrEqual))
+        {
+            sb.Append($" and \"{columnName}\" <= @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.In))
+        {
+            sb.Append($" and \"{columnName}\" in ('@{columnName}')");
+        }
+        else if (conditionalType.Equals(ConditionalType.NotIn))
+        {
+            sb.Append($" and \"{columnName}\" not in ('@{columnName}')");
+        }
+        else if (conditionalType.Equals(ConditionalType.LikeLeft))
+        {
+            sb.Append($" and \"{columnName}\" like CONCAT('%',@{columnName})");
+        }
+        else if (conditionalType.Equals(ConditionalType.LikeRight))
+        {
+            sb.Append($" and \"{columnName}\" like CONCAT(@{columnName},'%')");
+        }
+        else if (conditionalType.Equals(ConditionalType.NoEqual))
+        {
+            sb.Append($" and \"{columnName}\" <> @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.IsNullOrEmpty))
+        {
+            sb.Append($" and ifnull(\"{columnName}\", '') = ''");
+        }
+        else if (conditionalType.Equals(ConditionalType.IsNot))
+        {
+            sb.Append($" and ifnull(\"{columnName}\", '') <> ''");
+        }
+        else if (conditionalType.Equals(ConditionalType.NoLike))
+        {
+            sb.Append($" and \"{columnName}\" not like '%@{columnName}%'");
+        }
+        else if (conditionalType.Equals(ConditionalType.EqualNull))
+        {
+            sb.Append($" and \"{columnName}\" is null");
+        }
+        else
+        {
+            sb.Append($" and \"{columnName}\" = @{columnName}");
         }
     }
 }
@@ -1503,9 +1752,65 @@ public partial class SQLiteAdapter : ISqlAdapter
     /// <param name="conditionalType"></param>
     public void AppendColumnNameEqualsValue(StringBuilder sb, string columnName, ConditionalType conditionalType)
     {
-        if (conditionalType.Equals(ConditionalType.Equal))
+        if (conditionalType.Equals(ConditionalType.Like))
         {
-            sb.AppendFormat("\"{0}\" = @{1}", columnName, columnName);
+            sb.Append($" and \"{columnName}\" like CONCAT('%',@{columnName},'%')");
+        }
+        else if (conditionalType.Equals(ConditionalType.GreaterThan))
+        {
+            sb.Append($" and \"{columnName}\" > @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.GreaterThanOrEqual))
+        {
+            sb.Append($" and \"{columnName}\" >= @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.LessThan))
+        {
+            sb.Append($" and \"{columnName}\" < @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.LessThanOrEqual))
+        {
+            sb.Append($" and \"{columnName}\" <= @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.In))
+        {
+            sb.Append($" and \"{columnName}\" in ('@{columnName}')");
+        }
+        else if (conditionalType.Equals(ConditionalType.NotIn))
+        {
+            sb.Append($" and \"{columnName}\" not in ('@{columnName}')");
+        }
+        else if (conditionalType.Equals(ConditionalType.LikeLeft))
+        {
+            sb.Append($" and \"{columnName}\" like CONCAT('%',@{columnName})");
+        }
+        else if (conditionalType.Equals(ConditionalType.LikeRight))
+        {
+            sb.Append($" and \"{columnName}\" like CONCAT(@{columnName},'%')");
+        }
+        else if (conditionalType.Equals(ConditionalType.NoEqual))
+        {
+            sb.Append($" and \"{columnName}\" <> @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.IsNullOrEmpty))
+        {
+            sb.Append($" and ifnull(\"{columnName}\", '') = ''");
+        }
+        else if (conditionalType.Equals(ConditionalType.IsNot))
+        {
+            sb.Append($" and ifnull(\"{columnName}\", '') <> ''");
+        }
+        else if (conditionalType.Equals(ConditionalType.NoLike))
+        {
+            sb.Append($" and \"{columnName}\" not like '%@{columnName}%'");
+        }
+        else if (conditionalType.Equals(ConditionalType.EqualNull))
+        {
+            sb.Append($" and \"{columnName}\" is null");
+        }
+        else
+        {
+            sb.Append($" and \"{columnName}\" = @{columnName}");
         }
     }
 }
@@ -1574,9 +1879,65 @@ public partial class FbAdapter : ISqlAdapter
     /// <param name="conditionalType"></param>
     public void AppendColumnNameEqualsValue(StringBuilder sb, string columnName, ConditionalType conditionalType)
     {
-        if (conditionalType.Equals(ConditionalType.Equal))
+        if (conditionalType.Equals(ConditionalType.Like))
         {
-            sb.AppendFormat("{0} = @{1}", columnName, columnName);
+            sb.Append($" and {columnName} like CONCAT('%',@{columnName},'%')");
+        }
+        else if (conditionalType.Equals(ConditionalType.GreaterThan))
+        {
+            sb.Append($" and {columnName} > @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.GreaterThanOrEqual))
+        {
+            sb.Append($" and {columnName} >= @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.LessThan))
+        {
+            sb.Append($" and {columnName} < @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.LessThanOrEqual))
+        {
+            sb.Append($" and {columnName} <= @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.In))
+        {
+            sb.Append($" and {columnName} in ('@{columnName}')");
+        }
+        else if (conditionalType.Equals(ConditionalType.NotIn))
+        {
+            sb.Append($" and {columnName} not in ('@{columnName}')");
+        }
+        else if (conditionalType.Equals(ConditionalType.LikeLeft))
+        {
+            sb.Append($" and {columnName} like CONCAT('%',@{columnName})");
+        }
+        else if (conditionalType.Equals(ConditionalType.LikeRight))
+        {
+            sb.Append($" and {columnName} like CONCAT(@{columnName},'%')");
+        }
+        else if (conditionalType.Equals(ConditionalType.NoEqual))
+        {
+            sb.Append($" and {columnName} <> @{columnName}");
+        }
+        else if (conditionalType.Equals(ConditionalType.IsNullOrEmpty))
+        {
+            sb.Append($" and ifnull({columnName}, '') = ''");
+        }
+        else if (conditionalType.Equals(ConditionalType.IsNot))
+        {
+            sb.Append($" and ifnull({columnName}, '') <> ''");
+        }
+        else if (conditionalType.Equals(ConditionalType.NoLike))
+        {
+            sb.Append($" and {columnName} not like '%@{columnName}%'");
+        }
+        else if (conditionalType.Equals(ConditionalType.EqualNull))
+        {
+            sb.Append($" and {columnName} is null");
+        }
+        else
+        {
+            sb.Append($" and {columnName} = @{columnName}");
         }
     }
 }
