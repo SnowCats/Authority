@@ -31,10 +31,9 @@ namespace Auth.Repository.System
         /// <param name="pagination">分页类</param>
         /// <param name="Wheres"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<Setting>> GetPagedList(Pagination pagination, List<string> Wheres, object parameters)
+        public async Task<IEnumerable<Setting>> GetPagedList(int page, int itemsPerPage, IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs)
         {
-            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs = new List<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>>();
-            var list = await GetPagedListAsync<Setting>(pagination.Page, pagination.ItemsPerPage, keyValuePairs);
+            var list = await GetPagedListAsync<Setting>(page, itemsPerPage, keyValuePairs);
 
             return list;
         }

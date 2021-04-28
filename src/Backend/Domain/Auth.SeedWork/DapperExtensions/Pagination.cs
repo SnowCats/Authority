@@ -15,10 +15,5 @@ namespace Auth.SeedWork.DapperExtensions
         /// 每页数量
         /// </summary>
         public int ItemsPerPage { get; set; }
-
-        /// <summary>
-        /// 总数
-        /// </summary>
-        public long Total { get; set; }
     }
 }

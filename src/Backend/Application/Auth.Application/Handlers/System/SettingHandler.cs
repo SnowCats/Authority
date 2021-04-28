@@ -99,7 +99,9 @@ namespace Auth.Application.Handlers.System
         /// <returns></returns>
         public async Task<IEnumerable<SettingDto>> Handle(QueryPagedListRequest request, CancellationToken cancellationToken)
         {
-            IEnumerable<Setting> list = await SettingRepository.GetPagedList(request, new List<string>(), new { });
+            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs = new List<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>>();
+
+            IEnumerable<Setting> list = await SettingRepository.GetPagedList(request.Page, request.ItemsPerPage, keyValuePairs);
             IEnumerable<SettingDto> dtos = mapper.Map<IEnumerable<SettingDto>>(list);
 
             return dtos;

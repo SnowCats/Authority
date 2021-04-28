@@ -17,6 +17,6 @@ namespace Auth.IRepository.ISetting
         /// <param name="pagination">分页类</param>
         /// <param name="Wheres"></param>
         /// <returns></returns>
-        Task<IEnumerable<Setting>> GetPagedList(Pagination pagination, List<string> Wheres, object parameters);
+        Task<IEnumerable<Setting>> GetPagedList(int page, int itemsPerPage, IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs);
     }
 }

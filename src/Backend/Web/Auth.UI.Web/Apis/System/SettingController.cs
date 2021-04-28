@@ -75,7 +75,7 @@ namespace Auth.UI.Web.Apis.System
         /// <param name="settingDto"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<object> GetPagedListAsync(QueryListRequest request)
+        public async Task<object> GetPagedListAsync(QueryPagedListRequest request)
         {
             IEnumerable<SettingDto> result = await Mediator.Send(request);
 
@@ -88,7 +88,7 @@ namespace Auth.UI.Web.Apis.System
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<dynamic> GetListWithParamsAsync(QueryListRequest request)
+        public async Task<dynamic> GetListAsync(QueryListRequest request)
         {
             IEnumerable<SettingDto> result = await Mediator.Send(request);
 

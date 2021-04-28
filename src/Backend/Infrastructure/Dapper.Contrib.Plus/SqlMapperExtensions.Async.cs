@@ -94,7 +94,7 @@ namespace Dapper.Contrib.Plus
             IDictionary<string, object> parameters = new ExpandoObject();
 
             // 查询返回的列名
-            if (columnExp is null)
+            if (columnExp != null)
             {
                 for (int i = 0; i < ((NewExpression)columnExp.Body).Members.Count; i++)
                 {
@@ -148,7 +148,7 @@ namespace Dapper.Contrib.Plus
             IDictionary<string, object> parameters = new ExpandoObject();
 
             // 查询返回的列名
-            if (columnExp is null)
+            if (columnExp != null)
             {
                 for (int i = 0; i < ((NewExpression)columnExp.Body).Members.Count; i++)
                 {
@@ -225,7 +225,7 @@ namespace Dapper.Contrib.Plus
             int page,
             int itemsPerPage,
             IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs,
-            Expression<Func<T, dynamic>> queryExp = null,
+            Expression<Func<T, dynamic>> columnExp = null,
             string defaultField = "timestamp",
             string orderBy = "timestamp desc",
             IDbTransaction transaction = null,
@@ -239,13 +239,14 @@ namespace Dapper.Contrib.Plus
             IDictionary<string, object> parameters = new ExpandoObject();
 
             // 查询返回的列名
-            if (queryExp is null)
+            if (columnExp != null)
             {
                 // 参数
-                for (int i = 0; i < keyValuePairs.Count(); i++)
+                for (int i = 0; i < ((NewExpression)columnExp.Body).Members.Count; i++)
                 {
-                    adapter.AppendColumnNameEqualsValue(query, keyValuePairs[i].Key.Key, keyValuePairs[i].Value);
-                    parameters.Add(keyValuePairs[i].Key.Key, keyValuePairs[i].Key.Value);
+                    adapter.AppendColumnName(columns, ((NewExpression)columnExp.Body).Members[i].Name);
+                    if (i < ((NewExpression)columnExp.Body).Members.Count - 1)
+                        columns.Append(", ");
                 }
             }
             else
@@ -254,16 +255,20 @@ namespace Dapper.Contrib.Plus
             }
 
             // 参数
-            for (int i = 0; i < keyValuePairs.Count(); i++)
+            if (keyValuePairs != null)
             {
-                adapter.AppendColumnNameEqualsValue(query, keyValuePairs[i].Key.Key, keyValuePairs[i].Value);
-                parameters.Add(keyValuePairs[i].Key.Key, keyValuePairs[i].Key.Value);
+                // 参数
+                for (int i = 0; i < keyValuePairs.Count(); i++)
+                {
+                    adapter.AppendColumnNameEqualsValue(query, keyValuePairs[i].Key.Key, keyValuePairs[i].Value);
+                    parameters.Add(keyValuePairs[i].Key.Key, keyValuePairs[i].Key.Value);
+                }
             }
 
             // mysql数据库, 需要改为适配所有数据库
-            long timestamp = (long)connection.ExecuteScalar($"select ifnull(min({defaultField}), unix_timestamp()) from {name} where 1=1 {query} order by {orderBy} limit {(page - 1) * itemsPerPage}, 1",
+            long timestamp = (long)await connection.ExecuteScalarAsync($"select ifnull(min({defaultField}), unix_timestamp()) from {name} where 1=1 {query} order by {orderBy} limit {(page - 1) * itemsPerPage}, 1",
                 parameters, transaction, commandTimeout);
-            var list = await connection.QueryAsync<T>($"select {columns} from {name} where 1=1 {query} and {defaultField} <= {timestamp} order by {orderBy} limit {(page - 1) * itemsPerPage}, {itemsPerPage}",
+            var list = await connection.QueryAsync<T>($"select {columns} from {name} where 1=1 {query} and {defaultField} >= {timestamp} order by {orderBy} limit {(page - 1) * itemsPerPage}, {itemsPerPage}",
                 parameters, transaction, commandTimeout: commandTimeout);
 
             return list;
@@ -286,7 +291,7 @@ namespace Dapper.Contrib.Plus
             var query = new StringBuilder();
             var adapter = GetFormatter(connection);
 
-            if (columnExp is null)
+            if (columnExp != null)
             {
                 for (int i = 0; i < ((NewExpression)columnExp.Body).Members.Count; i++)
                 {
@@ -300,7 +305,7 @@ namespace Dapper.Contrib.Plus
                 throw new Exception("parameter 'expression' can not be null");
             }
 
-            if (queryExp is null)
+            if (queryExp != null)
             {
                 for (int i = 0; i < ((NewExpression)queryExp.Body).Members.Count; i++)
                 {
@@ -338,7 +343,7 @@ namespace Dapper.Contrib.Plus
             var name = GetTableName(typeof(T));
             var query = new StringBuilder();
             var adapter = GetFormatter(connection);
-            if (queryExp is null)
+            if (queryExp != null)
             {
                 for (int i = 0; i < ((NewExpression)queryExp.Body).Members.Count; i++)
                 {
