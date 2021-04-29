@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Auth.Application.Common;
 using Auth.Dto.System;
-using Auth.SeedWork.DapperExtensions;
 using MediatR;
 
 namespace Auth.Application.Commands.System.Setting
@@ -9,7 +9,7 @@ namespace Auth.Application.Commands.System.Setting
     /// <summary>
     /// 更新数据字典请求
     /// </summary>
-    public class QueryPagedListRequest : Pagination, IRequest<IEnumerable<SettingDto>>
+    public class QueryPagedListRequest : Pagination<SettingDto>, IRequest<Pagination<SettingDto>>
     {
         /// <summary>
         /// 上级字典值

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Auth.Application.Commands.System.Setting;
+using Auth.Application.Common;
 using Auth.Dto.System;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -75,11 +76,11 @@ namespace Auth.UI.Web.Apis.System
         /// <param name="settingDto"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<object> GetPagedListAsync(QueryPagedListRequest request)
+        public async Task<Pagination<SettingDto>> GetPagedListAsync(QueryPagedListRequest request)
         {
-            IEnumerable<SettingDto> result = await Mediator.Send(request);
+            Pagination<SettingDto> response = await Mediator.Send(request);
 
-            return result;
+            return response;
         }
 
         /// <summary>
@@ -90,9 +91,9 @@ namespace Auth.UI.Web.Apis.System
         [HttpPost]
         public async Task<dynamic> GetListAsync(QueryListRequest request)
         {
-            IEnumerable<SettingDto> result = await Mediator.Send(request);
+            IEnumerable<SettingDto> response = await Mediator.Send(request);
 
-            return result;
+            return response;
         }
     }
 }

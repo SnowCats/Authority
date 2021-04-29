@@ -5,9 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DapperExtensions\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\Dapper.Contrib.Plus\Dapper.Contrib.Plus.csproj" />
   </ItemGroup>
 </Project>

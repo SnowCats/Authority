@@ -198,5 +198,20 @@ namespace Auth.Repository
 
             return list;
         }
+
+        /// <summary>
+        /// 总条数
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="keyValuePairs"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public async Task<long> Count<T>(IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs, IDbTransaction transaction = null)
+            where T : class, new()
+        {
+            long count = await UnitOfWork.ReadConnection.CountAsync<T>(keyValuePairs, transaction);
+
+            return count;
+        }
     }
 }

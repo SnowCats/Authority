@@ -436,6 +436,43 @@ namespace Dapper.Contrib.Plus
         }
 
         /// <summary>
+        /// 查询记录总数
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="keyValuePairs"></param>
+        /// <param name="transaction"></param>
+        /// <param name="commandTimeout"></param>
+        /// <returns></returns>
+        public static long Count<T>(
+            this IDbConnection connection,
+            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs,
+            IDbTransaction transaction = null,
+            int? commandTimeout = null)
+            where T : class, new()
+        {
+            var name = GetTableName(typeof(T));
+            var adapter = GetFormatter(connection);
+            var query = new StringBuilder();
+            IDictionary<string, object> parameters = new ExpandoObject();
+
+            // 参数
+            if (keyValuePairs != null)
+            {
+                // 参数
+                for (int i = 0; i < keyValuePairs.Count(); i++)
+                {
+                    adapter.AppendColumnNameEqualsValue(query, keyValuePairs[i].Key.Key, keyValuePairs[i].Value);
+                    parameters.Add(keyValuePairs[i].Key.Key, keyValuePairs[i].Key.Value);
+                }
+            }
+
+            long count = (long)connection.ExecuteScalar($"select count(*) from {name} where 1=1 {query}");
+
+            return count;
+        }
+
+        /// <summary>
         /// Update any field
         /// </summary>
         /// <typeparam name="T"></typeparam>

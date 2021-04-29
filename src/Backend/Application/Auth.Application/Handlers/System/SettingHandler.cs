@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Auth.Application.Commands.System.Setting;
+using Auth.Application.Common;
 using Auth.Dto.System;
 using Auth.Entity.System;
 using Auth.IRepository.ISetting;
-using Auth.SeedWork.DapperExtensions;
 using AutoMapper;
 using MediatR;
 
@@ -18,7 +18,7 @@ namespace Auth.Application.Handlers.System
     public class SettingHandler : IRequestHandler<CreateRequest, Guid?>,
         IRequestHandler<UpdateRequest, bool>,
         IRequestHandler<DeleteRequest, bool>,
-        IRequestHandler<QueryPagedListRequest, IEnumerable<SettingDto>>,
+        IRequestHandler<QueryPagedListRequest, Pagination<SettingDto>>,
         IRequestHandler<QueryListRequest, IEnumerable<SettingDto>>
     {
         /// <summary>
@@ -97,14 +97,15 @@ namespace Auth.Application.Handlers.System
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<SettingDto>> Handle(QueryPagedListRequest request, CancellationToken cancellationToken)
+        public async Task<Pagination<SettingDto>> Handle(QueryPagedListRequest request, CancellationToken cancellationToken)
         {
             IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs = new List<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>>();
 
             IEnumerable<Setting> list = await SettingRepository.GetPagedList(request.Page, request.ItemsPerPage, keyValuePairs);
+            long count = await SettingRepository.Count<Setting>(keyValuePairs);
             IEnumerable<SettingDto> dtos = mapper.Map<IEnumerable<SettingDto>>(list);
 
-            return dtos;
+            return new Pagination<SettingDto> { Count = count, List = dtos };
         }
 
         /// <summary>

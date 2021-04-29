@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using Auth.Entity.System;
 using Auth.IRepository;
 using Auth.IRepository.ISetting;
-using Auth.SeedWork.DapperExtensions;
-using Dapper.Contrib.Plus;
 
 namespace Auth.Repository.System
 {

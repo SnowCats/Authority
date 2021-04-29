@@ -117,5 +117,15 @@ namespace Auth.IRepository
             string orderBy = "timestamp desc",
             IDbTransaction transaction = null)
             where T : class, new();
+
+        /// <summary>
+        /// 总条数
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="keyValuePairs"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        Task<long> Count<T>(IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs, IDbTransaction transaction = null)
+            where T : class, new();
     }
 }

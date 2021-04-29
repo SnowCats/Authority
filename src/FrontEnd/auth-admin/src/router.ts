@@ -14,11 +14,6 @@ export default new Router({
     mode: 'history',
     base: process.env.BASE_URL,
     routes: [
-        {
-            path: '/',
-            name: 'index',
-            component: () => import('./pages/index.vue')
-        },
         // 基础数据
         {
             // 组织信息

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Auth.Entity.System;
-using Auth.SeedWork.DapperExtensions;
 
 namespace Auth.IRepository.ISetting
 {
