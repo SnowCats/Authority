@@ -1,5 +1,5 @@
 <template>
-  <div id="system-setting">
+  <div id="system-setting-add">
     <div class="page-wrapper">
       <v-container grid-list-xl fluid>
         <v-layout row wrap>
@@ -55,6 +55,7 @@ import Vue from 'vue';
 import Setting from '@/types/system/setting';
 import Component from 'vue-class-component';
 import VWidget from '../../../components/VWidget.vue';
+import { insert } from '../../../services/system/setting';
 
 // 组件注入
 @Component({
@@ -86,14 +87,9 @@ export default class Index extends Vue {
 
     // valid
     if((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
-      this.axios
-        .post('/api/Setting/Insert', this.setting)
-        .then(res => {
-          console.log(res);
-        })
-        .catch(function (error) {
-          console.log(error.response);
-        });
+      insert(this.setting).then((res: any) => {
+        console.log(res);
+      });
     }
   }
   back(): void {

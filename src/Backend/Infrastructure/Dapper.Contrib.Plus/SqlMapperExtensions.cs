@@ -467,7 +467,7 @@ namespace Dapper.Contrib.Plus
                 }
             }
 
-            long count = (long)connection.ExecuteScalar($"select count(*) from {name} where 1=1 {query}");
+            long count = (long)connection.ExecuteScalar($"select count(*) from {name} where 1=1 {query}", parameters, transaction, commandTimeout);
 
             return count;
         }

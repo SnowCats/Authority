@@ -12,8 +12,8 @@
                       <v-select
                         label="上级字典值"
                         :clearable="true"
-                        v-model="setting.value"
-                        :items="item.value.list"
+                        v-model="model.parentValue"
+                        :items="dict.items"
                         item.text="text"
                         item.value="value"
                       ></v-select>
@@ -21,13 +21,13 @@
                     <v-flex md3 sm6 xs12>
                       <v-text-field
                         label="字典文本"
-                        v-model="setting.text"
+                        v-model="model.text"
                       ></v-text-field>
                     </v-flex>
                     <v-flex md3 sm6 xs12>
                       <v-text-field
                         label="字典值"
-                        v-model="setting.value"
+                        v-model="model.value"
                       ></v-text-field>
                     </v-flex>
                     <v-flex md12 sm12 xs12>
@@ -63,8 +63,12 @@
                   :items-per-page="pagination.itemsPerPage"
                   hide-default-footer
                   class="elevation-1"
-                  @page-count="pageCount = $event"
+                  @page-count="pagination.count = $event"
                 >
+                  <template v-slot:[`item.id`]="{ item }">
+                    <!-- 序号 -->
+                    {{ (pagination.page * list.map(function(x) {return x.id; }).indexOf(item.id)) + 1 }}
+                  </template>
                   <template v-slot:[`item.actions`]="{ item }">
                     <v-icon small class="mr-2" @click="edit(item)">
                       mdi-pencil
@@ -77,7 +81,7 @@
                 <div class="text-center pt-2">
                   <v-pagination
                     v-model="pagination.page"
-                    :length="pagination.pageCount"
+                    :length="pagination.count"
                   ></v-pagination>
                 </div>
               </template>
@@ -90,10 +94,12 @@
 </template>
 
 <script lang="ts">
-import Setting from "@/types/system/setting";
 import Vue from "vue";
+import Setting from "@/types/system/setting";
+import Pagination from "@/types/common/pagination";
 import Component from "vue-class-component";
-import VWidget from "../../../components/VWidget.vue";
+import VWidget from "@components/VWidget.vue";
+import { getPagedList } from '@/services/system/setting';
 
 // 组件注入
 @Component({
@@ -106,9 +112,9 @@ import VWidget from "../../../components/VWidget.vue";
 export default class Index extends Vue {
   // data
   setting: Setting = new Setting();
-  private item = {
-    value: {
-      list: [
+  // 字典
+  private dict = {
+    items: [
         {
           value: 0,
           text: "禁用",
@@ -117,23 +123,19 @@ export default class Index extends Vue {
           value: 1,
           text: "启用",
         },
-      ],
-    },
-  };
-  pagination = {
-    page: 1,
-    pageCount: 1,
-    itemsPerPage: 5,
-  };
-  query = {
-    page: 1,
-    pageCount: 0,
-    itemsPerPage: 5,
-    model: {
+      ]
+  }
+  // 分页
+  pagination: Pagination = new Pagination();
+  model: any = {
+      page: this.pagination.page,
+      itemsPerPage: this.pagination.itemsPerPage,
+      count: this.pagination.count,
+      parentValue: this.setting.parentValue,
       text: this.setting.text,
       value: this.setting.value,
-    },
   };
+  // Table
   headers: any[] = [
     { text: "序号", value: "id" },
     { text: "上级字典值", value: "parentValue" },
@@ -144,21 +146,20 @@ export default class Index extends Vue {
     { text: "备注", value: "notes" },
     { text: "操作", value: "actions" },
   ];
-  list: any[] = [
-    {
-      id: 1,
-      parentValue: '',
-      parentText: '',
-      value: 'gender',
-      text: '性别',
-      status: 1,
-      notes: '这是备注。'
-    },
-  ];
+  list: Setting[] = [];
+  // created
+  created(): void {
+    this.search();
+  }
   // Methods
   // 查询
   search(): void {
-    console.log("查询");
+    console.log("查询", this.model);
+    getPagedList(this.model).then((res: any) => {
+      this.list = res.data.list;
+      console.log("list", this.list);
+      this.model.count = res.count;
+    });
   }
   // 新增
   add(): void {

@@ -15,7 +15,9 @@ namespace Auth.Application.Handlers.System
     /// <summary>
     /// 数据字典处理服务
     /// </summary>
-    public class SettingHandler : IRequestHandler<CreateRequest, Guid?>,
+    public class SettingHandler :
+        IRequestHandler<GetRequest, SettingDto>,
+        IRequestHandler<CreateRequest, Guid?>,
         IRequestHandler<UpdateRequest, bool>,
         IRequestHandler<DeleteRequest, bool>,
         IRequestHandler<QueryPagedListRequest, Pagination<SettingDto>>,
@@ -101,11 +103,11 @@ namespace Auth.Application.Handlers.System
         {
             IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs = new List<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>>();
 
-            IEnumerable<Setting> list = await SettingRepository.GetPagedList(request.Page, request.ItemsPerPage, keyValuePairs);
-            long count = await SettingRepository.Count<Setting>(keyValuePairs);
+            IEnumerable<Setting> list = await SettingRepository.GetPagedListAsync<Setting>(request.Page, request.ItemsPerPage, keyValuePairs);
+            long count = await SettingRepository.CountAsync<Setting>(keyValuePairs);
             IEnumerable<SettingDto> dtos = mapper.Map<IEnumerable<SettingDto>>(list);
 
-            return new Pagination<SettingDto> { Count = count, List = dtos };
+            return new Pagination<SettingDto> { Count = count, Page = request.Page, ItemsPerPage = request.ItemsPerPage, List = dtos };
         }
 
         /// <summary>
@@ -120,6 +122,20 @@ namespace Auth.Application.Handlers.System
             IEnumerable<SettingDto> dtos = mapper.Map<IEnumerable<SettingDto>>(list);
 
             return dtos;
+        }
+
+        /// <summary>
+        /// 查询单条记录
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<SettingDto> Handle(GetRequest request, CancellationToken cancellationToken)
+        {
+            Setting setting = await SettingRepository.GetAsync<Setting>(request.ID.Value);
+            SettingDto settingDto = mapper.Map<SettingDto>(setting);
+
+            return settingDto;
         }
     }
 }

@@ -22,18 +22,5 @@ namespace Auth.Repository.System
         {
             UnitOfWork = unitOfWork;
         }
-
-        /// <summary>
-        /// 数据字典分页列表
-        /// </summary>
-        /// <param name="pagination">分页类</param>
-        /// <param name="Wheres"></param>
-        /// <returns></returns>
-        public async Task<IEnumerable<Setting>> GetPagedList(int page, int itemsPerPage, IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs)
-        {
-            var list = await GetPagedListAsync<Setting>(page, itemsPerPage, keyValuePairs);
-
-            return list;
-        }
     }
 }

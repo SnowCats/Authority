@@ -17,7 +17,8 @@ module.exports = {
       .set("@router", resolve("src/router"))
       .set("@store", resolve("src/store"))
       .set("@layouts", resolve("src/layouts"))
-      .set("@static", resolve("src/static"));
+      .set("@static", resolve("src/static"))
+      .set("@services", resolve("src/services"));
   },
   css: {
     requireModuleExtension: true,

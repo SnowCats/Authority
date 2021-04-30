@@ -38,6 +38,30 @@ namespace Auth.Repository
         }
 
         /// <summary>
+        /// 查询单条记录
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public async Task<T> GetAsync<T>(Guid id, IDbTransaction transaction = null) where T : class, new()
+        {
+            return await UnitOfWork.ReadConnection.GetAsync<T>(id);
+        }
+
+        /// <summary>
+        /// 查询单条记录
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public T Get<T>(Guid id, IDbTransaction transaction = null) where T : class, new()
+        {
+            return UnitOfWork.ReadConnection.Get<T>(id);
+        }
+
+        /// <summary>
         /// 删除
         /// </summary>
         /// <typeparam name="T">返回实体类型</typeparam>
@@ -206,7 +230,7 @@ namespace Auth.Repository
         /// <param name="keyValuePairs"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public async Task<long> Count<T>(IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs, IDbTransaction transaction = null)
+        public async Task<long> CountAsync<T>(IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs, IDbTransaction transaction = null)
             where T : class, new()
         {
             long count = await UnitOfWork.ReadConnection.CountAsync<T>(keyValuePairs, transaction);

@@ -29,6 +29,19 @@ namespace Auth.UI.Web.Apis.System
         }
 
         /// <summary>
+        /// 查询单条记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<SettingDto> GetAsync(Guid id)
+        {
+            GetRequest request = new GetRequest { ID = id };
+            SettingDto response = (SettingDto)await Mediator.Send(request);
+
+            return response;
+        }
+
+        /// <summary>
         /// 新增数据字典
         /// </summary>
         /// <param name="dto"></param>

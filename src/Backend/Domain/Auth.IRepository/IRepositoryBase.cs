@@ -12,6 +12,24 @@ namespace Auth.IRepository
     public interface IRepositoryBase
     {
         /// <summary>
+        /// 查询单条记录
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        Task<T> GetAsync<T>(Guid id, IDbTransaction transaction = null) where T : class, new();
+
+        /// <summary>
+        /// 查询单条记录
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        T Get<T>(Guid id, IDbTransaction transaction = null) where T : class, new();
+
+        /// <summary>
         /// 新增接口
         /// </summary>
         /// <typeparam name="T">返回类型</typeparam>
@@ -125,7 +143,7 @@ namespace Auth.IRepository
         /// <param name="keyValuePairs"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        Task<long> Count<T>(IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs, IDbTransaction transaction = null)
+        Task<long> CountAsync<T>(IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs, IDbTransaction transaction = null)
             where T : class, new();
     }
 }

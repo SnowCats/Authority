@@ -90,7 +90,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { Locales } from "../../i18n/locales";
-import Menus from "../../apis/menu";
+import Menus from "../../services/menu";
 
 // 组件注入
 @Component({
