@@ -33,10 +33,11 @@ namespace Auth.UI.Web.Apis.System
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [HttpGet("{id}")]
         public async Task<SettingDto> GetAsync(Guid id)
         {
             GetRequest request = new GetRequest { ID = id };
-            SettingDto response = (SettingDto)await Mediator.Send(request);
+            SettingDto response = await Mediator.Send(request);
 
             return response;
         }

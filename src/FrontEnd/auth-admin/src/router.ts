@@ -65,10 +65,16 @@ export default new Router({
             component: () => import('./pages/system/setting/index.vue')
         },
         {
-            // 数据字典新增
+            // 数据字典信息新增
             path: '/system/setting/add',
             name: 'setting-add',
             component: () => import('./pages/system/setting/add.vue')
+        },
+        {
+            // 数据字典信息编辑
+            path: '/system/setting/edit/:id',
+            name: 'setting-edit',
+            component: () => import('./pages/system/setting/edit.vue')
         }
     ]
 });

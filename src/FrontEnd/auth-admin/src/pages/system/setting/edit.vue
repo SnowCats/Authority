@@ -1,10 +1,10 @@
 <template>
-  <div id="system-setting-edit">
+  <div id="system-setting-add">
     <div class="page-wrapper">
       <v-container grid-list-xl fluid>
         <v-layout row wrap>
           <v-flex sm12>
-            <v-widget title="数据字典新增">
+            <v-widget title="数据字典编辑">
               <template slot="widget-content">
                 <v-container grid-list-xl fluid>
                   <v-form ref="form" v-model="valid" lazy-validation>
@@ -55,7 +55,7 @@ import Vue from 'vue';
 import Setting from '@/types/system/setting';
 import Component from 'vue-class-component';
 import VWidget from '../../../components/VWidget.vue';
-import { insert } from '../../../services/system/setting';
+import service from '../../../services/system/setting';
 
 // 组件注入
 @Component({
@@ -83,7 +83,12 @@ export default class Index extends Vue {
 
   // created
   created(): void {
-    
+    this.setting.id = this.$route.params.id;
+    service.get(this.setting.id).then((res: any) => {
+      console.log("get data", res.data);
+      this.setting = res.data;
+    });
+    console.log("编辑项id", this.$route.params.id);
   }
 
   // Methods
@@ -92,13 +97,16 @@ export default class Index extends Vue {
 
     // valid
     if((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
-      let res = insert(this.setting);
-      console.log(res);
+      let result = service.update(this.setting);
+      if(result) {
+        console.log("更新成功");
+        this.$router.push("../.");
+      }
     }
   }
   back(): void {
     // 返回上一级
-    this.$router.push('.');
+    this.$router.push('../.');
   }
 }
 </script>

@@ -24,6 +24,7 @@ export const i18n = new VueI18n({
   fallbackLocale: defaultLocale
 });
 
+// 全局挂载
 // 
 new Vue({
   i18n,

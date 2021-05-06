@@ -55,7 +55,7 @@ import Vue from 'vue';
 import Setting from '@/types/system/setting';
 import Component from 'vue-class-component';
 import VWidget from '../../../components/VWidget.vue';
-import { insert } from '../../../services/system/setting';
+import service from '../../../services/system/setting';
 
 // 组件注入
 @Component({
@@ -87,7 +87,7 @@ export default class Index extends Vue {
 
     // valid
     if((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
-      insert(this.setting).then((res: any) => {
+      service.insert(this.setting).then((res: any) => {
         console.log(res);
       });
     }

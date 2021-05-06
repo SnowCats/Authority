@@ -70,10 +70,10 @@
                     {{ (pagination.page * list.map(function(x) {return x.id; }).indexOf(item.id)) + 1 }}
                   </template>
                   <template v-slot:[`item.actions`]="{ item }">
-                    <v-icon small class="mr-2" @click="edit(item)">
+                    <v-icon small class="mr-2" @click="edit(item.id)">
                       mdi-pencil
                     </v-icon>
-                    <v-icon small class="mr-2" @click="del(item)">
+                    <v-icon small class="mr-2" @click="del(item.id)">
                       mdi-delete
                     </v-icon>
                   </template>
@@ -99,7 +99,7 @@ import Setting from "@/types/system/setting";
 import Pagination from "@/types/common/pagination";
 import Component from "vue-class-component";
 import VWidget from "@components/VWidget.vue";
-import { getPagedList } from '@/services/system/setting';
+import service from '@/services/system/setting';
 
 // 组件注入
 @Component({
@@ -155,7 +155,7 @@ export default class Index extends Vue {
   // 查询
   search(): void {
     console.log("查询", this.model);
-    getPagedList(this.model).then((res: any) => {
+    service.getPagedList(this.model).then((res: any) => {
       this.list = res.data.list;
       console.log("list", this.list);
       this.model.count = res.count;
@@ -163,16 +163,20 @@ export default class Index extends Vue {
   }
   // 新增
   add(): void {
-    this.$router.push("./setting/add");
     console.log("新增");
+    this.$router.push("./setting/add");
   }
   // 编辑
-  edit(item: string): void {
-    console.log("编辑", item);
+  edit(id: string): void {
+    console.log("跳转到编辑");
+    this.$router.push("./setting/edit/" + id);
   }
   // 删除
   del(item: string): void {
     console.log("删除", item);
+    // service.delete(item).then((res: any) => {
+    //   console.log("删除成功", res.data);
+    // })
   }
 }
 </script>
