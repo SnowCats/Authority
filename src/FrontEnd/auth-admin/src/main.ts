@@ -7,9 +7,6 @@ import router from './router';
 import './assets/variables/app.scss';
 import './assets/mixins/mixins.scss';
 
-import Alert from "@/components/alerts/index";
-
-Vue.prototype.$alert = Alert;
 Vue.config.productionTip = false;
 
 // i18n

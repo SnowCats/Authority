@@ -176,8 +176,6 @@ export default class Index extends Vue {
     // service.delete(item).then((res: any) => {
     //   console.log("删除成功", res.data);
     // })
-
-    this.$alert.init();
   }
 }
 </script>
