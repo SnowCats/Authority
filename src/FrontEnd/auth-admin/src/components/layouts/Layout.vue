@@ -87,8 +87,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
+import { Vue, Component, Prop } from 'vue-property-decorator';
 import { Locales } from "../../i18n/locales";
 import Menus from "../../services/menu";
 

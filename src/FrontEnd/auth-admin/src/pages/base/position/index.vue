@@ -3,8 +3,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
+import { Vue, Component, Prop } from 'vue-property-decorator';
 
 // 组件注入
 @Component({

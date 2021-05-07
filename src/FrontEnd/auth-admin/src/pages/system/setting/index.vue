@@ -94,10 +94,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { Vue, Component, Prop } from 'vue-property-decorator';
 import Setting from "@/types/system/setting";
 import Pagination from "@/types/common/pagination";
-import Component from "vue-class-component";
 import VWidget from "@components/VWidget.vue";
 import service from '@/services/system/setting';
 
@@ -177,6 +176,8 @@ export default class Index extends Vue {
     // service.delete(item).then((res: any) => {
     //   console.log("删除成功", res.data);
     // })
+
+    this.$alert.init();
   }
 }
 </script>

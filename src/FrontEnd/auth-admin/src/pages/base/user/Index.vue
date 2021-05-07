@@ -94,8 +94,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
+import { Vue, Component, Prop } from 'vue-property-decorator';
 import VWidget from "../../../components/VWidget.vue";
 import User from "../../../types/base/user";
 

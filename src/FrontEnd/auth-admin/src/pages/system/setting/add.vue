@@ -51,9 +51,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Vue, Component, Prop } from 'vue-property-decorator';
 import Setting from '@/types/system/setting';
-import Component from 'vue-class-component';
 import VWidget from '../../../components/VWidget.vue';
 import service from '../../../services/system/setting';
 
