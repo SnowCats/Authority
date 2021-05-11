@@ -10,14 +10,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
+import { Vue, Component, Prop } from 'vue-property-decorator';
 import Layout from './components/layouts/Layout.vue';
 
 // 组件注入
 @Component({
   components: {
-    Layout,
+    Layout
   },
 })
 export default class App extends Vue {}
@@ -29,5 +28,12 @@ export default class App extends Vue {}
     height: 100vh;
     padding-top: 64px + 15px;
   }
+}
+
+.v-alert {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10000;
 }
 </style>

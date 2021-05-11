@@ -19,32 +19,18 @@
                       ></v-select>
                     </v-flex>
                     <v-flex md3 sm6 xs12>
-                      <v-text-field
-                        label="字典文本"
-                        v-model="model.text"
-                      ></v-text-field>
+                      <v-text-field label="字典文本" v-model="model.text"></v-text-field>
                     </v-flex>
                     <v-flex md3 sm6 xs12>
-                      <v-text-field
-                        label="字典值"
-                        v-model="model.value"
-                      ></v-text-field>
+                      <v-text-field label="字典值" v-model="model.value"></v-text-field>
                     </v-flex>
                     <v-flex md12 sm12 xs12>
                       <div class="text-right">
-                        <v-btn
-                          color="green darken-2"
-                          class="white--text ma-2"
-                          @click="add"
-                        >
+                        <v-btn color="green darken-2" class="white--text ma-2" @click="add">
                           <v-icon left>mdi-plus</v-icon>
                           新增
                         </v-btn>
-                        <v-btn
-                          color="light-blue darken-2"
-                          class="white--text ma-2"
-                          @click="search"
-                        >
+                        <v-btn color="light-blue darken-2" class="white--text ma-2" @click="search">
                           <v-icon left>mdi-magnify</v-icon>
                           查询
                         </v-btn>
@@ -67,22 +53,23 @@
                 >
                   <template v-slot:[`item.id`]="{ item }">
                     <!-- 序号 -->
-                    {{ (pagination.page * list.map(function(x) {return x.id; }).indexOf(item.id)) + 1 }}
+                    {{
+                      pagination.page *
+                        list
+                          .map(function (x) {
+                            return x.id;
+                          })
+                          .indexOf(item.id) +
+                      1
+                    }}
                   </template>
                   <template v-slot:[`item.actions`]="{ item }">
-                    <v-icon small class="mr-2" @click="edit(item.id)">
-                      mdi-pencil
-                    </v-icon>
-                    <v-icon small class="mr-2" @click="del(item.id)">
-                      mdi-delete
-                    </v-icon>
+                    <v-icon small class="mr-2" @click="edit(item.id)"> mdi-pencil </v-icon>
+                    <v-icon small class="mr-2" @click="del(item.id)"> mdi-delete </v-icon>
                   </template>
                 </v-data-table>
                 <div class="text-center pt-2">
-                  <v-pagination
-                    v-model="pagination.page"
-                    :length="pagination.count"
-                  ></v-pagination>
+                  <v-pagination v-model="pagination.page" :length="pagination.count"></v-pagination>
                 </div>
               </template>
             </v-widget>
@@ -95,9 +82,9 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import Setting from "@/types/system/setting";
-import Pagination from "@/types/common/pagination";
-import VWidget from "@components/VWidget.vue";
+import Setting from '@/types/system/setting';
+import Pagination from '@/types/common/pagination';
+import VWidget from '@components/VWidget.vue';
 import service from '@/services/system/setting';
 
 // 组件注入
@@ -114,36 +101,36 @@ export default class Index extends Vue {
   // 字典
   private dict = {
     items: [
-        {
-          value: 0,
-          text: "禁用",
-        },
-        {
-          value: 1,
-          text: "启用",
-        },
-      ]
-  }
+      {
+        value: 0,
+        text: '禁用',
+      },
+      {
+        value: 1,
+        text: '启用',
+      },
+    ],
+  };
   // 分页
   pagination: Pagination = new Pagination();
   model: any = {
-      page: this.pagination.page,
-      itemsPerPage: this.pagination.itemsPerPage,
-      count: this.pagination.count,
-      parentValue: this.setting.parentValue,
-      text: this.setting.text,
-      value: this.setting.value,
+    page: this.pagination.page,
+    itemsPerPage: this.pagination.itemsPerPage,
+    count: this.pagination.count,
+    parentValue: this.setting.parentValue,
+    text: this.setting.text,
+    value: this.setting.value,
   };
   // Table
   headers: any[] = [
-    { text: "序号", value: "id" },
-    { text: "上级字典值", value: "parentValue" },
-    { text: "上级字典文本", value: "parentText" },
-    { text: "字典值", value: "value" },
-    { text: "字典文本", value: "text" },
-    { text: "状态", value: "status" },
-    { text: "备注", value: "notes" },
-    { text: "操作", value: "actions" },
+    { text: '序号', value: 'id' },
+    { text: '上级字典值', value: 'parentValue' },
+    { text: '上级字典文本', value: 'parentText' },
+    { text: '字典值', value: 'value' },
+    { text: '字典文本', value: 'text' },
+    { text: '状态', value: 'status' },
+    { text: '备注', value: 'notes' },
+    { text: '操作', value: 'actions' },
   ];
   list: Setting[] = [];
   // created
@@ -153,29 +140,26 @@ export default class Index extends Vue {
   // Methods
   // 查询
   search(): void {
-    console.log("查询", this.model);
+    console.log('查询', this.model);
     service.getPagedList(this.model).then((res: any) => {
       this.list = res.data.list;
-      console.log("list", this.list);
+      console.log('list', this.list);
       this.model.count = res.count;
     });
   }
   // 新增
   add(): void {
-    console.log("新增");
-    this.$router.push("./setting/add");
+    console.log('新增');
+    this.$router.push('./setting/add');
   }
   // 编辑
   edit(id: string): void {
-    console.log("跳转到编辑");
-    this.$router.push("./setting/edit/" + id);
+    console.log('跳转到编辑');
+    this.$router.push('./setting/edit/' + id);
   }
   // 删除
   del(item: string): void {
-    console.log("删除", item);
-    // service.delete(item).then((res: any) => {
-    //   console.log("删除成功", res.data);
-    // })
+    console.log('删除', item);
   }
 }
 </script>
