@@ -160,6 +160,10 @@ export default class Index extends Vue {
   // 删除
   del(item: string): void {
     console.log('删除', item);
+    this.$root.$confirm('Delete?', 'Are you sure?', { color: 'red' })
+      .then((value: any) => {
+        console.log(value);
+    });
   }
 }
 </script>

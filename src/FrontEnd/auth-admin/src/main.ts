@@ -24,8 +24,10 @@ export const i18n = new VueI18n({
   fallbackLocale: defaultLocale
 });
 
-// 全局挂载
-// 
+// 全局变量
+Vue.prototype.$confirm = () => {};
+
+// Vue实例
 new Vue({
   i18n,
   store,

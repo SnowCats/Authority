@@ -95,7 +95,7 @@ import Menus from "../../services/menu";
 @Component({
   components: {},
 })
-export default class Layout extends Vue {
+export default class VLayout extends Vue {
   // data
   menus = Menus;
   language = {
