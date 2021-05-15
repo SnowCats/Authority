@@ -1,7 +1,7 @@
 <template>
 	<v-row justify="center">
 		<v-dialog
-		 	v-model="dialog"
+		 	v-model="visible"
 		  :max-width="options.width"
 			persistent
 		>
@@ -65,7 +65,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
  */
 
 export default class VConfirm extends Vue {
-  dialog: Boolean = false;
+  visible: Boolean = false;
 	message: String = "";
 	title: String = "";
   options: any = {
@@ -75,15 +75,15 @@ export default class VConfirm extends Vue {
 		cancelText: 'CANCEL',
 		cancelColor: 'default',
   };
-	resolve: any = null;
-	reject: any = null;
+	resolve: Function = (value: boolean) => value;
+	reject: Function = (value: boolean) => value;
 
 	open(title: string, message: string ,options: any): Promise<any> {
-		this.dialog = true;
+		this.visible = true;
 		this.title = title;
 		this.message = message;
 		this.options = Object.assign(this.options, options);
-		return new Promise((resolve: any, reject: any) => {
+		return new Promise((resolve: Function, reject: Function) => {
 			this.resolve = resolve;
 			this.reject = reject;
 		});
@@ -91,12 +91,12 @@ export default class VConfirm extends Vue {
 
 	agree(): void {
 		this.resolve(true);
-		this.dialog = false;
+		this.visible = false;
 	}
 
 	cancel(): void {
 			this.resolve(false);
-			this.dialog = false;
+			this.visible = false;
 		}
 }
 </script>

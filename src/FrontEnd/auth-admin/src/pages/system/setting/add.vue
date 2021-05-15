@@ -88,6 +88,14 @@ export default class Index extends Vue {
     if((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
       service.insert(this.setting).then((res: any) => {
         console.log(res);
+        if(!!res.data) {
+          this.$root.$alert("success", "新增成功");
+          // 返回上级目录
+          this.back();
+        }
+        else {
+          this.$root.$alert("warning", "当前字典值已存在，不能重新添加");
+        }
       });
     }
   }

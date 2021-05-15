@@ -26,6 +26,7 @@ export const i18n = new VueI18n({
 
 // 全局变量
 Vue.prototype.$confirm = () => {};
+Vue.prototype.$alert = () => {};
 
 // Vue实例
 new Vue({

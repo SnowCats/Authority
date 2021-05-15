@@ -140,10 +140,8 @@ export default class Index extends Vue {
   // Methods
   // 查询
   search(): void {
-    console.log('查询', this.model);
     service.getPagedList(this.model).then((res: any) => {
       this.list = res.data.list;
-      console.log('list', this.list);
       this.model.count = res.count;
     });
   }
@@ -158,8 +156,8 @@ export default class Index extends Vue {
     this.$router.push('./setting/edit/' + id);
   }
   // 删除
-  del(item: string): void {
-    console.log('删除', item);
+  del(id: string): void {
+    console.log('删除', id);
     this.$root.$confirm('确认删除吗？', '删除后数据不可恢复', { 
       width: 500,
       okText: '确认',
@@ -169,8 +167,21 @@ export default class Index extends Vue {
     }).then((value: boolean) => {
         if(value) {
           // 执行删除操作
+          service.delete({ id: id }).then((res: any) => {
+            if(!!res.data) {
+              this.$root.$alert("success", "删除成功", 3000);
+              this.search();
+            }
+            else {
+              this.$root.$alert("error", "删除失败");
+            }
+          })
         }
     });
   }
 }
 </script>
+
+<style lang="scss" scoped>
+
+</style>

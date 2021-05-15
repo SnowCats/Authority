@@ -10,7 +10,7 @@ axios.interceptors.request.use(
   function (config) {
     config.withCredentials = false;
     // Do something before request is sent
-    if (config.method === "post") {
+    if (config.method === 'POST') {
       config.data = JSON.stringify(config.data);
     }
     return config;

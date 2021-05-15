@@ -6,20 +6,22 @@
         <router-view :key="$route.fullPath"></router-view>
       </v-container>
     </v-main>
-    <v-confirm ref="confirm"></v-confirm>
+    <confirm ref="confirm"></confirm>
+    <alert ref="alert"></alert>
   </v-app>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import VLayout from '@/components/layouts/VLayout.vue';
-import VConfirm from '@/components/dialogs/VConfirm.vue';
-
+import Confirm from '@/components/dialogs/Confirm.vue';
+import Alert from '@/components/dialogs/Alert.vue';
 // 组件注入
 @Component({
   components: {
     VLayout,
-    VConfirm
+    Confirm,
+    Alert
   },
 })
 export default class App extends Vue {
@@ -27,6 +29,7 @@ export default class App extends Vue {
 
   mounted() {
     this.$root.$confirm = this.$refs.confirm.open;
+    this.$root.$alert = this.$refs.alert.open;
   }
 }
 </script>
