@@ -1,24 +1,33 @@
 <template>
-  <v-dialog
-		v-model="dialog"
-		:max-width="options.width"
-		@keydown.esc="cancel"
-		v-bind:style="{ zIndex: options.zIndex }"
-	>
-		<v-card>
-			<v-toolbar dark :color="options.color" dense text>
-				<v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
-			</v-toolbar>
-			<v-card-text v-show="!!message">{{ message }}</v-card-text>
-			<v-card-actions class="pt-0">
-				<v-spacer></v-spacer>
-				<v-btn color="primary darken-1" @click.native="agree"
-					>Yes</v-btn
-				>
-				<v-btn color="grey" @click.native="cancel">Cancel</v-btn>
-			</v-card-actions>
-		</v-card>
-	</v-dialog>
+	<v-row justify="center">
+		<v-dialog
+		 	v-model="dialog"
+		  :max-width="options.width"
+			persistent
+		>
+			<v-card>
+				<v-card-title class="headline">
+					{{title}}
+				</v-card-title>
+				<v-card-text>
+					{{message}}
+				</v-card-text>
+				<v-card-actions>
+					<v-spacer></v-spacer>
+					<v-btn
+						:color="options.cancelColor"
+						text
+						@click.native="cancel"
+					>{{options.cancelText}}</v-btn>
+					<v-btn
+						:color="options.okColor"
+						text
+						@click.native="agree"
+					>{{options.okText}}</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
+	</v-row>
 </template>
 
 <script lang="ts">
@@ -57,15 +66,17 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 export default class VConfirm extends Vue {
   dialog: Boolean = false;
-	resolve: any = null;
-	reject: any = null;
 	message: String = "";
 	title: String = "";
   options: any = {
-    color: 'primary',
-    width: 290,
-    zIndex: 10000
-  }
+    width: 300,
+		okText: 'OK',
+		okColor: 'primary',
+		cancelText: 'CANCEL',
+		cancelColor: 'default',
+  };
+	resolve: any = null;
+	reject: any = null;
 
 	open(title: string, message: string ,options: any): Promise<any> {
 		this.dialog = true;

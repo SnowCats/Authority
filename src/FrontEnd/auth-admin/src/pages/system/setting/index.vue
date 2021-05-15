@@ -160,9 +160,16 @@ export default class Index extends Vue {
   // 删除
   del(item: string): void {
     console.log('删除', item);
-    this.$root.$confirm('Delete?', 'Are you sure?', { color: 'red' })
-      .then((value: any) => {
-        console.log(value);
+    this.$root.$confirm('确认删除吗？', '删除后数据不可恢复', { 
+      width: 500,
+      okText: '确认',
+      okColor: 'primary',
+      cancelText: '取消',
+      cancelColor: 'default',
+    }).then((value: boolean) => {
+        if(value) {
+          // 执行删除操作
+        }
     });
   }
 }
