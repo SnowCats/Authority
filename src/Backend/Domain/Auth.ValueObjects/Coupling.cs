@@ -9,13 +9,8 @@ namespace Auth.ValueObjects
     /// </summary>
     public class Coupling : ValueObject
     {
-        public string Value { get; }
+        public string Value { get; set; }
 
-        public string Text { get; }
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            throw new NotImplementedException();
-        }
+        public string Text { get; set; }
     }
 }

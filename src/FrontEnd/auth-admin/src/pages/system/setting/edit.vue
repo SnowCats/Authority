@@ -13,8 +13,8 @@
                         <v-select
                           label="上级字典值"
                           :clearable="true"
-                          v-model="setting"
-                          :items="item.value.list"
+                          v-model="setting.parentValue"
+                          :items="select.settings"
                           item.text="text"
                           item.value="value"
                         ></v-select>
@@ -74,20 +74,24 @@ export default class Index extends Vue {
     text: [(v:any) => !!v || '必填']
   }
   // list
-  private item = {
-    value: {
-      list: [],
-    },
-  };
+  // list
+  select: any = {
+    settings: []
+  }
+
+  // mounted
+  mounted(): void {
+    service.getList({}).then(res => {
+      this.select.settings = res.data;
+    })
+  }
 
   // created
   created(): void {
     this.setting.id = this.$route.params.id;
     service.get(this.setting.id).then((res: any) => {
-      console.log("get data", res.data);
       this.setting = res.data;
     });
-    console.log("编辑项id", this.$route.params.id);
   }
 
   // Methods

@@ -68,12 +68,12 @@ namespace Auth.Dto.System
         /// <summary>
         /// 上级节点值
         /// </summary>
-        public string SuperiorValue { get; }
+        public string SuperiorValue { get; set; }
 
         /// <summary>
         /// 上级节点文本
         /// </summary>
-        public string SuperiorText { get; }
+        public string SuperiorText { get; set; }
 
         #endregion
     }

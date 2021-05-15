@@ -117,7 +117,7 @@ namespace Dapper.Contrib.Plus
 
             string sql = $"select {columns} from {name} where 1=1 {query}";
 
-            return await connection.QueryAsync<T>(sql, parameters, transaction, commandTimeout: commandTimeout);
+            return await connection.QueryAsync<T>(sql, param: parameters, transaction: transaction, commandTimeout: commandTimeout);
         }
 
         /// <summary>

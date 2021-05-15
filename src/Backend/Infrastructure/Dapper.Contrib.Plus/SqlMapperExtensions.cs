@@ -1295,11 +1295,11 @@ public partial class SqlServerAdapter : ISqlAdapter
         }
         else if (conditionalType.Equals(ConditionalType.In))
         {
-            sb.Append($" and [{columnName}] in ('@{columnName}')");
+            sb.Append($" and [{columnName}] in @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.NotIn))
         {
-            sb.Append($" and [{columnName}] not in ('@{columnName}')");
+            sb.Append($" and [{columnName}] not in @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.LikeLeft))
         {
@@ -1421,11 +1421,11 @@ public partial class SqlCeServerAdapter : ISqlAdapter
         }
         else if (conditionalType.Equals(ConditionalType.In))
         {
-            sb.Append($" and [{columnName}] in ('@{columnName}')");
+            sb.Append($" and [{columnName}] in @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.NotIn))
         {
-            sb.Append($" and [{columnName}] not in ('@{columnName}')");
+            sb.Append($" and [{columnName}] not in @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.LikeLeft))
         {
@@ -1546,11 +1546,11 @@ public partial class MySqlAdapter : ISqlAdapter
         }
         else if (conditionalType.Equals(ConditionalType.In))
         {
-            sb.Append($" and `{columnName}` in ('@{columnName}')");
+            sb.Append($" and `{columnName}` in @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.NotIn))
         {
-            sb.Append($" and `{columnName}` not in ('@{columnName}')");
+            sb.Append($" and `{columnName}` not in @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.LikeLeft))
         {
@@ -1692,11 +1692,11 @@ public partial class PostgresAdapter : ISqlAdapter
         }
         else if (conditionalType.Equals(ConditionalType.In))
         {
-            sb.Append($" and \"{columnName}\" in ('@{columnName}')");
+            sb.Append($" and \"{columnName}\" in @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.NotIn))
         {
-            sb.Append($" and \"{columnName}\" not in ('@{columnName}')");
+            sb.Append($" and \"{columnName}\" not in @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.LikeLeft))
         {
@@ -1815,11 +1815,11 @@ public partial class SQLiteAdapter : ISqlAdapter
         }
         else if (conditionalType.Equals(ConditionalType.In))
         {
-            sb.Append($" and \"{columnName}\" in ('@{columnName}')");
+            sb.Append($" and \"{columnName}\" in @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.NotIn))
         {
-            sb.Append($" and \"{columnName}\" not in ('@{columnName}')");
+            sb.Append($" and \"{columnName}\" not in @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.LikeLeft))
         {
@@ -1942,11 +1942,11 @@ public partial class FbAdapter : ISqlAdapter
         }
         else if (conditionalType.Equals(ConditionalType.In))
         {
-            sb.Append($" and {columnName} in ('@{columnName}')");
+            sb.Append($" and {columnName} in @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.NotIn))
         {
-            sb.Append($" and {columnName} not in ('@{columnName}')");
+            sb.Append($" and {columnName} not in @{columnName}");
         }
         else if (conditionalType.Equals(ConditionalType.LikeLeft))
         {

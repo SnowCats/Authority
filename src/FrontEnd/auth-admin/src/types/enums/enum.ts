@@ -1,4 +1,4 @@
 enum Status {
-  Disabled,
-  Enabled,
+  Disable,
+  Enable,
 }

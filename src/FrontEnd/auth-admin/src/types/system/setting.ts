@@ -8,6 +8,8 @@ interface ISetting {
     text?: string;
     status?: number;
     notes?: string;
+    superiorValue: string;
+    superiorText: string;
 }
 
 export default class Setting implements ISetting {
@@ -17,4 +19,6 @@ export default class Setting implements ISetting {
     text = '';
     status = 1;  // 默认启用
     notes = '';
+    superiorValue = '';
+    superiorText = '';
 } 

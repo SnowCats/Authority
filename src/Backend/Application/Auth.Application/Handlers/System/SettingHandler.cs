@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Auth.Application.Commands.System.Setting;
@@ -53,7 +54,7 @@ namespace Auth.Application.Handlers.System
             Setting setting = mapper.Map<Setting>(request.SettingDto);
 
             // 判断Value是否已存在
-            if(await SettingRepository.HasValueAsync<Setting>(nameof(setting.Value), setting.Value))
+            if (await SettingRepository.HasValueAsync<Setting>(nameof(setting.Value), setting.Value))
             {
                 return null;
             }
@@ -105,8 +106,31 @@ namespace Auth.Application.Handlers.System
 
             IEnumerable<Setting> list = await SettingRepository.GetPagedListAsync<Setting>(request.Page, request.ItemsPerPage, keyValuePairs);
             long count = await SettingRepository.CountAsync<Setting>(keyValuePairs);
-            IEnumerable<SettingDto> dtos = mapper.Map<IEnumerable<SettingDto>>(list);
 
+            // 如果有记录
+            if (count > 0)
+            {
+                // 查询并关联上级节点的文本值
+                IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValues = new List<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>>
+                {
+                    new KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>(
+                        new KeyValuePair<string, dynamic>(nameof(request.Value), list.Where(s => !string.IsNullOrWhiteSpace(s.ParentValue)).Select(s => s.ParentValue).ToList()),
+                        ConditionalType.In)
+                };
+
+                IEnumerable<Setting> parentList = await SettingRepository.GetListAsync<Setting>(keyValues);
+
+                if (parentList.Any())
+                {
+                    foreach (var item in parentList)
+                    {
+                        list.Where(s => s.ParentValue == item.Value).FirstOrDefault().Superior.Text = item.Text;
+                        list.Where(s => s.ParentValue == item.Value).FirstOrDefault().Superior.Value = item.Value;
+                    }
+                }
+            }
+
+            IEnumerable<SettingDto> dtos = mapper.Map<IEnumerable<SettingDto>>(list);
             return new Pagination<SettingDto> { Count = count, Page = request.Page, ItemsPerPage = request.ItemsPerPage, List = dtos };
         }
 

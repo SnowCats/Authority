@@ -125,7 +125,7 @@ export default class Index extends Vue {
   headers: any[] = [
     { text: '序号', value: 'id' },
     { text: '上级字典值', value: 'parentValue' },
-    { text: '上级字典文本', value: 'parentText' },
+    { text: '上级字典文本', value: 'superiorText' },
     { text: '字典值', value: 'value' },
     { text: '字典文本', value: 'text' },
     { text: '状态', value: 'status' },
