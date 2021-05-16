@@ -111,7 +111,7 @@ export default class Index extends Vue {
   }
   back(): void {
     // 返回上一级
-    this.$router.push('.');
+    this.$router.go(-1);
   }
 }
 </script>

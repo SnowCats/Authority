@@ -21,12 +21,13 @@ import Alert from '@/components/dialogs/Alert.vue';
   components: {
     VLayout,
     Confirm,
-    Alert
+    Alert,
   },
 })
 export default class App extends Vue {
   $refs!: any;
 
+  // mounted
   mounted() {
     this.$root.$confirm = this.$refs.confirm.open;
     this.$root.$alert = this.$refs.alert.open;

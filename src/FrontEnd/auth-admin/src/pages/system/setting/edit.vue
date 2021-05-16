@@ -103,13 +103,13 @@ export default class Index extends Vue {
       let result = service.update(this.setting);
       if(result) {
         console.log("更新成功");
-        this.$router.push("../.");
+        this.back();
       }
     }
   }
   back(): void {
     // 返回上一级
-    this.$router.push('../.');
+    this.$router.go(-1);
   }
 }
 </script>

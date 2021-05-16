@@ -51,8 +51,8 @@
                   class="elevation-1"
                   @page-count="pagination.count = $event"
                 >
+                  <!-- 序号 -->
                   <template v-slot:[`item.id`]="{ item }">
-                    <!-- 序号 -->
                     {{
                       pagination.page *
                         list
@@ -63,6 +63,11 @@
                       1
                     }}
                   </template>
+                  <!-- 状态 -->
+                  <template v-slot:[`item.status`]="{ item }">
+                    {{ item.status === 1 ? '有效' : '无效' }}
+                  </template>
+                  <!-- 操作 -->
                   <template v-slot:[`item.actions`]="{ item }">
                     <v-icon small class="mr-2" @click="edit(item.id)"> mdi-pencil </v-icon>
                     <v-icon small class="mr-2" @click="del(item.id)"> mdi-delete </v-icon>
@@ -100,7 +105,7 @@ export default class Index extends Vue {
   setting: Setting = new Setting();
   // 字典
   private select: any = {
-    settings: []
+    settings: [],
   };
   // 查询条件
   pagination: Pagination = new Pagination();
@@ -128,7 +133,7 @@ export default class Index extends Vue {
   mounted(): void {
     service.getList({}).then(res => {
       this.select.settings = res.data;
-    })
+    });
   }
 
   // created
@@ -159,30 +164,30 @@ export default class Index extends Vue {
   // 删除
   del(id: string): void {
     console.log('删除', id);
-    this.$root.$confirm('确认删除吗？', '删除后数据不可恢复', { 
-      width: 500,
-      okText: '确认',
-      okColor: 'primary',
-      cancelText: '取消',
-      cancelColor: 'default',
-    }).then((value: boolean) => {
-        if(value) {
+    this.$root
+      .$confirm('确认删除吗？', '删除后数据不可恢复', {
+        width: 500,
+        okText: '确认',
+        okColor: 'primary',
+        cancelText: '取消',
+        cancelColor: 'default',
+      })
+      .then((value: boolean) => {
+        if (value) {
           // 执行删除操作
           service.delete({ id: id }).then((res: any) => {
-            if(!!res.data) {
-              this.$root.$alert("success", "删除成功", 3000);
+            if (!!res.data) {
+              this.$root.$alert('success', '删除成功', 3000);
               this.search();
+            } else {
+              this.$root.$alert('error', '删除失败');
             }
-            else {
-              this.$root.$alert("error", "删除失败");
-            }
-          })
+          });
         }
-    });
+      });
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 </style>
