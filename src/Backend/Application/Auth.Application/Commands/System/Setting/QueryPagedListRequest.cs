@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Auth.Application.Common;
 using Auth.Dto.System;
+using Dapper.Contrib.Plus;
 using MediatR;
 
 namespace Auth.Application.Commands.System.Setting
@@ -19,16 +20,19 @@ namespace Auth.Application.Commands.System.Setting
         /// <summary>
         /// 上级字典值
         /// </summary>
+        [Conditional(ConditionalType.Equal)]
         public string ParentValue { get; set; }
 
         /// <summary>
         /// 字典文本
         /// </summary>
+        [Conditional(ConditionalType.Like)]
         public string Text { get; set; }
 
         /// <summary>
         /// 字典值
         /// </summary>
+        [Conditional(ConditionalType.Equal)]
         public string Value { get; set; }
     }
 }

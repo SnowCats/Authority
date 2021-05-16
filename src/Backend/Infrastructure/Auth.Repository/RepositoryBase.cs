@@ -46,7 +46,10 @@ namespace Auth.Repository
         /// <returns></returns>
         public async Task<T> GetAsync<T>(Guid id, IDbTransaction transaction = null) where T : class, new()
         {
-            return await UnitOfWork.ReadConnection.GetAsync<T>(id);
+            using (UnitOfWork.ReadConnection)
+            {
+                return await UnitOfWork.ReadConnection.GetAsync<T>(id);
+            }
         }
 
         /// <summary>
@@ -58,7 +61,10 @@ namespace Auth.Repository
         /// <returns></returns>
         public T Get<T>(Guid id, IDbTransaction transaction = null) where T : class, new()
         {
-            return UnitOfWork.ReadConnection.Get<T>(id);
+            using (UnitOfWork.ReadConnection)
+            {
+                return UnitOfWork.ReadConnection.Get<T>(id);
+            }
         }
 
         /// <summary>
@@ -69,9 +75,12 @@ namespace Auth.Repository
         /// <returns></returns>
         public bool Delete<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            var result = UnitOfWork.WriteConnection.Delete(t, transaction);
+            using (UnitOfWork.ReadConnection)
+            {
+                var result = UnitOfWork.WriteConnection.Delete(t, transaction);
 
-            return result;
+                return result;
+            }
         }
 
         /// <summary>
@@ -82,9 +91,12 @@ namespace Auth.Repository
         /// <returns></returns>
         public async Task<bool> DeleteAsync<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            var result = await UnitOfWork.WriteConnection.DeleteAsync(t, transaction);
+            using (UnitOfWork.WriteConnection)
+            {
+                var result = await UnitOfWork.WriteConnection.DeleteAsync(t, transaction);
 
-            return result;
+                return result;
+            }
         }
 
         /// <summary>
@@ -95,9 +107,12 @@ namespace Auth.Repository
         /// <returns></returns>
         public long Insert<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            var result = UnitOfWork.WriteConnection.Insert(t, transaction);
+            using (UnitOfWork.WriteConnection)
+            {
+                var result = UnitOfWork.WriteConnection.Insert(t, transaction);
 
-            return result;
+                return result;
+            }
         }
 
         /// <summary>
@@ -108,9 +123,12 @@ namespace Auth.Repository
         /// <returns></returns>
         public async Task<long> InsertAsync<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            var result = await UnitOfWork.WriteConnection.InsertAsync(t, transaction);
+            using (UnitOfWork.WriteConnection)
+            {
+                var result = await UnitOfWork.WriteConnection.InsertAsync(t, transaction);
 
-            return result;
+                return result;
+            }
         }
 
         /// <summary>
@@ -121,9 +139,12 @@ namespace Auth.Repository
         /// <returns></returns>
         public bool Update<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            bool result = UnitOfWork.WriteConnection.Update(t, transaction);
+            using (UnitOfWork.WriteConnection)
+            {
+                bool result = UnitOfWork.WriteConnection.Update(t, transaction);
 
-            return result;
+                return result;
+            }
         }
 
         /// <summary>
@@ -134,9 +155,12 @@ namespace Auth.Repository
         /// <returns></returns>
         public async Task<bool> UpdateAsync<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            var result = await UnitOfWork.WriteConnection.UpdateAsync(t, transaction);
+            using (UnitOfWork.WriteConnection)
+            {
+                var result = await UnitOfWork.WriteConnection.UpdateAsync(t, transaction);
 
-            return result;
+                return result;
+            }
         }
 
         /// <summary>
@@ -155,9 +179,12 @@ namespace Auth.Repository
                 new KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>(new KeyValuePair<string, dynamic>(key, value), ConditionalType.Equal)
             };
 
-            var list = await UnitOfWork.ReadConnection.GetListAsync(keyValuePairs, expression, transaction);
+            using (UnitOfWork.ReadConnection)
+            {
+                var list = await UnitOfWork.ReadConnection.GetListAsync(keyValuePairs, expression, transaction);
 
-            return list != null && list.Any();
+                return list != null && list.Any();
+            }
         }
 
         /// <summary>
@@ -174,9 +201,12 @@ namespace Auth.Repository
             where TEntity : class, new()
             where TModel : class, new()
         {
-            var list = await UnitOfWork.ReadConnection.GetListAsync(model, expression, transaction);
+            using (UnitOfWork.ReadConnection)
+            {
+                var list = await UnitOfWork.ReadConnection.GetListAsync(model, expression, transaction);
 
-            return list;
+                return list;
+            }
         }
 
         /// <summary>
@@ -193,49 +223,62 @@ namespace Auth.Repository
             Expression<Func<T, dynamic>> expression = null,
             IDbTransaction transaction = null) where T : class, new()
         {
-            var list = await UnitOfWork.ReadConnection.GetListAsync(keyValuePairs, expression, transaction);
+            using (UnitOfWork.ReadConnection)
+            {
+                var list = await UnitOfWork.ReadConnection.GetListAsync(keyValuePairs, expression, transaction);
 
-            return list;
+                return list;
+            }
         }
 
         /// <summary>
         /// 分页查询
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="page"></param>
-        /// <param name="itemsPerPage"></param>
-        /// <param name="keyValuePairs"></param>
-        /// <param name="expression"></param>
-        /// <param name="defaultField"></param>
-        /// <param name="orderBy"></param>
-        /// <param name="transaction"></param>
+        /// <typeparam name="TEntity">实体</typeparam>
+        /// <typeparam name="TModel">查询条件</typeparam>
+        /// <param name="page">页数</param>
+        /// <param name="itemsPerPage">条数</param>
+        /// <param name="model">查询条件</param>
+        /// <param name="expression">返回的列名</param>
+        /// <param name="defaultField">辅助分页列</param>
+        /// <param name="orderBy">排序</param>
+        /// <param name="transaction">事务</param>
         /// <returns></returns>
-        public async Task<IEnumerable<T>> GetPagedListAsync<T>(int page, int itemsPerPage,
-            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs,
-            Expression<Func<T, dynamic>> expression = null,
+        public async Task<IEnumerable<TEntity>> GetPagedListAsync<TEntity, TModel>(int page, int itemsPerPage,
+            TModel model,
+            Expression<Func<TEntity, dynamic>> expression = null,
             string defaultField = "timestamp",
             string orderBy = "timestamp desc",
             IDbTransaction transaction = null)
-            where T : class, new()
+            where TEntity : class, new()
+            where TModel : class, new()
         {
-            var list = await UnitOfWork.ReadConnection.GetPagedListAsync(page, itemsPerPage, keyValuePairs, expression, defaultField, orderBy, transaction);
+            using (UnitOfWork.ReadConnection)
+            {
+                var list = await UnitOfWork.ReadConnection.GetPagedListAsync(page, itemsPerPage, model, expression, defaultField, orderBy, transaction);
 
-            return list;
+                return list;
+            }
         }
 
         /// <summary>
-        /// 总条数
+        /// 总数
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="keyValuePairs"></param>
-        /// <param name="transaction"></param>
+        /// <typeparam name="TEntity">实体</typeparam>
+        /// <typeparam name="TModel">查询类</typeparam>
+        /// <param name="model">查询实例</param>
+        /// <param name="transaction">事务</param>
         /// <returns></returns>
-        public async Task<long> CountAsync<T>(IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs, IDbTransaction transaction = null)
-            where T : class, new()
+        public async Task<long> CountAsync<TEntity, TModel>(TModel model, IDbTransaction transaction = null)
+            where TEntity : class, new()
+            where TModel : class, new()
         {
-            long count = await UnitOfWork.ReadConnection.CountAsync<T>(keyValuePairs, transaction);
+            using (UnitOfWork.ReadConnection)
+            {
+                long count = await UnitOfWork.ReadConnection.CountAsync<TEntity, TModel>(model, transaction);
 
-            return count;
+                return count;
+            }
         }
     }
 }

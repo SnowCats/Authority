@@ -67,6 +67,22 @@ namespace Auth.Repository
         {
             get
             {
+                if (int.TryParse(Configuration.GetConnectionString("DefaultDB"), out int dbType))
+                {
+                    if (dbType == (int)DbType.MySql)
+                    {
+                        writeConnection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString:Write"));
+                    }
+                    else if (dbType == (int)DbType.SqlServer)
+                    {
+                        writeConnection = new SqlConnection(Configuration.GetConnectionString("SqlServerConnectionString:Write"));
+                    }
+                }
+                else
+                {
+                    throw new Exception("\"DefaultDB\" is incorrect, Please check your appsettings.{*}.json. example: \"DefaultDB\": 0");
+                }
+
                 return writeConnection;
             }
         }
@@ -78,6 +94,23 @@ namespace Auth.Repository
         {
             get
             {
+                // 初始化数据库连接
+                if (int.TryParse(Configuration.GetConnectionString("DefaultDB"), out int dbType))
+                {
+                    if (dbType == (int)DbType.MySql)
+                    {
+                        readConnection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString:Read"));
+                    }
+                    else if (dbType == (int)DbType.SqlServer)
+                    {
+                        readConnection = new SqlConnection(Configuration.GetConnectionString("SqlServerConnectionString:Read"));
+                    }
+                }
+                else
+                {
+                    throw new Exception("\"DefaultDB\" is incorrect, Please check your appsettings.{*}.json. example: \"DefaultDB\": 0");
+                }
+
                 return readConnection;
             }
         }

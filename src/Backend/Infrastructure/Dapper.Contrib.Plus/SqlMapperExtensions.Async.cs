@@ -142,7 +142,7 @@ namespace Dapper.Contrib.Plus
         {
             var name = GetTableName(typeof(TEntity));
             var columns = new StringBuilder();
-            var allProperties = TypePropertiesCache(typeof(TModel));
+            var allProperties = TypePropertiesCache(typeof(TModel)).Where(p => p.GetCustomAttributes(true).Any(a => a is ConditionalAttribute)).ToList();
             var query = new StringBuilder();
             var adapter = GetFormatter(connection);
             IDictionary<string, object> parameters = new ExpandoObject();
@@ -206,6 +206,173 @@ namespace Dapper.Contrib.Plus
             return await connection.QueryAsync<TEntity>(sql, parameters, transaction, commandTimeout: commandTimeout);
         }
 
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <typeparam name="TEntity">实体类</typeparam>
+        /// <typeparam name="TModel">查询类</typeparam>
+        /// <param name="connection">数据库对象</param>
+        /// <param name="page">页数</param>
+        /// <param name="itemsPerPage">每页条数</param>
+        /// <param name="keyValuePairs">查询条件</param>
+        /// <param name="expression">查询字段</param>
+        /// <param name="defaultField"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="transaction"></param>
+        /// <param name="commandTimeout"></param>
+        /// <returns></returns>
+        public static async Task<IEnumerable<TEntity>> GetPagedListAsync<TEntity, TModel>(
+            this IDbConnection connection,
+            int page,
+            int itemsPerPage,
+            TModel model,
+            Expression<Func<TEntity, dynamic>> columnExp = null,
+            string defaultField = "timestamp",
+            string orderBy = "timestamp desc",
+            IDbTransaction transaction = null,
+            int? commandTimeout = null)
+            where TEntity : class, new()
+            where TModel : class, new()
+        {
+            var name = GetTableName(typeof(TEntity));
+            var columns = new StringBuilder();
+            var allProperties = TypePropertiesCache(typeof(TModel)).Where(p => p.GetCustomAttributes(true).Any(a => a is ConditionalAttribute)).ToList();
+            var query = new StringBuilder();
+            var adapter = GetFormatter(connection);
+            IDictionary<string, object> parameters = new ExpandoObject();
+
+            // 查询返回的列名
+            if (columnExp != null)
+            {
+                // 参数
+                for (int i = 0; i < ((NewExpression)columnExp.Body).Members.Count; i++)
+                {
+                    adapter.AppendColumnName(columns, ((NewExpression)columnExp.Body).Members[i].Name);
+                    if (i < ((NewExpression)columnExp.Body).Members.Count - 1)
+                        columns.Append(", ");
+                }
+            }
+            else
+            {
+                columns.Append("*");
+            }
+
+            // 查询条件
+            for (int i = 0; i < allProperties.Count(); i++)
+            {
+                string propertyName;
+                ConditionalType conditionalType;
+                if (allProperties[i].GetCustomAttribute<FieldNameAttribute>() == null)
+                {
+                    propertyName = allProperties[i].Name;
+                }
+                else
+                {
+                    propertyName = allProperties[i].GetCustomAttribute<FieldNameAttribute>().Name;
+                }
+
+                if (allProperties[i].GetCustomAttribute<ConditionalAttribute>() == null)
+                {
+                    // If object is list or array. Set default conditionalType
+                    if (allProperties[i].PropertyType.IsArray || allProperties[i].PropertyType.IsGenericType)
+                    {
+                        conditionalType = ConditionalType.In;
+                    }
+                    else
+                    {
+                        conditionalType = ConditionalType.Equal;
+                    }
+                }
+                else
+                {
+                    conditionalType = allProperties[i].GetCustomAttribute<ConditionalAttribute>().ConditionalType;
+                }
+
+                if (allProperties[i].GetValue(model, null) != null && !string.IsNullOrWhiteSpace(allProperties[i].GetValue(model, null).ToString()))
+                {
+                    adapter.AppendColumnNameEqualsValue(query, propertyName, conditionalType);
+
+                    parameters.Add(propertyName, allProperties[i].GetValue(model, null));
+                }
+            }
+
+            // mysql数据库, 需要改为适配所有数据库
+            long timestamp = (long)await connection.ExecuteScalarAsync($"select ifnull(min({defaultField}), unix_timestamp()) from {name} where 1=1 {query} order by {orderBy} limit {(page - 1) * itemsPerPage}, 1",
+                parameters, transaction, commandTimeout);
+            var list = await connection.QueryAsync<TEntity>($"select {columns} from {name} where 1=1 {query} and {defaultField} >= {timestamp} order by {orderBy} limit {(page - 1) * itemsPerPage}, {itemsPerPage}",
+                parameters, transaction, commandTimeout: commandTimeout);
+
+            return list;
+        }
+
+        /// <summary>
+        /// 查询记录总数
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="keyValuePairs"></param>
+        /// <param name="transaction"></param>
+        /// <param name="commandTimeout"></param>
+        /// <returns></returns>
+        public static async Task<long> CountAsync<TEntity, TModel>(
+            this IDbConnection connection,
+            TModel model,
+            IDbTransaction transaction = null,
+            int? commandTimeout = null)
+            where TEntity : class, new()
+            where TModel : class, new()
+        {
+            var name = GetTableName(typeof(TEntity));
+            var allProperties = TypePropertiesCache(typeof(TModel)).Where(p => p.GetCustomAttributes(true).Any(a => a is ConditionalAttribute)).ToList();
+            var query = new StringBuilder();
+            var adapter = GetFormatter(connection);
+            IDictionary<string, object> parameters = new ExpandoObject();
+
+            // 查询条件
+            for (int i = 0; i < allProperties.Count(); i++)
+            {
+                string propertyName;
+                ConditionalType conditionalType;
+                if (allProperties[i].GetCustomAttribute<FieldNameAttribute>() == null)
+                {
+                    propertyName = allProperties[i].Name;
+                }
+                else
+                {
+                    propertyName = allProperties[i].GetCustomAttribute<FieldNameAttribute>().Name;
+                }
+
+                if (allProperties[i].GetCustomAttribute<ConditionalAttribute>() == null)
+                {
+                    // If object is list or array. Set default conditionalType
+                    if (allProperties[i].PropertyType.IsArray || allProperties[i].PropertyType.IsGenericType)
+                    {
+                        conditionalType = ConditionalType.In;
+                    }
+                    else
+                    {
+                        conditionalType = ConditionalType.Equal;
+                    }
+                }
+                else
+                {
+                    conditionalType = allProperties[i].GetCustomAttribute<ConditionalAttribute>().ConditionalType;
+                }
+
+                if (allProperties[i].GetValue(model, null) != null && !string.IsNullOrWhiteSpace(allProperties[i].GetValue(model, null).ToString()))
+                {
+                    adapter.AppendColumnNameEqualsValue(query, propertyName, conditionalType);
+
+                    parameters.Add(propertyName, allProperties[i].GetValue(model, null));
+                }
+            }
+
+            long count = (long)await connection.ExecuteScalarAsync($"select count(*) from {name} where 1=1 {query}", parameters, transaction, commandTimeout);
+
+            return count;
+        }
+
+        #region （Obsolete）弃用分页方法
         /// <summary>
         /// 分页查询
         /// </summary>
@@ -310,6 +477,8 @@ namespace Dapper.Contrib.Plus
 
             return count;
         }
+
+        #endregion
 
         /// <summary>
         /// Update any field

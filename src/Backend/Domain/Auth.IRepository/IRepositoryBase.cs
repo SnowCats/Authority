@@ -119,31 +119,35 @@ namespace Auth.IRepository
         /// <summary>
         /// 分页查询
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="page"></param>
-        /// <param name="itemsPerPage"></param>
-        /// <param name="keyValuePairs"></param>
-        /// <param name="expression"></param>
-        /// <param name="defaultField"></param>
-        /// <param name="orderBy"></param>
-        /// <param name="transaction"></param>
+        /// <typeparam name="TEntity">实体</typeparam>
+        /// <typeparam name="TModel">查询条件</typeparam>
+        /// <param name="page">页数</param>
+        /// <param name="itemsPerPage">条数</param>
+        /// <param name="model">查询条件</param>
+        /// <param name="expression">返回的列名</param>
+        /// <param name="defaultField">辅助分页列</param>
+        /// <param name="orderBy">排序</param>
+        /// <param name="transaction">事务</param>
         /// <returns></returns>
-        Task<IEnumerable<T>> GetPagedListAsync<T>(int page, int itemsPerPage,
-            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs,
-            Expression<Func<T, dynamic>> expression = null,
+        Task<IEnumerable<TEntity>> GetPagedListAsync<TEntity, TModel>(int page, int itemsPerPage,
+            TModel model,
+            Expression<Func<TEntity, dynamic>> expression = null,
             string defaultField = "timestamp",
             string orderBy = "timestamp desc",
             IDbTransaction transaction = null)
-            where T : class, new();
+            where TEntity : class, new()
+            where TModel : class, new();
 
         /// <summary>
-        /// 总条数
+        /// 总数
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="keyValuePairs"></param>
-        /// <param name="transaction"></param>
+        /// <typeparam name="TEntity">实体</typeparam>
+        /// <typeparam name="TModel">查询类</typeparam>
+        /// <param name="model">查询实例</param>
+        /// <param name="transaction">事务</param>
         /// <returns></returns>
-        Task<long> CountAsync<T>(IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs, IDbTransaction transaction = null)
-            where T : class, new();
+        Task<long> CountAsync<TEntity, TModel>(TModel model, IDbTransaction transaction = null)
+            where TEntity : class, new()
+            where TModel : class, new();
     }
 }

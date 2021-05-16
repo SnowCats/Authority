@@ -101,19 +101,8 @@ namespace Auth.Application.Handlers.System
         /// <returns></returns>
         public async Task<PagedList<SettingDto>> Handle(QueryPagedListRequest request, CancellationToken cancellationToken)
         {
-            // 查询条件
-            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs = new List<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>>()
-            {
-                new KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>(
-                        new KeyValuePair<string, dynamic>(nameof(request.ParentValue), request.ParentValue), ConditionalType.Equal),
-                new KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>(
-                        new KeyValuePair<string, dynamic>(nameof(request.Value), request.Value), ConditionalType.Equal),
-                new KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>(
-                        new KeyValuePair<string, dynamic>(nameof(request.Text), request.Text), ConditionalType.Equal),
-            };
-
-            IEnumerable<Setting> entities = await SettingRepository.GetPagedListAsync<Setting>(request.Pagination.Page, request.Pagination.ItemsPerPage, keyValuePairs);
-            long count = await SettingRepository.CountAsync<Setting>(keyValuePairs);
+            IEnumerable<Setting> entities = await SettingRepository.GetPagedListAsync<Setting, QueryPagedListRequest>(request.Pagination.Page, request.Pagination.ItemsPerPage, request);
+            long count = await SettingRepository.CountAsync<Setting, QueryPagedListRequest>(request);
 
             // 如果有记录
             if (count > 0)
