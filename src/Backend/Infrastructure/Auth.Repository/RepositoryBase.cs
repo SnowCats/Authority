@@ -174,14 +174,15 @@ namespace Auth.Repository
         /// <returns></returns>
         public async Task<bool> HasValueAsync<T>(string key, string value, Expression<Func<T, dynamic>> expression = null, IDbTransaction transaction = null) where T : class, new()
         {
-            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs = new List<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>>
+            // 查询条件
+            IList<Condition> conditions = new List<Condition>
             {
-                new KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>(new KeyValuePair<string, dynamic>(key, value), ConditionalType.Equal)
+                new Condition { Name = key, Value = value, Type = ConditionalType.Equal }
             };
 
             using (UnitOfWork.ReadConnection)
             {
-                var list = await UnitOfWork.ReadConnection.GetListAsync(keyValuePairs, expression, transaction);
+                var list = await UnitOfWork.ReadConnection.GetListAsync(conditions, expression, transaction);
 
                 return list != null && list.Any();
             }
@@ -219,13 +220,13 @@ namespace Auth.Repository
         /// <param name="transaction"></param>
         /// <returns></returns>
         public async Task<IEnumerable<T>> GetListAsync<T>(
-            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs,
+            IList<Condition> conditions,
             Expression<Func<T, dynamic>> expression = null,
             IDbTransaction transaction = null) where T : class, new()
         {
             using (UnitOfWork.ReadConnection)
             {
-                var list = await UnitOfWork.ReadConnection.GetListAsync(keyValuePairs, expression, transaction);
+                var list = await UnitOfWork.ReadConnection.GetListAsync(conditions, expression, transaction);
 
                 return list;
             }

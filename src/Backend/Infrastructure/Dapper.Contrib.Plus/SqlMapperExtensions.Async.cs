@@ -83,7 +83,7 @@ namespace Dapper.Contrib.Plus
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
         public static async Task<IEnumerable<T>> GetListAsync<T>(this IDbConnection connection,
-            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs,
+            IList<Condition> conditions = null,
             Expression<Func<T, dynamic>> columnExp = null,
             IDbTransaction transaction = null, int? commandTimeout = null) where T : class, new()
         {
@@ -108,11 +108,11 @@ namespace Dapper.Contrib.Plus
                 columns.Append("*");
             }
 
-            // 参数
-            for (int i = 0; i < keyValuePairs.Count(); i++)
+            // 查询条件
+            foreach(var item in conditions)
             {
-                adapter.AppendColumnNameEqualsValue(query, keyValuePairs[i].Key.Key, keyValuePairs[i].Value);
-                parameters.Add(keyValuePairs[i].Key.Key, keyValuePairs[i].Key.Value);
+                adapter.AppendColumnNameEqualsValue(query, item.Name, item.Type);
+                parameters.Add(item.Name, item.Value);
             }
 
             string sql = $"select {columns} from {name} where 1=1 {query}";

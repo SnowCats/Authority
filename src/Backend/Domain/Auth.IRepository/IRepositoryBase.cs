@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Dapper.Contrib.Plus;
 
 namespace Auth.IRepository
 {
@@ -112,7 +113,7 @@ namespace Auth.IRepository
         /// <param name="transaction"></param>
         /// <returns></returns>
         Task<IEnumerable<T>> GetListAsync<T>(
-            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs,
+            IList<Condition> conditions,
             Expression<Func<T, dynamic>> expression = null,
             IDbTransaction transaction = null) where T : class, new();
 

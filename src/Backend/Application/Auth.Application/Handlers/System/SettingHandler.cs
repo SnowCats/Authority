@@ -9,6 +9,7 @@ using Auth.Dto.System;
 using Auth.Entity.System;
 using Auth.IRepository.ISetting;
 using AutoMapper;
+using Dapper.Contrib.Plus;
 using MediatR;
 
 namespace Auth.Application.Handlers.System
@@ -106,16 +107,17 @@ namespace Auth.Application.Handlers.System
 
             // 如果有记录
             if (count > 0)
-            {
+            {                
                 // 查询并关联上级节点的文本值
-                IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValues = new List<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>>
+                IList<Condition> conditions = new List<Condition>
                 {
-                    new KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>(
-                        new KeyValuePair<string, dynamic>(nameof(request.Value), entities.Where(s => !string.IsNullOrWhiteSpace(s.ParentValue)).Select(s => s.ParentValue).ToList()),
-                        ConditionalType.In)
+                    new Condition {
+                        Name = nameof(request.Value),
+                        Value = entities.Where(s => !string.IsNullOrWhiteSpace(s.ParentValue)).Select(s => s.ParentValue).ToList(),
+                        Type = ConditionalType.In }
                 };
 
-                IEnumerable<Setting> parentList = await SettingRepository.GetListAsync<Setting>(keyValues);
+                IEnumerable<Setting> parentList = await SettingRepository.GetListAsync<Setting>(conditions);
 
                 if (parentList.Any())
                 {
