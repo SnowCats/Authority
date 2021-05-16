@@ -218,7 +218,7 @@ namespace Auth.Repository
             IDbTransaction transaction = null)
             where T : class, new()
         {
-            var list = await UnitOfWork.ReadConnection.GetPagedListAsync<T>(page, itemsPerPage, keyValuePairs, expression, defaultField, orderBy, transaction);
+            var list = await UnitOfWork.ReadConnection.GetPagedListAsync(page, itemsPerPage, keyValuePairs, expression, defaultField, orderBy, transaction);
 
             return list;
         }

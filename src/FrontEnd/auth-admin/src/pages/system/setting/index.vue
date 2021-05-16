@@ -13,7 +13,7 @@
                         label="上级字典值"
                         :clearable="true"
                         v-model="model.parentValue"
-                        :items="dict.items"
+                        :items="select.settings"
                         item.text="text"
                         item.value="value"
                       ></v-select>
@@ -99,24 +99,13 @@ export default class Index extends Vue {
   // data
   setting: Setting = new Setting();
   // 字典
-  private dict = {
-    items: [
-      {
-        value: 0,
-        text: '禁用',
-      },
-      {
-        value: 1,
-        text: '启用',
-      },
-    ],
+  private select: any = {
+    settings: []
   };
-  // 分页
+  // 查询条件
   pagination: Pagination = new Pagination();
   model: any = {
-    page: this.pagination.page,
-    itemsPerPage: this.pagination.itemsPerPage,
-    count: this.pagination.count,
+    pagination: this.pagination,
     parentValue: this.setting.parentValue,
     text: this.setting.text,
     value: this.setting.value,
@@ -132,12 +121,21 @@ export default class Index extends Vue {
     { text: '备注', value: 'notes' },
     { text: '操作', value: 'actions' },
   ];
+  // 分页列表
   list: Setting[] = [];
+
+  // mounted
+  mounted(): void {
+    service.getList({}).then(res => {
+      this.select.settings = res.data;
+    })
+  }
+
   // created
   created(): void {
     this.search();
   }
-  // Methods
+
   // 查询
   search(): void {
     service.getPagedList(this.model).then((res: any) => {
@@ -145,16 +143,19 @@ export default class Index extends Vue {
       this.model.count = res.count;
     });
   }
-  // 新增
+
+  // 跳转到新增页面
   add(): void {
-    console.log('新增');
+    console.log('跳转到新增');
     this.$router.push('./setting/add');
   }
-  // 编辑
+
+  // 跳转到编辑页面
   edit(id: string): void {
     console.log('跳转到编辑');
     this.$router.push('./setting/edit/' + id);
   }
+
   // 删除
   del(id: string): void {
     console.log('删除', id);

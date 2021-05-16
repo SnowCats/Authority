@@ -90,9 +90,9 @@ namespace Auth.UI.Web.Apis.System
         /// <param name="settingDto"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Pagination<SettingDto>> GetPagedListAsync(QueryPagedListRequest request)
+        public async Task<PagedList<SettingDto>> GetPagedListAsync(QueryPagedListRequest request)
         {
-            Pagination<SettingDto> response = await Mediator.Send(request);
+            PagedList<SettingDto> response = await Mediator.Send(request);
 
             return response;
         }

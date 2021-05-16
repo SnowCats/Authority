@@ -21,7 +21,7 @@ namespace Auth.Application.Handlers.System
         IRequestHandler<CreateRequest, Guid?>,
         IRequestHandler<UpdateRequest, bool>,
         IRequestHandler<DeleteRequest, bool>,
-        IRequestHandler<QueryPagedListRequest, Pagination<SettingDto>>,
+        IRequestHandler<QueryPagedListRequest, PagedList<SettingDto>>,
         IRequestHandler<QueryListRequest, IEnumerable<SettingDto>>
     {
         /// <summary>
@@ -74,7 +74,6 @@ namespace Auth.Application.Handlers.System
         public async Task<bool> Handle(DeleteRequest request, CancellationToken cancellationToken)
         {
             Setting setting = mapper.Map<Setting>(request.SettingDto);
-
             bool result = await SettingRepository.DeleteAsync(setting);
 
             return result;
@@ -100,11 +99,20 @@ namespace Auth.Application.Handlers.System
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<Pagination<SettingDto>> Handle(QueryPagedListRequest request, CancellationToken cancellationToken)
+        public async Task<PagedList<SettingDto>> Handle(QueryPagedListRequest request, CancellationToken cancellationToken)
         {
-            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs = new List<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>>();
+            // 查询条件
+            IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValuePairs = new List<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>>()
+            {
+                new KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>(
+                        new KeyValuePair<string, dynamic>(nameof(request.ParentValue), request.ParentValue), ConditionalType.Equal),
+                new KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>(
+                        new KeyValuePair<string, dynamic>(nameof(request.Value), request.Value), ConditionalType.Equal),
+                new KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>(
+                        new KeyValuePair<string, dynamic>(nameof(request.Text), request.Text), ConditionalType.Equal),
+            };
 
-            IEnumerable<Setting> list = await SettingRepository.GetPagedListAsync<Setting>(request.Page, request.ItemsPerPage, keyValuePairs);
+            IEnumerable<Setting> entities = await SettingRepository.GetPagedListAsync<Setting>(request.Pagination.Page, request.Pagination.ItemsPerPage, keyValuePairs);
             long count = await SettingRepository.CountAsync<Setting>(keyValuePairs);
 
             // 如果有记录
@@ -114,7 +122,7 @@ namespace Auth.Application.Handlers.System
                 IList<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>> keyValues = new List<KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>>
                 {
                     new KeyValuePair<KeyValuePair<string, dynamic>, ConditionalType>(
-                        new KeyValuePair<string, dynamic>(nameof(request.Value), list.Where(s => !string.IsNullOrWhiteSpace(s.ParentValue)).Select(s => s.ParentValue).ToList()),
+                        new KeyValuePair<string, dynamic>(nameof(request.Value), entities.Where(s => !string.IsNullOrWhiteSpace(s.ParentValue)).Select(s => s.ParentValue).ToList()),
                         ConditionalType.In)
                 };
 
@@ -124,14 +132,14 @@ namespace Auth.Application.Handlers.System
                 {
                     foreach (var item in parentList)
                     {
-                        list.Where(s => s.ParentValue == item.Value).FirstOrDefault().Superior.Text = item.Text;
-                        list.Where(s => s.ParentValue == item.Value).FirstOrDefault().Superior.Value = item.Value;
+                        entities.Where(s => s.ParentValue == item.Value).FirstOrDefault().Superior.Text = item.Text;
+                        entities.Where(s => s.ParentValue == item.Value).FirstOrDefault().Superior.Value = item.Value;
                     }
                 }
             }
 
-            IEnumerable<SettingDto> dtos = mapper.Map<IEnumerable<SettingDto>>(list);
-            return new Pagination<SettingDto> { Count = count, Page = request.Page, ItemsPerPage = request.ItemsPerPage, List = dtos };
+            IEnumerable<SettingDto> list = mapper.Map<IEnumerable<SettingDto>>(entities);
+            return new PagedList<SettingDto> { List = list, Count = count };
         }
 
         /// <summary>
@@ -142,10 +150,10 @@ namespace Auth.Application.Handlers.System
         /// <returns></returns>
         public async Task<IEnumerable<SettingDto>> Handle(QueryListRequest request, CancellationToken cancellationToken)
         {
-            IEnumerable<Setting> list = await SettingRepository.GetListAsync<Setting, QueryListRequest>(request);
-            IEnumerable<SettingDto> dtos = mapper.Map<IEnumerable<SettingDto>>(list);
+            IEnumerable<Setting> entities = await SettingRepository.GetListAsync<Setting, QueryListRequest>(request);
+            IEnumerable<SettingDto> list = mapper.Map<IEnumerable<SettingDto>>(entities);
 
-            return dtos;
+            return list;
         }
 
         /// <summary>
