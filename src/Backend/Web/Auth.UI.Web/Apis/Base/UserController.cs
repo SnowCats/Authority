@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Auth.Application.Commands.Base.User;
-using Auth.Dto.Base;
+using Auth.Dtos.Base;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

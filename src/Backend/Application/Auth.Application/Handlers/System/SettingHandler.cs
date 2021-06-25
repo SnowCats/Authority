@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Auth.Application.Commands.System.Setting;
 using Auth.Application.Common;
-using Auth.Dto.System;
+using Auth.Dtos.System;
 using Auth.Entity.SystemEntity;
 using Auth.IRepository.ISetting;
 using AutoMapper;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Auth.Application.Common;
-using Auth.Dto.System;
+using Auth.Dtos.System;
 using Dapper.Contrib.Plus;
 using MediatR;
 

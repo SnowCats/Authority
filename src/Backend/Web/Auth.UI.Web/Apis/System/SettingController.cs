@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Auth.Application.Commands.System.Setting;
 using Auth.Application.Common;
-using Auth.Dto.System;
+using Auth.Dtos.System;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

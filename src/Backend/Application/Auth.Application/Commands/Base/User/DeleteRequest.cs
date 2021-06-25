@@ -1,5 +1,5 @@
 ﻿using System;
-using Auth.Dto.Base;
+using Auth.Dtos.Base;
 using MediatR;
 
 namespace Auth.Application.Commands.Base.User
