@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using Auth.Utility;
-using MediatR;
 
-namespace Auth.Dto.Base
+namespace Auth.Dtos.System
 {
     /// <summary>
-    /// 用户信息Dto
+    /// 字典Dto
     /// </summary>
-    public class UserDto
+    public class SettingDto
     {
         /// <summary>
         /// 主键
@@ -16,54 +14,19 @@ namespace Auth.Dto.Base
         public Guid? ID { get; set; }
 
         /// <summary>
-        /// 姓名
+        /// 上级字典Value
         /// </summary>
-        public string Name { get; set; }
+        public string ParentValue { get; set; }
 
         /// <summary>
-        /// 性别
+        /// 字典Value
         /// </summary>
-        public short? Gender { get; set; }
+        public string Value { get; set; }
 
         /// <summary>
-        /// 用户名
+        /// 字典Text
         /// </summary>
-        public string UserName { get; set; }
-
-        /// <summary>
-        /// 密码
-        /// </summary>
-        public string Password { get; set; }
-
-        /// <summary>
-        /// 邮箱
-        /// </summary>
-        public string Email { get; set; }
-
-        /// <summary>
-        /// 微信
-        /// </summary>
-        public string Wechat { get; set; }
-
-        /// <summary>
-        /// 手机号
-        /// </summary>
-        public string Telephone { get; set; }
-
-        /// <summary>
-        /// 座机
-        /// </summary>
-        public string Phone { get; set; }
-
-        /// <summary>
-        /// 岗位ID
-        /// </summary>
-        public Guid? PositionID { get; set; }
-
-        /// <summary>
-        /// 地址
-        /// </summary>
-        public string Address { get; set; }
+        public string Text { get; set; }
 
         /// <summary>
         /// 状态，0:启用，1:禁用
@@ -100,9 +63,18 @@ namespace Auth.Dto.Base
         /// </summary>
         public Guid? ModifiedBy { get; set; }
 
+        #region 值对象
+
         /// <summary>
-        /// 用户角色关系列表
+        /// 上级节点值
         /// </summary>
-        public IEnumerable<UserRoleDto> UserRoles { get; set; }
+        public string SuperiorValue { get; set; }
+
+        /// <summary>
+        /// 上级节点文本
+        /// </summary>
+        public string SuperiorText { get; set; }
+
+        #endregion
     }
 }

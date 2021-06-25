@@ -1,12 +1,12 @@
 ﻿using System;
 using Auth.Utility;
 
-namespace Auth.Dto.System
+namespace Auth.Dtos.Base
 {
     /// <summary>
-    /// 字典Dto
+    /// 角色信息Dto
     /// </summary>
-    public class SettingDto
+    public class RoleDto
     {
         /// <summary>
         /// 主键
@@ -14,19 +14,9 @@ namespace Auth.Dto.System
         public Guid? ID { get; set; }
 
         /// <summary>
-        /// 上级字典Value
+        /// 角色名称
         /// </summary>
-        public string ParentValue { get; set; }
-
-        /// <summary>
-        /// 字典Value
-        /// </summary>
-        public string Value { get; set; }
-
-        /// <summary>
-        /// 字典Text
-        /// </summary>
-        public string Text { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// 状态，0:启用，1:禁用
@@ -62,19 +52,5 @@ namespace Auth.Dto.System
         /// 修改人
         /// </summary>
         public Guid? ModifiedBy { get; set; }
-
-        #region 值对象
-
-        /// <summary>
-        /// 上级节点值
-        /// </summary>
-        public string SuperiorValue { get; set; }
-
-        /// <summary>
-        /// 上级节点文本
-        /// </summary>
-        public string SuperiorText { get; set; }
-
-        #endregion
     }
 }

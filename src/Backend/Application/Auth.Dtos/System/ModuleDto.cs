@@ -1,7 +1,7 @@
 ﻿using System;
 using Auth.Utility;
 
-namespace Auth.Dto.System
+namespace Auth.Dtos.System
 {
     /// <summary>
     /// 模块Dto

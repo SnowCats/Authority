@@ -1,12 +1,12 @@
 ﻿using System;
 using Auth.Utility;
 
-namespace Auth.Dto.Base
+namespace Auth.Dtos.System
 {
     /// <summary>
-    /// 组织架构Dto
+    /// 权限Dto
     /// </summary>
-    public class OrganizationDto
+    public class PermissionDto
     {
         /// <summary>
         /// 主键
@@ -14,12 +14,7 @@ namespace Auth.Dto.Base
         public Guid? ID { get; set; }
 
         /// <summary>
-        /// 上级组织ID
-        /// </summary>
-        public Guid? ParentID { get; set; }
-
-        /// <summary>
-        /// 上级组织名称
+        /// 权限名
         /// </summary>
         public string Name { get; set; }
 

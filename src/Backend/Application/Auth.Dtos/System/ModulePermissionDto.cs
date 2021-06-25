@@ -1,12 +1,10 @@
 ﻿using System;
-using Auth.Utility;
-
-namespace Auth.Dto.System
+namespace Auth.Dtos.System
 {
     /// <summary>
-    /// 接口Dto
+    /// 模块权限关系表
     /// </summary>
-    public class ApiDto
+    public class ModulePermissionDto
     {
         /// <summary>
         /// 主键
@@ -19,14 +17,9 @@ namespace Auth.Dto.System
         public Guid? ModuleID { get; set; }
 
         /// <summary>
-        /// 接口名称
+        /// 权限ID
         /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// 接口地址
-        /// </summary>
-        public string Route { get; set; }
+        public Guid? PermissionID { get; set; }
 
         /// <summary>
         /// 状态，0:启用，1:禁用
@@ -37,11 +30,6 @@ namespace Auth.Dto.System
         /// 备注
         /// </summary>
         public string Notes { get; set; }
-
-        /// <summary>
-        /// 数据时间戳
-        /// </summary>
-        public long Timestamp { get; set; } = DateUtility.UnixTimestampFromTime();
 
         /// <summary>
         /// 创建时间

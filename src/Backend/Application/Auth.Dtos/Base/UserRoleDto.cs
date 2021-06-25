@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Auth.Dto.Base
+namespace Auth.Dtos.Base
 {
     /// <summary>
     /// 用户和角色关系Dto
