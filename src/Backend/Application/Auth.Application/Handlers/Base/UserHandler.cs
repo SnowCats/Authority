@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Auth.Application.Commands.Base.User;
-using Auth.Entity.Base;
+using Auth.Entity.BaseEntity;
 using Auth.IRepository.IBase;
 using AutoMapper;
 using MediatR;

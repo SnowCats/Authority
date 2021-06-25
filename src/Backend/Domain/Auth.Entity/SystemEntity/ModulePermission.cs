@@ -1,7 +1,7 @@
 ﻿using System;
 using Dapper.Contrib.Plus;
 
-namespace Auth.Entity.System
+namespace Auth.Entity.SystemEntity
 {
     /// <summary>
     /// 模块关系表

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Dapper.Contrib.Plus;
 
-namespace Auth.Entity.Base
+namespace Auth.Entity.BaseEntity
 {
     /// <summary>
     /// 用户信息

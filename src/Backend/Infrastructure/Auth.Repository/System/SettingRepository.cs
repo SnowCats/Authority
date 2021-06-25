@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Auth.Entity.System;
+using Auth.Entity.SystemEntity;
 using Auth.IRepository;
 using Auth.IRepository.ISetting;
 

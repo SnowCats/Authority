@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Auth.Application.Commands.System.Setting;
 using Auth.Application.Common;
 using Auth.Dto.System;
-using Auth.Entity.System;
+using Auth.Entity.SystemEntity;
 using Auth.IRepository.ISetting;
 using AutoMapper;
 using Dapper.Contrib.Plus;

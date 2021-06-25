@@ -1,21 +1,16 @@
 ﻿using System;
 using Dapper.Contrib.Plus;
 
-namespace Auth.Entity.Base
+namespace Auth.Entity.BaseEntity
 {
     /// <summary>
-    /// 岗位
+    /// 角色
     /// </summary>
-    [Table("base_positions")]
-    public class Position : SeedWork.Entity
+    [Table("base_roles")]
+    public class Role : SeedWork.Entity
     {
         /// <summary>
-        /// 组织ID
-        /// </summary>
-        public Guid? OrgID { get; set; }
-
-        /// <summary>
-        /// 岗位名称
+        /// 角色名称
         /// </summary>
         public string Name { get; set; }
 

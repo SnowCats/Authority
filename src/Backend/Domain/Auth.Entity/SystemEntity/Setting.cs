@@ -1,18 +1,29 @@
 ﻿using System;
+using Auth.ValueObjects;
 using Dapper.Contrib.Plus;
 
-namespace Auth.Entity.System
+namespace Auth.Entity.SystemEntity
 {
     /// <summary>
-    /// 权限表
+    /// 字典
     /// </summary>
-    [Table("sys_permissions")]
-    public class Permission : SeedWork.Entity
+    [Table("sys_settings")]
+    public class Setting : SeedWork.Entity
     {
         /// <summary>
-        /// 权限名
+        /// 上级字典Key
         /// </summary>
-        public string Name { get; set; }
+        public string ParentValue { get; set; }
+
+        /// <summary>
+        /// 字典Value
+        /// </summary>
+        public string Value { get; set; }
+
+        /// <summary>
+        /// 字典Text
+        /// </summary>
+        public string Text { get; set; }
 
         /// <summary>
         /// 状态，0:启用，1:禁用
@@ -48,5 +59,15 @@ namespace Auth.Entity.System
         /// 修改人
         /// </summary>
         public Guid? ModifiedBy { get; set; }
+
+        #region ValueObjects
+
+        /// <summary>
+        /// 上级节点
+        /// </summary>
+        [Computed]
+        public Coupling Superior { get; set; } = new Coupling();
+
+        #endregion
     }
 }

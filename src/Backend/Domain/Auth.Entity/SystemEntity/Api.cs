@@ -1,28 +1,28 @@
 ﻿using System;
 using Dapper.Contrib.Plus;
 
-namespace Auth.Entity.System
+namespace Auth.Entity.SystemEntity
 {
     /// <summary>
-    /// 模块名
+    /// 接口表
     /// </summary>
-    [Table("sys_modules")]
-    public class Module : SeedWork.Entity
+    [Table("sys_apis")]
+    public class Api : SeedWork.Entity
     {
         /// <summary>
-        /// 上级节点
+        /// 模块ID
         /// </summary>
-        public Guid? ParentID { get; set; }
+        public Guid? ModuleID { get; set; }
 
         /// <summary>
-        /// 模块名称
+        /// 接口名称
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 模块图标名
+        /// 接口地址
         /// </summary>
-        public string Icon { get; set; }
+        public string Route { get; set; }
 
         /// <summary>
         /// 状态，0:启用，1:禁用
@@ -47,6 +47,7 @@ namespace Auth.Entity.System
         /// <summary>
         /// 创建人
         /// </summary>
+        [IgnoreUpdate]
         public Guid? CreatedBy { get; set; }
 
         /// <summary>

@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Base\" />
-    <Folder Include="System\" />
+    <Folder Include="BaseEntity\" />
+    <Folder Include="SystemEntity\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Auth.SeedWork\Auth.SeedWork.csproj" />

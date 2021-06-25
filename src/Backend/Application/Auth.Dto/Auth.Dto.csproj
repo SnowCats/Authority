@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Base\" />
-    <Folder Include="System\" />
-    <Folder Include="System\" />
+    <Folder Include="BaseDto\" />
+    <Folder Include="SystemDto\" />
+    <Folder Include="SystemDto\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MediatR" Version="9.0.0" />

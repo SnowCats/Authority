@@ -1,21 +1,21 @@
 ﻿using System;
 using Dapper.Contrib.Plus;
 
-namespace Auth.Entity.Base
+namespace Auth.Entity.BaseEntity
 {
     /// <summary>
-    /// 组织架构
+    /// 岗位
     /// </summary>
-    [Table("base_organizations")]
-    public class Organization : SeedWork.Entity
+    [Table("base_positions")]
+    public class Position : SeedWork.Entity
     {
         /// <summary>
-        /// 上级组织ID
+        /// 组织ID
         /// </summary>
-        public Guid? ParentID { get; set; }
+        public Guid? OrgID { get; set; }
 
         /// <summary>
-        /// 上级组织名称
+        /// 岗位名称
         /// </summary>
         public string Name { get; set; }
 

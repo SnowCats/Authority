@@ -1,16 +1,16 @@
 ﻿using System;
 using Dapper.Contrib.Plus;
 
-namespace Auth.Entity.Base
+namespace Auth.Entity.SystemEntity
 {
     /// <summary>
-    /// 角色
+    /// 权限表
     /// </summary>
-    [Table("base_roles")]
-    public class Role : SeedWork.Entity
+    [Table("sys_permissions")]
+    public class Permission : SeedWork.Entity
     {
         /// <summary>
-        /// 角色名称
+        /// 权限名
         /// </summary>
         public string Name { get; set; }
 
@@ -27,7 +27,7 @@ namespace Auth.Entity.Base
         /// <summary>
         /// 数据时间戳
         /// </summary>
-        public long Timestamp{ get; set; }
+        public long Timestamp { get; set; }
 
         /// <summary>
         /// 创建时间

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Auth.Entity.Base;
+using Auth.Entity.BaseEntity;
 using Auth.IRepository;
 using Auth.IRepository.IBase;
 using Microsoft.Extensions.Configuration;
