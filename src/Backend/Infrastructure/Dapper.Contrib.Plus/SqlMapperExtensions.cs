@@ -1601,7 +1601,7 @@ public partial class MySqlAdapter : ISqlAdapter
         {
             sb.Append($" and `{columnName}` like CONCAT('%',@{columnName},'%')");
         }
-        else if(conditionalType.Equals(ConditionalType.GreaterThan))
+        else if (conditionalType.Equals(ConditionalType.GreaterThan))
         {
             sb.Append($" and `{columnName}` > @{columnName}");
         }

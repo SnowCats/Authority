@@ -109,7 +109,7 @@ namespace Dapper.Contrib.Plus
             }
 
             // 查询条件
-            foreach(var item in conditions)
+            foreach (var item in conditions)
             {
                 adapter.AppendColumnNameEqualsValue(query, item.Name, item.Type);
                 parameters.Add(item.Name, item.Value);
