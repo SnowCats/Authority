@@ -18,7 +18,7 @@ namespace Auth.Core.AutoMapper
         public AutoMapperProfile()
         {
             List<Type> entities = AssemblyLoadContext.Default.LoadFromAssemblyPath(AppContext.BaseDirectory + "Auth.Entity.dll").DefinedTypes.Select(s => s.AsType()).ToList();
-            List<Type> dtos = AssemblyLoadContext.Default.LoadFromAssemblyPath(AppContext.BaseDirectory + "Auth.Dto.dll").DefinedTypes.Select(s => s.AsType()).ToList();
+            List<Type> dtos = AssemblyLoadContext.Default.LoadFromAssemblyPath(AppContext.BaseDirectory + "Auth.Dtos.dll").DefinedTypes.Select(s => s.AsType()).ToList();
 
             if (entities.Any() && dtos.Any())
             {

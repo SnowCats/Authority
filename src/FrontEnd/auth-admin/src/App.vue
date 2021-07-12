@@ -1,11 +1,17 @@
 <template>
   <v-app>
-    <v-layout></v-layout>
-    <v-main>
-      <v-container fluid>
-        <router-view :key="$route.fullPath"></router-view>
-      </v-container>
-    </v-main>
+    <!-- 已登录 -->
+    <template v-if="isLogged">
+      <v-layout></v-layout>
+      <v-main>
+        <v-container fluid>
+          <router-view :key="$route.fullPath"></router-view>
+        </v-container>
+      </v-main>
+    </template>
+    <template v-else>
+      <router-view :key="$route.fullPath"></router-view>
+    </template>
     <confirm ref="confirm"></confirm>
     <alert ref="alert"></alert>
   </v-app>
@@ -26,6 +32,7 @@ import Alert from '@/components/dialogs/Alert.vue';
 })
 export default class App extends Vue {
   $refs!: any;
+  isLogged: boolean = false;
 
   // mounted
   mounted() {
