@@ -25,7 +25,7 @@
                 <p class="text-right reset">Forgot password?</p>
               </v-flex>
               <v-flex md12 sm12 xs12>
-                <v-btn depressed color="#1768d5" class="btn-login">Login</v-btn>
+                <v-btn depressed color="#1768d5" class="btn-login" @click="onLogin">Login</v-btn>
               </v-flex>
             </v-layout>
           </v-form>
@@ -33,7 +33,7 @@
         <li class="right-content">
           <p class="title">Welcome</p>
           <v-divider></v-divider>
-          <p class="description">Sed do eiusmod temporut labore aet dolore magna aliqua. Your perfact place to buy & sell</p>
+          <p class="description">Industry excels in diligence, wastefulness in play, action in thinking, destruction in following</p>
         </li>
       </ul>
     </div>
@@ -44,7 +44,11 @@
 import { Vue, Component, Prop } from 'vue-property-decorator';
 
 @Component({})
-export default class Login extends Vue {}
+export default class Login extends Vue {
+  onLogin(): void {
+    this.$router.push('/');
+  }
+}
 </script>
 
 <style lang="scss" scoped>

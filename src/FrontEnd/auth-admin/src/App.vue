@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- 已登录 -->
-    <template v-if="isLogged">
+    <template v-if="loggedin">
       <v-layout></v-layout>
       <v-main>
         <v-container fluid>
@@ -32,7 +32,11 @@ import Alert from '@/components/dialogs/Alert.vue';
 })
 export default class App extends Vue {
   $refs!: any;
-  isLogged: boolean = false;
+  loggedin: boolean = true;
+
+  created() {
+    console.log("App logged", this.loggedin);
+  }
 
   // mounted
   mounted() {

@@ -9,15 +9,15 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         language: defaultLocale,
-        alert: {}
+        alert: {},
     },
     mutations: {
         setLanguage: (state: any, playload: Locales) => {
             state.language = playload;
-        }
+        },
     },
     actions: {
-        
+
     },
     modules: {
 

@@ -17,7 +17,13 @@ export default new VueRouter({
         {
             path: '/login',
             name: 'login',
-            component: () => import('@/pages/login.vue')
+            component: () => import('@/pages/home/login.vue')
+        },
+        // Dashboard
+        {
+            path: '/',
+            name: 'Dashboard',
+            component: () => import('@/pages/index.vue')
         },
         // 基础数据
         {
