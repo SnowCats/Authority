@@ -11,7 +11,7 @@
     <ProjectReference Include="..\..\Application\Auth.Application\Auth.Application.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
-    <ProjectReference Include="..\..\Application\Auth.Dto\Auth.Dto.csproj">
+    <ProjectReference Include="..\..\Application\Auth.Dtos\Auth.Dtos.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>

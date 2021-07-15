@@ -75,7 +75,7 @@ namespace Auth.Repository
         /// <returns></returns>
         public bool Delete<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            using (UnitOfWork.ReadConnection)
+            using (UnitOfWork.WriteConnection)
             {
                 var result = UnitOfWork.WriteConnection.Delete(t, transaction);
 
