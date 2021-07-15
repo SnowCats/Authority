@@ -41,22 +41,24 @@ namespace Auth.Repository
             Configuration = configuration;
 
             // 初始化数据库连接
-            if (int.TryParse(Configuration.GetConnectionString("DefaultDB"), out int dbType))
+            string database = Configuration.GetConnectionString("Database");
+
+            if (!string.IsNullOrWhiteSpace(database))
             {
-                if (dbType == (int)DbType.MySql)
+                if (database.ToUpper() == Enum.GetName(typeof(DATABASE), DATABASE.MySQL)?.ToUpper())
                 {
-                    writeConnection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString:Write"));
-                    readConnection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString:Read"));
+                    writeConnection = new MySqlConnection(Configuration.GetConnectionString("MySQL:W"));
+                    readConnection = new MySqlConnection(Configuration.GetConnectionString("MySQL:R"));
                 }
-                else if (dbType == (int)DbType.SqlServer)
+                if (database.ToUpper() == Enum.GetName(typeof(DATABASE), DATABASE.SQLServer)?.ToUpper())
                 {
-                    writeConnection = new SqlConnection(Configuration.GetConnectionString("SqlServerConnectionString:Write"));
-                    readConnection = new SqlConnection(Configuration.GetConnectionString("SqlServerConnectionString:Read"));
+                    writeConnection = new SqlConnection(Configuration.GetConnectionString("SQLServer:W"));
+                    readConnection = new SqlConnection(Configuration.GetConnectionString("SQLServer:R"));
                 }
             }
             else
             {
-                throw new Exception("\"DefaultDB\" is incorrect, Please check your appsettings.{*}.json. example: \"DefaultDB\": 0");
+                throw new Exception("\"DefaultDB\" is incorrect, Please check your appsettings.{*}.json. example: \"Database\": \"MySQL\"");
             }
         }
 
@@ -67,20 +69,15 @@ namespace Auth.Repository
         {
             get
             {
-                if (int.TryParse(Configuration.GetConnectionString("DefaultDB"), out int dbType))
+                string database = Configuration.GetConnectionString("Database");
+
+                if (database.ToUpper() == Enum.GetName(typeof(DATABASE), DATABASE.MySQL)?.ToUpper())
                 {
-                    if (dbType == (int)DbType.MySql)
-                    {
-                        writeConnection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString:Write"));
-                    }
-                    else if (dbType == (int)DbType.SqlServer)
-                    {
-                        writeConnection = new SqlConnection(Configuration.GetConnectionString("SqlServerConnectionString:Write"));
-                    }
+                    writeConnection = new MySqlConnection(Configuration.GetConnectionString("MySQL:W"));
                 }
-                else
+                if (database.ToUpper() == Enum.GetName(typeof(DATABASE), DATABASE.SQLServer)?.ToUpper())
                 {
-                    throw new Exception("\"DefaultDB\" is incorrect, Please check your appsettings.{*}.json. example: \"DefaultDB\": 0");
+                    writeConnection = new SqlConnection(Configuration.GetConnectionString("SQLServer:W"));
                 }
 
                 return writeConnection;
@@ -94,21 +91,16 @@ namespace Auth.Repository
         {
             get
             {
+                string database = Configuration.GetConnectionString("Database");
+
                 // 初始化数据库连接
-                if (int.TryParse(Configuration.GetConnectionString("DefaultDB"), out int dbType))
+                if (database == Enum.GetName(typeof(DATABASE), DATABASE.MySQL)?.ToUpper())
                 {
-                    if (dbType == (int)DbType.MySql)
-                    {
-                        readConnection = new MySqlConnection(Configuration.GetConnectionString("MySqlConnectionString:Read"));
-                    }
-                    else if (dbType == (int)DbType.SqlServer)
-                    {
-                        readConnection = new SqlConnection(Configuration.GetConnectionString("SqlServerConnectionString:Read"));
-                    }
+                    readConnection = new MySqlConnection(Configuration.GetConnectionString("MySQL:R"));
                 }
-                else
+                else if (database == Enum.GetName(typeof(DATABASE), DATABASE.SQLServer))
                 {
-                    throw new Exception("\"DefaultDB\" is incorrect, Please check your appsettings.{*}.json. example: \"DefaultDB\": 0");
+                    readConnection = new SqlConnection(Configuration.GetConnectionString("SQLServer:R"));
                 }
 
                 return readConnection;
@@ -185,9 +177,9 @@ namespace Auth.Repository
     /// <summary>
     /// 数据库类型
     /// </summary>
-    public enum DbType
+    public enum DATABASE
     {
-        MySql,
-        SqlServer
+        MySQL,
+        SQLServer
     }
 }
