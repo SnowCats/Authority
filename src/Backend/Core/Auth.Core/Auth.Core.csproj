@@ -9,7 +9,7 @@
     <Folder Include="IdentityServer4\" />
     <Folder Include="Swagger\" />
     <Folder Include="AutoMapper\" />
-    <Folder Include="DI\" />
+    <Folder Include="IoC\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MediatR" Version="9.0.0" />

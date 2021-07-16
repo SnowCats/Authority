@@ -15,10 +15,9 @@ namespace Auth.Repository.Base
         /// <summary>
         /// Constructor
         /// </summary>
-        public UserRepository(IUnitOfWork unitOfWork)
-            : base(unitOfWork)
+        public UserRepository(IDbContext dbContext) : base(dbContext)
         {
-            
+
         }
     }
 }

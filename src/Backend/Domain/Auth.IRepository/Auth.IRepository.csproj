@@ -10,5 +10,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Auth.Entity\Auth.Entity.csproj" />
+    <ProjectReference Include="..\..\Core\Auth.Utility\Auth.Utility.csproj" />
   </ItemGroup>
 </Project>

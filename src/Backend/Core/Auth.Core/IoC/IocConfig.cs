@@ -5,7 +5,7 @@ using Auth.Utility;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Auth.Core.DI
+namespace Auth.Core.IoC
 {
     /// <summary>
     /// AspNet Core DI Config

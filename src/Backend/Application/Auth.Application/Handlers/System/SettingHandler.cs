@@ -7,6 +7,7 @@ using Auth.Application.Commands.System.Setting;
 using Auth.Application.Common;
 using Auth.Dtos.System;
 using Auth.Entity.SystemEntity;
+using Auth.IRepository;
 using Auth.IRepository.ISetting;
 using AutoMapper;
 using Dapper.Contrib.Plus;
@@ -26,9 +27,9 @@ namespace Auth.Application.Handlers.System
         IRequestHandler<QueryListRequest, IEnumerable<SettingDto>>
     {
         /// <summary>
-        /// 数据字典仓储接口
+        /// 工作单元
         /// </summary>
-        private readonly ISettingRepository SettingRepository;
+        private readonly IUnitOfWork UnitOfWork;
 
         /// <summary>
         /// Mapper
@@ -38,10 +39,10 @@ namespace Auth.Application.Handlers.System
         /// <summary>
         /// Constructor
         /// </summary>
-        public SettingHandler(ISettingRepository settingRepository, IMapper mapper)
+        public SettingHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
+            UnitOfWork = unitOfWork;
             this.mapper = mapper;
-            SettingRepository = settingRepository;
         }
 
         /// <summary>
@@ -54,14 +55,16 @@ namespace Auth.Application.Handlers.System
         {
             Setting setting = mapper.Map<Setting>(request.SettingDto);
 
+            //UnitOfWork.Setting.Insert(setting);
+
             // 判断Value是否已存在
-            if (await SettingRepository.HasValueAsync<Setting>(nameof(setting.Value), setting.Value))
+            if (await UnitOfWork.Setting.HasValueAsync<Setting>(nameof(setting.Value), setting.Value))
             {
                 return null;
             }
             else
             {
-                await SettingRepository.InsertAsync(setting);
+                await UnitOfWork.Setting.InsertAsync(setting);
                 return setting.ID;
             }
         }
@@ -75,7 +78,7 @@ namespace Auth.Application.Handlers.System
         public async Task<bool> Handle(DeleteRequest request, CancellationToken cancellationToken)
         {
             Setting setting = mapper.Map<Setting>(request.SettingDto);
-            bool result = await SettingRepository.DeleteAsync(setting);
+            bool result = await UnitOfWork.Setting.DeleteAsync(setting);
 
             return result;
         }
@@ -89,7 +92,7 @@ namespace Auth.Application.Handlers.System
         public async Task<bool> Handle(UpdateRequest request, CancellationToken cancellationToken)
         {
             Setting setting = mapper.Map<Setting>(request.SettingDto);
-            bool result = await SettingRepository.UpdateAsync(setting);
+            bool result = await UnitOfWork.Setting.UpdateAsync(setting);
 
             return result;
         }
@@ -102,8 +105,8 @@ namespace Auth.Application.Handlers.System
         /// <returns></returns>
         public async Task<PagedList<SettingDto>> Handle(QueryPagedListRequest request, CancellationToken cancellationToken)
         {
-            IEnumerable<Setting> entities = await SettingRepository.GetPagedListAsync<Setting, QueryPagedListRequest>(request.Pagination.Page, request.Pagination.ItemsPerPage, request);
-            long count = await SettingRepository.CountAsync<Setting, QueryPagedListRequest>(request);
+            IEnumerable<Setting> entities = await UnitOfWork.Setting.GetPagedListAsync<Setting, QueryPagedListRequest>(request.Pagination.Page, request.Pagination.ItemsPerPage, request);
+            long count = await UnitOfWork.Setting.CountAsync<Setting, QueryPagedListRequest>(request);
 
             // 如果有记录
             if (count > 0)
@@ -117,7 +120,7 @@ namespace Auth.Application.Handlers.System
                         Type = ConditionalType.In }
                 };
 
-                IEnumerable<Setting> parentList = await SettingRepository.GetListAsync<Setting>(conditions);
+                IEnumerable<Setting> parentList = await UnitOfWork.Setting.GetListAsync<Setting>(conditions);
 
                 if (parentList.Any())
                 {
@@ -141,7 +144,7 @@ namespace Auth.Application.Handlers.System
         /// <returns></returns>
         public async Task<IEnumerable<SettingDto>> Handle(QueryListRequest request, CancellationToken cancellationToken)
         {
-            IEnumerable<Setting> entities = await SettingRepository.GetListAsync<Setting, QueryListRequest>(request);
+            IEnumerable<Setting> entities = await UnitOfWork.Setting.GetListAsync<Setting, QueryListRequest>(request);
             IEnumerable<SettingDto> list = mapper.Map<IEnumerable<SettingDto>>(entities);
 
             return list;
@@ -155,7 +158,7 @@ namespace Auth.Application.Handlers.System
         /// <returns></returns>
         public async Task<SettingDto> Handle(GetRequest request, CancellationToken cancellationToken)
         {
-            Setting setting = await SettingRepository.GetAsync<Setting>(request.ID.Value);
+            Setting setting = await UnitOfWork.Setting.GetAsync<Setting>(request.ID.Value);
             SettingDto settingDto = mapper.Map<SettingDto>(setting);
 
             return settingDto;

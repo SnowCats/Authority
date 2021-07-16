@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Auth.Application.Commands.Base.User;
 using Auth.Entity.BaseEntity;
+using Auth.IRepository;
 using Auth.IRepository.IBase;
 using AutoMapper;
 using MediatR;
@@ -15,9 +16,9 @@ namespace Auth.Application.Handlers.Base
     public class UserHandler : IRequestHandler<CreateRequest, Guid>
     {
         /// <summary>
-        /// User Repository
+        /// UnitOfWork
         /// </summary>
-        private readonly IUserRepository UserRepository;
+        private readonly IUnitOfWork UnitOfWork;
 
         /// <summary>
         /// Mapper
@@ -28,9 +29,9 @@ namespace Auth.Application.Handlers.Base
         /// Constructor
         /// </summary>
         /// <param name="userRepository"></param>
-        public UserHandler(IUserRepository userRepository, IMapper mapper)
+        public UserHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            UserRepository = userRepository;
+            UnitOfWork = unitOfWork;
             this.mapper = mapper;
         }
 
@@ -44,7 +45,7 @@ namespace Auth.Application.Handlers.Base
         {
             User user = mapper.Map<User>(request.UserDto);
 
-            await UserRepository.InsertAsync(user);
+            await UnitOfWork.User.InsertAsync(user);
 
             return user.ID;
         }

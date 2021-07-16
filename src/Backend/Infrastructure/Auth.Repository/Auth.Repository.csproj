@@ -16,5 +16,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\Auth.IRepository\Auth.IRepository.csproj" />
     <ProjectReference Include="..\Dapper.Contrib.Plus\Dapper.Contrib.Plus.csproj" />
+    <ProjectReference Include="..\..\Core\Auth.Utility\Auth.Utility.csproj" />
   </ItemGroup>
 </Project>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Auth.IRepository;
+using Auth.Utility;
 using Dapper;
 using Dapper.Contrib.Plus;
 
@@ -18,7 +19,7 @@ namespace Auth.Repository
         /// <summary>
         /// UnitOfWork
         /// </summary>
-        private readonly IUnitOfWork UnitOfWork;
+        private readonly IDbContext _dbContext;
 
         /// <summary>
         /// Empty Constructor
@@ -32,9 +33,9 @@ namespace Auth.Repository
         /// Constructor
         /// </summary>
         /// <param name="_unitOfWork">工作单元</param>
-        public RepositoryBase(IUnitOfWork unitOfWork)
+        public RepositoryBase(IDbContext dbContext)
         {
-            UnitOfWork = unitOfWork;
+            _dbContext = dbContext;
         }
 
         /// <summary>
@@ -46,9 +47,9 @@ namespace Auth.Repository
         /// <returns></returns>
         public async Task<T> GetAsync<T>(Guid id, IDbTransaction transaction = null) where T : class, new()
         {
-            using (UnitOfWork.ReadConnection)
+            using (_dbContext.InitConnection(RW.R))
             {
-                return await UnitOfWork.ReadConnection.GetAsync<T>(id);
+                return await _dbContext.Connection.GetAsync<T>(id);
             }
         }
 
@@ -61,9 +62,9 @@ namespace Auth.Repository
         /// <returns></returns>
         public T Get<T>(Guid id, IDbTransaction transaction = null) where T : class, new()
         {
-            using (UnitOfWork.ReadConnection)
+            using (_dbContext.InitConnection(RW.R))
             {
-                return UnitOfWork.ReadConnection.Get<T>(id);
+                return _dbContext.Connection.Get<T>(id);
             }
         }
 
@@ -75,9 +76,9 @@ namespace Auth.Repository
         /// <returns></returns>
         public bool Delete<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            using (UnitOfWork.WriteConnection)
+            using (_dbContext.InitConnection(RW.W))
             {
-                var result = UnitOfWork.WriteConnection.Delete(t, transaction);
+                var result = _dbContext.Connection.Delete(t, transaction);
 
                 return result;
             }
@@ -91,9 +92,9 @@ namespace Auth.Repository
         /// <returns></returns>
         public async Task<bool> DeleteAsync<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            using (UnitOfWork.WriteConnection)
+            using (_dbContext.InitConnection(RW.W))
             {
-                var result = await UnitOfWork.WriteConnection.DeleteAsync(t, transaction);
+                var result = await _dbContext.Connection.DeleteAsync(t, transaction);
 
                 return result;
             }
@@ -107,9 +108,9 @@ namespace Auth.Repository
         /// <returns></returns>
         public long Insert<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            using (UnitOfWork.WriteConnection)
+            using (_dbContext.InitConnection(RW.W))
             {
-                var result = UnitOfWork.WriteConnection.Insert(t, transaction);
+                var result = _dbContext.Connection.Insert(t, transaction);
 
                 return result;
             }
@@ -123,9 +124,9 @@ namespace Auth.Repository
         /// <returns></returns>
         public async Task<long> InsertAsync<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            using (UnitOfWork.WriteConnection)
+            using (_dbContext.InitConnection(RW.W))
             {
-                var result = await UnitOfWork.WriteConnection.InsertAsync(t, transaction);
+                var result = await _dbContext.Connection.InsertAsync(t, transaction);
 
                 return result;
             }
@@ -139,9 +140,9 @@ namespace Auth.Repository
         /// <returns></returns>
         public bool Update<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            using (UnitOfWork.WriteConnection)
+            using (_dbContext.InitConnection(RW.W))
             {
-                bool result = UnitOfWork.WriteConnection.Update(t, transaction);
+                bool result = _dbContext.Connection.Update(t, transaction);
 
                 return result;
             }
@@ -155,9 +156,9 @@ namespace Auth.Repository
         /// <returns></returns>
         public async Task<bool> UpdateAsync<T>(T t, IDbTransaction transaction = null) where T : class, new()
         {
-            using (UnitOfWork.WriteConnection)
+            using (_dbContext.InitConnection(RW.W))
             {
-                var result = await UnitOfWork.WriteConnection.UpdateAsync(t, transaction);
+                var result = await _dbContext.Connection.UpdateAsync(t, transaction);
 
                 return result;
             }
@@ -180,9 +181,9 @@ namespace Auth.Repository
                 new Condition { Name = key, Value = value, Type = ConditionalType.Equal }
             };
 
-            using (UnitOfWork.ReadConnection)
+            using (_dbContext.InitConnection(RW.R))
             {
-                var list = await UnitOfWork.ReadConnection.GetListAsync(conditions, expression, transaction);
+                var list = await _dbContext.Connection.GetListAsync(conditions, expression, transaction);
 
                 return list != null && list.Any();
             }
@@ -202,9 +203,9 @@ namespace Auth.Repository
             where TEntity : class, new()
             where TModel : class, new()
         {
-            using (UnitOfWork.ReadConnection)
+            using (_dbContext.InitConnection(RW.R))
             {
-                var list = await UnitOfWork.ReadConnection.GetListAsync(model, expression, transaction);
+                var list = await _dbContext.Connection.GetListAsync(model, expression, transaction);
 
                 return list;
             }
@@ -224,9 +225,9 @@ namespace Auth.Repository
             Expression<Func<T, dynamic>> expression = null,
             IDbTransaction transaction = null) where T : class, new()
         {
-            using (UnitOfWork.ReadConnection)
+            using (_dbContext.InitConnection(RW.R))
             {
-                var list = await UnitOfWork.ReadConnection.GetListAsync(conditions, expression, transaction);
+                var list = await _dbContext.Connection.GetListAsync(conditions, expression, transaction);
 
                 return list;
             }
@@ -254,9 +255,9 @@ namespace Auth.Repository
             where TEntity : class, new()
             where TModel : class, new()
         {
-            using (UnitOfWork.ReadConnection)
+            using (_dbContext.InitConnection(RW.R))
             {
-                var list = await UnitOfWork.ReadConnection.GetPagedListAsync(page, itemsPerPage, model, expression, defaultField, orderBy, transaction);
+                var list = await _dbContext.Connection.GetPagedListAsync(page, itemsPerPage, model, expression, defaultField, orderBy, transaction);
 
                 return list;
             }
@@ -274,9 +275,9 @@ namespace Auth.Repository
             where TEntity : class, new()
             where TModel : class, new()
         {
-            using (UnitOfWork.ReadConnection)
+            using (_dbContext.InitConnection(RW.R))
             {
-                long count = await UnitOfWork.ReadConnection.CountAsync<TEntity, TModel>(model, transaction);
+                long count = await _dbContext.Connection.CountAsync<TEntity, TModel>(model, transaction);
 
                 return count;
             }

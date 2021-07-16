@@ -1,7 +1,7 @@
 using System.Reflection;
 using Auth.Core.AppSettings;
 using Auth.Core.AutoMapper;
-using Auth.Core.DI;
+using Auth.Core.IoC;
 using Auth.Core.Swagger;
 using MediatR;
 using Microsoft.AspNetCore.Builder;

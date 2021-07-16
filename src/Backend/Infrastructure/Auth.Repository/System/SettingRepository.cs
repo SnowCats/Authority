@@ -10,17 +10,11 @@ namespace Auth.Repository.System
     public class SettingRepository : RepositoryBase, ISettingRepository
     {
         /// <summary>
-        /// UnitOfWork
-        /// </summary>
-        private readonly IUnitOfWork UnitOfWork;
-
-        /// <summary>
         /// Constructor
         /// </summary>
-        public SettingRepository(IUnitOfWork unitOfWork)
-            : base(unitOfWork)
+        public SettingRepository(IDbContext dbContext) : base(dbContext)
         {
-            UnitOfWork = unitOfWork;
+
         }
     }
 }
