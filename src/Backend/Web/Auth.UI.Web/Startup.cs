@@ -37,7 +37,7 @@ namespace Auth.UI.Web
             services.AddCors(c => c.AddPolicy("auth-admin",
                 option => option
                     .AllowAnyHeader()
-                    .AllowAnyOrigin()
+                    .WithOrigins(Configuration.GetSection("AllowedHosts").Value.Split(";"))
                     .AllowAnyMethod()
                     )
             );
