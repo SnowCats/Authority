@@ -7,6 +7,7 @@
   <ItemGroup>
     <Folder Include="BaseEntity\" />
     <Folder Include="SystemEntity\" />
+    <Folder Include="Ids4Entity\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Auth.SeedWork\Auth.SeedWork.csproj" />
