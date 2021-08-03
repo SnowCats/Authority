@@ -63,5 +63,29 @@ namespace Auth.Entity.Ids4Entity
         /// NonEditable
         /// </summary>
         public bool NonEditable { get; set; }
+
+        /// <summary>
+        /// ApiResourceClaim
+        /// </summary>
+        [Computed]
+        public ApiResourceClaim ApiResourceClaim { get; set; }
+
+        /// <summary>
+        /// ApiResourceProperty
+        /// </summary>
+        [Computed]
+        public ApiResourceProperty ApiResourceProperty { get; set; }
+
+        /// <summary>
+        /// ApiResourceScope
+        /// </summary>
+        [Computed]
+        public ApiResourceScope ApiResourceScope { get; set; }
+
+        /// <summary>
+        /// ApiResourceSecret
+        /// </summary>
+        [Computed]
+        public ApiResourceSecret ApiResourceSecret { get; set; }
     }
 }

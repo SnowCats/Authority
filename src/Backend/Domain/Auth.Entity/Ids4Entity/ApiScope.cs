@@ -48,5 +48,17 @@ namespace Auth.Entity.Ids4Entity
         /// ShowInDiscoveryDocument
         /// </summary>
         public object ShowInDiscoveryDocument { get; set; }
+
+        /// <summary>
+        /// ApiScopeClaim
+        /// </summary>
+        [Computed]
+        public ApiScopeClaim ApiScopeClaim { get; set; }
+
+        /// <summary>
+        /// ApiScopeProperty
+        /// </summary>
+        [Computed]
+        public ApiScopeProperty ApiScopeProperty { get; set; }
     }
 }

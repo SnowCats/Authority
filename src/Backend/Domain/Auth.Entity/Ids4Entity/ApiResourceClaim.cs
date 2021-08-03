@@ -15,12 +15,12 @@ namespace Auth.Entity.Ids4Entity
         public int Id { get; set; }
 
         /// <summary>
-        /// 
+        /// Type
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// 
+        /// ApiResourceId
         /// </summary>
         public int ApiResourceId { get; set; }
     }

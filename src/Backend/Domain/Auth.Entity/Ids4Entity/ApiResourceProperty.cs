@@ -25,7 +25,7 @@ namespace Auth.Entity.Ids4Entity
         public string Value { get; set; }
 
         /// <summary>
-        /// 
+        /// ApiResourceId
         /// </summary>
         public int ApiResourceId { get; set; }
     }

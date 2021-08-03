@@ -66,7 +66,7 @@ namespace Auth.Entity.SystemEntity
         /// 上级节点
         /// </summary>
         [Computed]
-        public Coupling Superior { get; set; } = new Coupling();
+        public KeyValue Superior { get; set; } = new KeyValue();
 
         #endregion
     }

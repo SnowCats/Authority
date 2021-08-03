@@ -12,10 +12,14 @@
   <ItemGroup>
     <Folder Include="Base\" />
     <Folder Include="System\" />
+    <Folder Include="Ids4\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\Auth.IRepository\Auth.IRepository.csproj" />
     <ProjectReference Include="..\Dapper.Contrib.Plus\Dapper.Contrib.Plus.csproj" />
     <ProjectReference Include="..\..\Core\Auth.Utility\Auth.Utility.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Ids4\" />
   </ItemGroup>
 </Project>

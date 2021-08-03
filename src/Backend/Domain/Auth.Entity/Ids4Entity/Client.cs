@@ -225,5 +225,65 @@ namespace Auth.Entity.Ids4Entity
         /// NonEditable
         /// </summary>
         public bool NonEditable { get; set; }
+
+        /// <summary>
+        /// ClientClaim
+        /// </summary>
+        [Computed]
+        public ClientClaim ClientClaim { get; set; }
+
+        /// <summary>
+        /// ClientCorsOrigin
+        /// </summary>
+        [Computed]
+        public ClientCorsOrigin ClientCorsOrigin { get; set; }
+
+        /// <summary>
+        /// ClientGrantType
+        /// </summary>
+        [Computed]
+        public ClientGrantType ClientGrantType { get; set; }
+
+        /// <summary>
+        /// ClientIdPRestriction
+        /// </summary>
+        [Computed]
+        public ClientIdPRestriction ClientIdPRestriction { get; set; }
+
+        /// <summary>
+        /// ClientPostLogoutRedirectUri
+        /// </summary>
+        [Computed]
+        public ClientPostLogoutRedirectUri ClientPostLogoutRedirectUri { get; set; }
+
+        /// <summary>
+        /// ClientProperty
+        /// </summary>
+        [Computed]
+        public ClientProperty ClientProperty { get; set; }
+
+        /// <summary>
+        /// ClientRedirectUri
+        /// </summary>
+        [Computed]
+        public ClientRedirectUri ClientRedirectUri { get; set; }
+
+        /// <summary>
+        /// ClientScope
+        /// </summary>
+        [Computed]
+        public ClientScope ClientScope { get; set; }
+
+        /// <summary>
+        /// ClientSecret
+        /// </summary>
+        [Computed]
+        public ClientSecret ClientSecret { get; set; }
+
+        /// <summary>
+        /// DeviceCodes
+        /// </summary>
+        [Computed]
+        public DeviceCodes DeviceCodes { get; set; }
     }
 }

@@ -96,7 +96,7 @@ namespace Auth.Repository
             }
             else
             {
-                throw new Exception("\"DefaultDB\" is incorrect, Please check your appsettings.{*}.json. example: \"Database\": \"MySQL\"");
+                throw new Exception("\"Database\" is incorrect, Please check your appsettings.{*}.json. example: \"Database\": \"MySQL\"");
             }
         }
 
