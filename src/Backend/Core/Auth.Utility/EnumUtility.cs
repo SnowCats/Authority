@@ -18,4 +18,10 @@ namespace Auth.Utility
         R,
         W
     }
+
+    public enum Enabled
+    {
+        FLASE,
+        TRUE
+    }
 }

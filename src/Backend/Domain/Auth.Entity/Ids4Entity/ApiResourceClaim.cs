@@ -4,7 +4,7 @@ using Dapper.Contrib.Plus;
 namespace Auth.Entity.Ids4Entity
 {
     /// <summary>
-    /// 
+    /// ApiResourceClaim
     /// </summary>
     [Table("api_resource_claims")]
     public class ApiResourceClaim

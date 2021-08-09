@@ -173,7 +173,7 @@ namespace Auth.Repository
         /// <param name="expression"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public async Task<bool> HasValueAsync<T>(string key, string value, Expression<Func<T, dynamic>> expression = null, IDbTransaction transaction = null) where T : class, new()
+        public async Task<bool> HasValueAsync<T>(string key, dynamic value, Expression<Func<T, dynamic>> expression = null, IDbTransaction transaction = null) where T : class, new()
         {
             // 查询条件
             IList<Condition> conditions = new List<Condition>

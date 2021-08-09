@@ -87,7 +87,7 @@ namespace Auth.IRepository
         /// <param name="expression"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        Task<bool> HasValueAsync<T>(string key, string value, Expression<Func<T, dynamic>> expression = null, IDbTransaction transaction = null) where T : class, new();
+        Task<bool> HasValueAsync<T>(string key, dynamic value, Expression<Func<T, dynamic>> expression = null, IDbTransaction transaction = null) where T : class, new();
 
         /// <summary>
         /// 查询列表
