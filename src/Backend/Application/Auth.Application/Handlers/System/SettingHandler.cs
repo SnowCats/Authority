@@ -65,7 +65,7 @@ namespace Auth.Application.Handlers.System
             else
             {
                 await UnitOfWork.Setting.InsertAsync(setting);
-                return setting.ID;
+                return setting.Id;
             }
         }
 

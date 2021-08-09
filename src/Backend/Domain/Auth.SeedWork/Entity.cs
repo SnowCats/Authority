@@ -12,6 +12,6 @@ namespace Auth.SeedWork
         /// 主键
         /// </summary>
         [ExplicitKey]
-        public Guid ID { get; set; }
+        public Guid Id { get; set; }
     }
 }

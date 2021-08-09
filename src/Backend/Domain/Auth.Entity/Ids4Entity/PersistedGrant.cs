@@ -12,6 +12,7 @@ namespace Auth.Entity.Ids4Entity
         /// <summary>
         /// Key
         /// </summary>
+        [Key]
         public string Key { get; set; }
 
         /// <summary>

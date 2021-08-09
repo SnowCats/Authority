@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Dapper.Contrib.Plus;
 
 namespace Auth.Entity.Ids4Entity
@@ -9,6 +10,7 @@ namespace Auth.Entity.Ids4Entity
         /// <summary>
         /// 主键
         /// </summary>
+        [Key]
         public int Id { get; set; }
 
         /// <summary>
@@ -230,60 +232,60 @@ namespace Auth.Entity.Ids4Entity
         /// ClientClaim
         /// </summary>
         [Computed]
-        public ClientClaim ClientClaim { get; set; }
+        public IList<ClientClaim> Claims { get; set; }
 
         /// <summary>
         /// ClientCorsOrigin
         /// </summary>
         [Computed]
-        public ClientCorsOrigin ClientCorsOrigin { get; set; }
+        public IList<ClientCorsOrigin> CorsOrigins { get; set; }
 
         /// <summary>
         /// ClientGrantType
         /// </summary>
         [Computed]
-        public ClientGrantType ClientGrantType { get; set; }
+        public IList<ClientGrantType> GrantTypes { get; set; }
 
         /// <summary>
         /// ClientIdPRestriction
         /// </summary>
         [Computed]
-        public ClientIdPRestriction ClientIdPRestriction { get; set; }
+        public IList<ClientIdPRestriction> PRestrictions { get; set; }
 
         /// <summary>
         /// ClientPostLogoutRedirectUri
         /// </summary>
         [Computed]
-        public ClientPostLogoutRedirectUri ClientPostLogoutRedirectUri { get; set; }
+        public IList<ClientPostLogoutRedirectUri> PostLogoutRedirectUris { get; set; }
 
         /// <summary>
         /// ClientProperty
         /// </summary>
         [Computed]
-        public ClientProperty ClientProperty { get; set; }
+        public IList<ClientProperty> Properties { get; set; }
 
         /// <summary>
         /// ClientRedirectUri
         /// </summary>
         [Computed]
-        public ClientRedirectUri ClientRedirectUri { get; set; }
+        public IList<ClientRedirectUri> RedirectUris { get; set; }
 
         /// <summary>
         /// ClientScope
         /// </summary>
         [Computed]
-        public ClientScope ClientScope { get; set; }
+        public IList<ClientScope> Scopes { get; set; }
 
         /// <summary>
         /// ClientSecret
         /// </summary>
         [Computed]
-        public ClientSecret ClientSecret { get; set; }
+        public IList<ClientSecret> Secrets { get; set; }
 
         /// <summary>
         /// DeviceCodes
         /// </summary>
         [Computed]
-        public DeviceCodes DeviceCodes { get; set; }
+        public IList<DeviceCodes> DeviceCodes { get; set; }
     }
 }

@@ -16,4 +16,8 @@
       <ReferenceSourceTarget>ProjectReference</ReferenceSourceTarget>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="IdentityModel" />
+    <None Remove="IdentityServer4.Storage" />
+  </ItemGroup>
 </Project>

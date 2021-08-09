@@ -47,7 +47,7 @@ namespace Auth.Application.Handlers.Base
 
             await UnitOfWork.User.InsertAsync(user);
 
-            return user.ID;
+            return user.Id;
         }
     }
 }

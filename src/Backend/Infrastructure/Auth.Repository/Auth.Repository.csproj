@@ -8,6 +8,7 @@
     <PackageReference Include="MySql.Data" Version="8.0.21" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.8" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Base\" />
@@ -21,5 +22,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Ids4\" />
+    <None Remove="AutoMapper.Extensions.Microsoft.DependencyInjection" />
   </ItemGroup>
 </Project>

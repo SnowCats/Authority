@@ -9,6 +9,7 @@ namespace Auth.Entity.Ids4Entity
         /// <summary>
         /// 主键
         /// </summary>
+        [Key]
         public int Id { get; set; }
 
         /// <summary>

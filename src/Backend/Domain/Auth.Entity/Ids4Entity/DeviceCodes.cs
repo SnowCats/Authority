@@ -12,6 +12,7 @@ namespace Auth.Entity.Ids4Entity
         /// <summary>
         /// UserCode
         /// </summary>
+        [ExplicitKey]
         public string UserCode { get; set; }
 
         /// <summary>
