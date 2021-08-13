@@ -588,32 +588,28 @@ namespace Dapper.Contrib.Plus
         /// <typeparam name="T"></typeparam>
         /// <param name="connection"></param>
         /// <param name="conditions"></param>
-        /// <param name="parameters"></param>
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        public static bool DeleteAny<T>(
-            IDbConnection connection,
-            Expression<Func<T, dynamic>> queryExp,
-            object parameters,
-            IDbTransaction transaction,
-            int? commandTimeout = null)
+        public static bool DeleteAny<T>(this IDbConnection connection,
+            IList<Condition> conditions = null,
+            IDbTransaction transaction = null, int? commandTimeout = null) where T : class, new()
         {
             var name = GetTableName(typeof(T));
-            var query = new StringBuilder();
             var adapter = GetFormatter(connection);
-            if (queryExp != null)
+            var query = new StringBuilder();
+            IDictionary<string, object> parameters = new ExpandoObject();
+
+            // 查询条件
+            foreach (var item in conditions)
             {
-                for (int i = 0; i < ((NewExpression)queryExp.Body).Members.Count; i++)
-                {
-                    adapter.AppendColumnNameEqualsValue(query, ((NewExpression)queryExp.Body).Members[i].Name);
-                    if (i < ((NewExpression)queryExp.Body).Members.Count - 1)
-                        query.Append(" and ");
-                }
+                adapter.AppendColumnNameEqualsValue(query, item.Name, item.Type);
+                parameters.Add(item.Name, item.Value);
             }
 
             string sql = $"delete from {name} where 1=1 {query}";
-            var result = connection.Execute(sql, parameters, transaction, commandTimeout);
+
+            var result = connection.Execute(sql, param: parameters, transaction: transaction, commandTimeout: commandTimeout);
 
             return result > 0;
         }
