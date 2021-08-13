@@ -9,10 +9,11 @@ namespace Auth.Core.AutoMapper.Ids4
     /// <summary>
     /// IdentityServer4 MapperProfile
     /// </summary>
-    public class ClientMapperProfile : Profile
+    public class ModelMapperProfile : Profile
     {
-        public ClientMapperProfile()
+        public ModelMapperProfile()
         {
+            // Client
             CreateMap<Entity.Ids4Entity.Client, Client>()
                 .ForMember(dest => dest.ProtocolType, opt => opt.Condition(srcs => srcs != null))
                 .ReverseMap();
@@ -56,6 +57,18 @@ namespace Auth.Core.AutoMapper.Ids4
 
             CreateMap<Entity.Ids4Entity.ClientSecret, Secret>(MemberList.Destination)
                 .ForMember(dest => dest.Type, opt => opt.Condition(src => src != null))
+                .ReverseMap();
+
+            // ApiResource
+            CreateMap<Entity.Ids4Entity.ApiResource, ApiResource>()
+                .ReverseMap();
+
+            // ApiScope
+            CreateMap<Entity.Ids4Entity.ApiScope, ApiScope>()
+                .ReverseMap();
+
+            // IdentityResource
+            CreateMap<Entity.Ids4Entity.IdentityResource, IdentityResource>()
                 .ReverseMap();
         }
     }

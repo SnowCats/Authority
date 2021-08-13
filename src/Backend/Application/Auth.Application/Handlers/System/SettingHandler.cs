@@ -23,8 +23,8 @@ namespace Auth.Application.Handlers.System
         IRequestHandler<CreateRequest, Guid?>,
         IRequestHandler<UpdateRequest, bool>,
         IRequestHandler<DeleteRequest, bool>,
-        IRequestHandler<QueryPagedListRequest, PagedList<SettingDto>>,
-        IRequestHandler<QueryListRequest, IEnumerable<SettingDto>>
+        IRequestHandler<QueryPagedListFilter, PagedList<SettingDto>>,
+        IRequestHandler<QueryListFilter, IEnumerable<SettingDto>>
     {
         /// <summary>
         /// 工作单元
@@ -103,10 +103,10 @@ namespace Auth.Application.Handlers.System
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<PagedList<SettingDto>> Handle(QueryPagedListRequest request, CancellationToken cancellationToken)
+        public async Task<PagedList<SettingDto>> Handle(QueryPagedListFilter filter, CancellationToken cancellationToken)
         {
-            IEnumerable<Setting> entities = await UnitOfWork.Setting.GetPagedListAsync<Setting, QueryPagedListRequest>(request.Pagination.Page, request.Pagination.ItemsPerPage, request);
-            long count = await UnitOfWork.Setting.CountAsync<Setting, QueryPagedListRequest>(request);
+            IEnumerable<Setting> entities = await UnitOfWork.Setting.GetPagedListAsync<Setting, QueryPagedListFilter>(filter.Pagination.Page, filter.Pagination.ItemsPerPage, filter);
+            long count = await UnitOfWork.Setting.CountAsync<Setting, QueryPagedListFilter>(filter);
 
             // 如果有记录
             if (count > 0)
@@ -115,7 +115,7 @@ namespace Auth.Application.Handlers.System
                 IList<Condition> conditions = new List<Condition>
                 {
                     new Condition {
-                        Name = nameof(request.Value),
+                        Name = nameof(filter.Value),
                         Value = entities.Where(s => !string.IsNullOrWhiteSpace(s.ParentValue)).Select(s => s.ParentValue).ToList(),
                         Type = ConditionalType.In }
                 };
@@ -142,9 +142,9 @@ namespace Auth.Application.Handlers.System
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<SettingDto>> Handle(QueryListRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SettingDto>> Handle(QueryListFilter filter, CancellationToken cancellationToken)
         {
-            IEnumerable<Setting> entities = await UnitOfWork.Setting.GetListAsync<Setting, QueryListRequest>(request);
+            IEnumerable<Setting> entities = await UnitOfWork.Setting.GetListAsync<Setting, QueryListFilter>(filter);
             IEnumerable<SettingDto> list = mapper.Map<IEnumerable<SettingDto>>(entities);
 
             return list;

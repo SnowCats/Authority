@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Auth.Application.Commands.System.Setting
 {
-    public class QueryListRequest : IRequest<IEnumerable<SettingDto>>
+    public class QueryListFilter : IRequest<IEnumerable<SettingDto>>
     {
         /// <summary>
         /// Value

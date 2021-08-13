@@ -18,7 +18,7 @@ namespace Auth.Core.AutoMapper
         public static void AddAutoMapperConfiguration(this IServiceCollection services)
         {
             // Between IdentityServer4.Models and entity
-            services.AddSingleton(new MapperConfiguration(config => config.AddProfile<ClientMapperProfile>())
+            services.AddSingleton(new MapperConfiguration(config => config.AddProfile<ModelMapperProfile>())
                 .CreateMapper());
 
             // Between entity and dto

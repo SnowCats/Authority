@@ -91,9 +91,9 @@ namespace Auth.Web.Api.Apis.System
         /// <param name="settingDto"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<PagedList<SettingDto>> GetPagedListAsync(QueryPagedListRequest request)
+        public async Task<PagedList<SettingDto>> GetPagedListAsync(QueryPagedListFilter filter)
         {
-            PagedList<SettingDto> response = await Mediator.Send(request);
+            PagedList<SettingDto> response = await Mediator.Send(filter);
 
             return response;
         }
@@ -104,9 +104,9 @@ namespace Auth.Web.Api.Apis.System
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<dynamic> GetListAsync(QueryListRequest request)
+        public async Task<dynamic> GetListAsync(QueryListFilter filter)
         {
-            IEnumerable<SettingDto> response = await Mediator.Send(request);
+            IEnumerable<SettingDto> response = await Mediator.Send(filter);
 
             return response;
         }

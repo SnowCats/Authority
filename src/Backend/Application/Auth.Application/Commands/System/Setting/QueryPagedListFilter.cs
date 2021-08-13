@@ -10,7 +10,7 @@ namespace Auth.Application.Commands.System.Setting
     /// <summary>
     /// 更新数据字典请求
     /// </summary>
-    public class QueryPagedListRequest : IRequest<PagedList<SettingDto>>
+    public class QueryPagedListFilter : IRequest<PagedList<SettingDto>>
     {
         /// <summary>
         /// 分页条件
