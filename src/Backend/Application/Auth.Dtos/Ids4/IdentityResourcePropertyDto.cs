@@ -1,0 +1,21 @@
+﻿using System;
+namespace Auth.Dtos.Ids4
+{
+    public class IdentityResourcePropertyDto
+    {
+        /// <summary>
+        /// 主键
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Type
+        /// </summary>
+        public string Type { get; set; }
+
+        /// <summary>
+        /// IdentityResource
+        /// </summary>
+        public int IdentityResource { get; set; }
+    }
+}

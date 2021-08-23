@@ -8,11 +8,15 @@
     <Folder Include="Base\" />
     <Folder Include="System\" />
     <Folder Include="System\" />
+    <Folder Include="Ids4\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MediatR" Version="9.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Auth.Utility\Auth.Utility.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Ids4\" />
   </ItemGroup>
 </Project>

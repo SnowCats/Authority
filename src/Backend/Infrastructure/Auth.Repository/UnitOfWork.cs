@@ -29,7 +29,10 @@ namespace Auth.Repository
         /// </summary>
         /// <param name="user"></param>
         /// <param name="setting"></param>
-        public UnitOfWork(IUserRepository user, ISettingRepository setting)
+        public UnitOfWork(
+            IUserRepository user,
+            ISettingRepository setting
+        )
         {
             _user = user;
             _setting = setting;
