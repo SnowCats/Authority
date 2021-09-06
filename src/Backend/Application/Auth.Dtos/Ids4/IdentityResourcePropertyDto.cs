@@ -16,6 +16,6 @@ namespace Auth.Dtos.Ids4
         /// <summary>
         /// IdentityResource
         /// </summary>
-        public int IdentityResource { get; set; }
+        public int IdentityResourceId { get; set; }
     }
 }

@@ -48,7 +48,7 @@ namespace Auth.Dtos.Ids4
         /// <summary>
         /// LogoUri
         /// </summary>
-        public string Logouri { get; set; }
+        public string LogoUri { get; set; }
 
         /// <summary>
         /// RequireConsent

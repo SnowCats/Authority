@@ -51,7 +51,7 @@ namespace Auth.Entity.Ids4Entity
         /// <summary>
         /// LogoUri
         /// </summary>
-        public string Logouri { get; set; }
+        public string LogoUri { get; set; }
 
         /// <summary>
         /// RequireConsent

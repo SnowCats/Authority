@@ -14,7 +14,7 @@ namespace Auth.Core.IdentityServer4
         /// <param name="services"></param>
         public static void AddIdentityServer(this IServiceCollection services)
         {
-
+            services.AddIdentityServer();
         }
     }
 }

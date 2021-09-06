@@ -23,6 +23,6 @@ namespace Auth.Entity.Ids4Entity
         /// <summary>
         /// IdentityResource
         /// </summary>
-        public int IdentityResource { get; set; }
+        public int IdentityResourceId { get; set; }
     }
 }
