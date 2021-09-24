@@ -110,27 +110,5 @@ namespace Auth.Web.Api.Apis.System
 
             return response;
         }
-
-        /// <summary>
-        /// Http检查
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public dynamic HttpCheck(string link)
-        {
-            try
-            {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.CreateDefault(new Uri(link));
-                request.Method = "HEAD";
-                request.Timeout = 1000;
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-                return response;
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-        }
     }
 }

@@ -86,6 +86,25 @@ export default new VueRouter({
             path: '/system/setting/edit/:id',
             name: 'setting-edit',
             component: () => import('@/pages/system/setting/edit.vue')
-        }
+        },
+        // 认证授权
+        {
+            // 客户端
+            path: '/ids/client',
+            name: 'client-list',
+            component: () => import('@/pages/ids/client/index.vue')
+        },
+        {
+            // 身份资源
+            path: '/ids/identity-resource',
+            name: 'identity-resource-list',
+            component: () => import('@/pages/ids/identity-resource/index.vue')
+        },
+        {
+            // 接口资源
+            path: '/ids/api-resource',
+            name: 'api-resource-list',
+            component: () => import('@/pages/ids/api-resource/index.vue')
+        },
     ]
 });

@@ -26,8 +26,7 @@ const list = [{
         title: "角色信息",
         icon: "mdi-account-box",
         href: "/base/role",
-    },
-    ]
+    }]
 },
 {
     title: "系统设置",
@@ -57,9 +56,29 @@ const list = [{
         title: "数据字典",
         icon: "mdi-book",
         href: "/system/setting",
-    }
-    ]
-}
-];
+    }]
+},
+{
+    title: "认证授权",
+    group: "ids",
+    icon: "mdi-shield-key",
+    active: false,
+    items: [{
+        name: "client",
+        title: "客户端",
+        icon: "mdi-laptop",
+        href: "/ids/client",
+    }, {
+        name: "identity-resource",
+        title: "身份资源",
+        icon: "mdi-identifier",
+        href: "/ids/identity-resource",
+    }, {
+        name: "api-resource",
+        title: "接口资源",
+        icon: "mdi-api",
+        href: "/ids/api-resource",
+    }]
+}];
 
 export default list;
