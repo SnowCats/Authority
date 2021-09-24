@@ -1,4 +1,4 @@
-import Setting from '@/types/system/setting';
+import Setting from '@/types/entities/system/setting';
 import axios from '../../plugins/axios';
 
 let service = {

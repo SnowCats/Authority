@@ -52,9 +52,9 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import Setting from '@/types/system/setting';
-import VWidget from '../../../components/VWidget.vue';
-import service from '../../../services/system/setting';
+import Setting from '@/types/entities/system/setting';
+import VWidget from '@/components/VWidget.vue';
+import service from '@/services/system/setting';
 
 // 组件注入
 @Component({
@@ -70,20 +70,20 @@ export default class Index extends Vue {
   // validation
   valid: boolean = true;
   rules: any = {
-    value: [(v:any) => !!v || '必填'],
-    text: [(v:any) => !!v || '必填']
-  }
+    value: [(v: any) => !!v || '必填'],
+    text: [(v: any) => !!v || '必填'],
+  };
   // list
   // list
   select: any = {
-    settings: []
-  }
+    settings: [],
+  };
 
   // mounted
   mounted(): void {
     service.getList({}).then(res => {
       this.select.settings = res.data;
-    })
+    });
   }
 
   // created
@@ -99,10 +99,10 @@ export default class Index extends Vue {
     console.log('setting', this.setting);
 
     // valid
-    if((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
-      let result = service.update(this.setting);
-      if(result) {
-        console.log("更新成功");
+    if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
+      let result: any = service.update(this.setting);
+      if (result) {
+        console.log('更新成功');
         this.back();
       }
     }

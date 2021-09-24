@@ -95,8 +95,8 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import VWidget from "../../../components/VWidget.vue";
-import User from "../../../types/base/user";
+import VWidget from "@/components/VWidget.vue";
+import User from "@/types/entities/base/user";
 
 // 组件注入
 @Component({

@@ -52,7 +52,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import Setting from '@/types/system/setting';
+import Setting from '@/types/entities/system/setting';
 import VWidget from '@/components/VWidget.vue';
 import service from '@/services/system/setting';
 
