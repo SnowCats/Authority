@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Dapper.Contrib.Plus;
+using IdentityServer4.Models;
+using static IdentityServer4.IdentityServerConstants;
 
 namespace Auth.Entity.Ids4Entity
 {
@@ -14,54 +16,54 @@ namespace Auth.Entity.Ids4Entity
         public int Id { get; set; }
 
         /// <summary>
-        /// Enabled
+        /// 是否启用
         /// </summary>
-        public bool Enabled { get; set; }
+        public bool Enabled { get; set; } = true;
 
         /// <summary>
-        /// ClientId
+        /// 客户端Id
         /// </summary>
         public string ClientId { get; set; }
 
         /// <summary>
-        /// ProtocolType
+        /// 协议类型
         /// </summary>
-        public string ProtocolType { get; set; }
+        public string ProtocolType { get; set; } = ProtocolTypes.OpenIdConnect;
 
         /// <summary>
-        /// RequireClientSecret
+        /// 需要许可
         /// </summary>
-        public bool RequireClientSecret { get; set; }
+        public bool RequireClientSecret { get; set; } = true;
 
         /// <summary>
-        /// ClientName
+        /// 客户端名称
         /// </summary>
         public string ClientName { get; set; }
 
         /// <summary>
-        /// Description
+        /// 描述
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// ClientUri
+        /// 客户端Uri
         /// </summary>
         public string ClientUri { get; set; }
 
         /// <summary>
-        /// LogoUri
+        /// 注销URL
         /// </summary>
         public string LogoUri { get; set; }
 
         /// <summary>
-        /// RequireConsent
+        /// 需要许可
         /// </summary>
-        public bool RequireConsent { get; set; }
+        public bool RequireConsent { get; set; } = true;
 
         /// <summary>
-        /// AllowRememberConsent
+        /// 允许记住许可
         /// </summary>
-        public bool AllowRememberConsent { get; set; }
+        public bool AllowRememberConsent { get; set; } = true;
 
         /// <summary>
         /// AlwaysIncludeUserClaimsInIdToken
@@ -79,7 +81,7 @@ namespace Auth.Entity.Ids4Entity
         public bool AllowPlainTextPkce { get; set; }
 
         /// <summary>
-        /// RequireRequestObject
+        /// 需要请求对象
         /// </summary>
         public bool RequireRequestObject { get; set; }
 
@@ -89,34 +91,34 @@ namespace Auth.Entity.Ids4Entity
         public bool AllowAccessTokensViaBrowser { get; set; }
 
         /// <summary>
-        /// FrontChannelLogoutUri
+        /// Front-Channel注销URL
         /// </summary>
         public string FrontChannelLogoutUri { get; set; }
 
         /// <summary>
-        /// FrontChannelLogoutSessionRequired
+        /// 需要Front-Channel注销Session
         /// </summary>
-        public bool FrontChannelLogoutSessionRequired { get; set; }
+        public bool FrontChannelLogoutSessionRequired { get; set; } = true;
 
         /// <summary>
-        /// BackChannelLogoutUri
+        /// BackChannel注销URL
         /// </summary>
         public string BackChannelLogoutUri { get; set; }
 
         /// <summary>
-        /// BackChannelLogoutSessionRequired
+        /// 需要Back-Channel注销Session
         /// </summary>
-        public bool BackChannelLogoutSessionRequired { get; set; }
+        public bool BackChannelLogoutSessionRequired { get; set; } = true;
 
         /// <summary>
-        /// AllowOfflineAccess
+        /// 允许离线访问
         /// </summary>
         public bool AllowOfflineAccess { get; set; }
 
         /// <summary>
         /// IdentityTokenLifetime
         /// </summary>
-        public int IdentityTokenLifetime { get; set; }
+        public int IdentityTokenLifetime { get; set; } = 300;
 
         /// <summary>
         /// AllowedIdentityTokenSigningAlgorithms
@@ -126,32 +128,32 @@ namespace Auth.Entity.Ids4Entity
         /// <summary>
         /// AccessTokenLifetime
         /// </summary>
-        public int AccessTokenLifetime { get; set; }
+        public int AccessTokenLifetime { get; set; } = 3600;
 
         /// <summary>
         /// AuthorizationCodeLifetime
         /// </summary>
-        public int AuthorizationCodeLifetime { get; set; }
+        public int AuthorizationCodeLifetime { get; set; } = 300;
 
         /// <summary>
         /// ConsentLifetime
         /// </summary>
-        public int ConsentLifetime { get; set; }
+        public int? ConsentLifetime { get; set; }
 
         /// <summary>
         /// AbsoluteRefreshTokenLifetime
         /// </summary>
-        public int AbsoluteRefreshTokenLifetime { get; set; }
+        public int AbsoluteRefreshTokenLifetime { get; set; } = 2592000;
 
         /// <summary>
         /// SlidingRefreshTokenLifetime
         /// </summary>
-        public int SlidingRefreshTokenLifetime { get; set; }
+        public int SlidingRefreshTokenLifetime { get; set; } = 1296000;
 
         /// <summary>
         /// RefreshTokenUsage
         /// </summary>
-        public int RefreshTokenUsage { get; set; }
+        public int RefreshTokenUsage { get; set; } = (int)TokenUsage.OneTimeOnly;
 
         /// <summary>
         /// UpdateAccessTokenClaimsOnRefresh
@@ -161,17 +163,17 @@ namespace Auth.Entity.Ids4Entity
         /// <summary>
         /// RefreshTokenExpiration
         /// </summary>
-        public int RefreshTokenExpiration { get; set; }
+        public int RefreshTokenExpiration { get; set; } = (int)TokenExpiration.Absolute;
 
         /// <summary>
         /// AccessTokenType
         /// </summary>
-        public int AccessTokenType { get; set; }
+        public int AccessTokenType { get; set; } = (int)IdentityServer4.Models.AccessTokenType.Jwt;
 
         /// <summary>
         /// EnableLocalLogin
         /// </summary>
-        public bool EnableLocalLogin { get; set; }
+        public bool EnableLocalLogin { get; set; } = true;
 
         /// <summary>
         /// IncludeJwtId
@@ -186,7 +188,7 @@ namespace Auth.Entity.Ids4Entity
         /// <summary>
         /// ClientClaimsPrefix
         /// </summary>
-        public string ClientClaimsPrefix { get; set; }
+        public string ClientClaimsPrefix { get; set; } = "client_";
 
         /// <summary>
         /// PairWiseSubjectSalt
@@ -211,7 +213,7 @@ namespace Auth.Entity.Ids4Entity
         /// <summary>
         /// UserSsoLifetime
         /// </summary>
-        public int UserSsoLifetime { get; set; }
+        public int? UserSsoLifetime { get; set; }
 
         /// <summary>
         /// UserCodeType
@@ -221,7 +223,7 @@ namespace Auth.Entity.Ids4Entity
         /// <summary>
         /// DeviceCodeLifetime
         /// </summary>
-        public int DeviceCodeLifetime { get; set; }
+        public int DeviceCodeLifetime { get; set; } = 300;
 
         /// <summary>
         /// NonEditable

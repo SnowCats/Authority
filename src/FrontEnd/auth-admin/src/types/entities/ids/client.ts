@@ -1,26 +1,26 @@
 interface IClient {
-  id?: number;
-  enabled: boolean;
-  clientId: string;
-  protocolType: string;
-  requireClientSecret: boolean;
-  clientName: string;
-  description: string;
-  clientUri: string;
-  logoutUri: string;
-  requireConsent: boolean;
-  allowRememberConsent: boolean;
-  alwaysIncludeUserClaimsInIdToken: boolean;
-  requirePkce: boolean;
-  allowPlainTextPkce: boolean;
-  requireRequestObject: boolean;
-  allowAccessTokensViaBrowser: boolean;
-  frontChannelLogoutUri: string;
-  frontChannelLogoutSessionRequired: boolean;
-  backChannelLogoutUri: string;
-  backChannelLogoutSessionRequired: boolean;
-  allowOfflineAccess: boolean;
-  identityTokenLifetime: number;
+  id?: number;  // 主键
+  enabled: boolean; // 是否启用
+  clientId: string; // 客户端Id
+  protocolType: string; // 协议类型
+  requireClientSecret: boolean; // 需要许可
+  clientName: string; // 客户端名称
+  description: string;  // 描述
+  clientUri: string;  // 客户端Uri
+  logoUri: string;  // 注销URL
+  requireConsent: boolean;  // 需要许可
+  allowRememberConsent: boolean;  // 允许记住许可
+  alwaysIncludeUserClaimsInIdToken: boolean;  // 
+  requirePkce: boolean; // 
+  allowPlainTextPkce: boolean;  // 
+  requireRequestObject: boolean;  // 需要请求对象
+  allowAccessTokensViaBrowser: boolean; // 
+  frontChannelLogoutUri: string;  // Front-Channel注销URL
+  frontChannelLogoutSessionRequired: boolean; // 需要Front-Channel注销Session
+  backChannelLogoutUri: string; // BackChannel注销URL
+  backChannelLogoutSessionRequired: boolean;  // 需要Back-Channel注销Session
+  allowOfflineAccess: boolean;  // 允许离线访问
+  identityTokenLifetime: number;  // 
   allowedIdentityTokenSigningAlgorithms: string;
   accessTokenLifetime: number;
   authorizationCodeLifetime: number;
@@ -54,19 +54,19 @@ export default class Client implements IClient {
   clientName: string = '';
   description: string = '';
   clientUri: string = '';
-  logoutUri: string = '';
+  logoUri: string = '';
   requireConsent: boolean = false;
-  allowRememberConsent: boolean = false;
+  allowRememberConsent: boolean = true;
   alwaysIncludeUserClaimsInIdToken: boolean = false;
   requirePkce: boolean = false;
   allowPlainTextPkce: boolean = false;
   requireRequestObject: boolean = false;
   allowAccessTokensViaBrowser: boolean = false;
   frontChannelLogoutUri: string = '';
-  frontChannelLogoutSessionRequired: boolean = false;
+  frontChannelLogoutSessionRequired: boolean = true;
   backChannelLogoutUri: string = '';
-  backChannelLogoutSessionRequired: boolean = false;
-  allowOfflineAccess: boolean = false;
+  backChannelLogoutSessionRequired: boolean = true;
+  allowOfflineAccess: boolean = true;
   identityTokenLifetime: number = 0;
   allowedIdentityTokenSigningAlgorithms: string = '';
   accessTokenLifetime: number = 0;

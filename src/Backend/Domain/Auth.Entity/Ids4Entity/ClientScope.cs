@@ -16,12 +16,12 @@ namespace Auth.Entity.Ids4Entity
         public int Id { get; set; }
 
         /// <summary>
-        /// Scope
+        /// 允许的CORS来源Uri
         /// </summary>
         public string Scope { get; set; }
 
         /// <summary>
-        /// ClientId
+        /// 客户端Id
         /// </summary>
         public int ClientId { get; set; }
     }

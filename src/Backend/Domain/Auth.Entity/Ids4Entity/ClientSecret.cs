@@ -16,32 +16,32 @@ namespace Auth.Entity.Ids4Entity
         public int Id { get; set; }
 
         /// <summary>
-        /// Description
+        /// 描述
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// Value
+        /// 值
         /// </summary>
         public string Value { get; set; }
 
         /// <summary>
-        /// Expiration
+        /// 到期
         /// </summary>
         public string Expiration { get; set; }
 
         /// <summary>
-        /// Type
+        /// 类型，SharedSecret，X509Thumbprint
         /// </summary>
         public string Type { get; set; }
 
         /// <summary>
-        /// Created
+        /// 创建时间
         /// </summary>
         public string Created { get; set; }
 
         /// <summary>
-        /// ClientId
+        /// 客户端Id
         /// </summary>
         public int ClientId { get; set; }
     }

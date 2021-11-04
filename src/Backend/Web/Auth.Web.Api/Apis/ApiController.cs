@@ -17,7 +17,7 @@ namespace Auth.Web.Api.Apis
     [ApiController]
     [ApiExplorerSettings(GroupName = "v1")]
     [EnableCors("auth-admin")]
-    public class ApiController : Controller
+    public class ApiController : ControllerBase
     {
         /// <summary>
         /// 获取时间戳

@@ -16,7 +16,7 @@ namespace Auth.Entity.Ids4Entity
         public int Id { get; set; }
 
         /// <summary>
-        /// PostLogoutRedirectUri
+        /// Signout Url
         /// </summary>
         public string PostLogoutRedirectUri { get; set; }
 

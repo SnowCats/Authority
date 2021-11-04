@@ -95,6 +95,18 @@ export default new VueRouter({
             component: () => import('@/pages/ids/client/index.vue')
         },
         {
+            // 客户端新增
+            path: '/ids/client/add',
+            name: 'client-add',
+            component: () => import('@/pages/ids/client/add.vue')
+        },
+        {
+            // 客户端编辑
+            path: '/ids/client/edit/:id',
+            name: 'client-edit',
+            component: () => import('@/pages/ids/client/edit.vue')
+        },
+        {
             // 身份资源
             path: '/ids/identity-resource',
             name: 'identity-resource-list',

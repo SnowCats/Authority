@@ -13,12 +13,12 @@ namespace Auth.Entity.Ids4Entity
         public int Id { get; set; }
 
         /// <summary>
-        /// 
+        /// 回调URL
         /// </summary>
         public string RedirectUri { get; set; }
 
         /// <summary>
-        /// 
+        /// 客户端Id
         /// </summary>
         public int ClientId { get; set; }
     }
