@@ -1,5 +1,5 @@
 interface IApiResource {
-  id?: number;
+  id?: string;
   enabled: boolean;
   name: string;
   displayName: string;
@@ -13,7 +13,7 @@ interface IApiResource {
 }
 
 export default class ApiResource implements IApiResource {
-  id?: number | undefined;
+  id?: string;
   enabled: boolean = true;
   name: string = '';
   displayName: string = '';
@@ -24,5 +24,4 @@ export default class ApiResource implements IApiResource {
   updated: string = '';
   lastAccessed: string = '';
   nonEditable: boolean = false;
-
 }

@@ -27,44 +27,40 @@
                 </v-container>
               </template>
             </v-widget>
-            <v-widget title="客户端列表">
-              <template slot="widget-content">
-                <v-data-table
-                  :headers="headers"
-                  :items="list"
-                  :page.sync="pagination.page"
-                  :items-per-page="pagination.itemsPerPage"
-                  hide-default-footer
-                  class="elevation-1"
-                  @page-count="pagination.count = $event"
-                >
-                  <!-- 序号 -->
-                  <template v-slot:[`item.id`]="{ item }">
-                    {{
-                      pagination.page *
-                        list
-                          .map(function (x) {
-                            return x.id;
-                          })
-                          .indexOf(item.id) +
-                      1
-                    }}
-                  </template>
-                  <!-- 状态 -->
-                  <template v-slot:[`item.status`]="{ item }">
-                    {{ item.status === 1 ? '有效' : '无效' }}
-                  </template>
-                  <!-- 操作 -->
-                  <template v-slot:[`item.actions`]="{ item }">
-                    <v-icon small class="mr-2" @click="edit(item.id)"> mdi-pencil </v-icon>
-                    <v-icon small class="mr-2" @click="del(item.id)"> mdi-delete </v-icon>
-                  </template>
-                </v-data-table>
-                <div class="text-center pt-2">
-                  <v-pagination v-model="pagination.page" :length="pagination.count"></v-pagination>
-                </div>
+            <v-data-table
+              :headers="headers"
+              :items="list"
+              :page.sync="pagination.page"
+              :items-per-page="pagination.itemsPerPage"
+              hide-default-footer
+              class="elevation-1"
+              @page-count="pagination.count = $event"
+            >
+              <!-- 序号 -->
+              <template v-slot:[`item.id`]="{ item }">
+                {{
+                  pagination.page *
+                    list
+                      .map(function (x) {
+                        return x.id;
+                      })
+                      .indexOf(item.id) +
+                  1
+                }}
               </template>
-            </v-widget>
+              <!-- 状态 -->
+              <template v-slot:[`item.status`]="{ item }">
+                {{ item.status === 1 ? '有效' : '无效' }}
+              </template>
+              <!-- 操作 -->
+              <template v-slot:[`item.actions`]="{ item }">
+                <v-icon small class="mr-2" @click="edit(item.id)"> mdi-pencil </v-icon>
+                <v-icon small class="mr-2" @click="del(item.id)"> mdi-delete </v-icon>
+              </template>
+            </v-data-table>
+            <div class="text-center pt-2">
+              <v-pagination v-model="pagination.page" :length="pagination.count"></v-pagination>
+            </div>
           </v-flex>
         </v-layout>
       </v-container>
@@ -80,8 +76,8 @@ import { Vue, Component, Prop } from 'vue-property-decorator';
 
 @Component({
   components: {
-    VWidget
-  }
+    VWidget,
+  },
 })
 export default class Index extends Vue {
   // data
@@ -90,9 +86,7 @@ export default class Index extends Vue {
   pagination: Pagination = new Pagination();
   model: any = {};
   // Table
-  headers: any[] = [
-    { text: '客户端Id', value: 'clientId' },
-  ];
+  headers: any[] = [{ text: '客户端Id', value: 'clientId' }];
 
   // 分页列表
   list: Client[] = [];

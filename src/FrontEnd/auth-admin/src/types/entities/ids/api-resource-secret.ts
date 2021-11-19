@@ -1,19 +1,19 @@
 interface IApiResourceSecret {
-  id?: number;
+  id?: string;
   description: string;
   value: string;
   expiration: string;
   type: string;
   created: string;
-  apiResourceId: number;
+  apiResourceId: string;
 }
 
 export default class ApiResourceSecret implements IApiResourceSecret {
-  id?: number | undefined;
+  id?: string;
   description: string = '';
   value: string = '';
   expiration: string = '';
   type: string = '';
   created: string = '';
-  apiResourceId: number = 0;
+  apiResourceId: string = '';
 }

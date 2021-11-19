@@ -26,6 +26,12 @@ const list = [{
         title: "角色信息",
         icon: "mdi-account-box",
         href: "/base/role",
+    }, 
+    {
+        name: "claim-type",
+        title: "声明类型",
+        icon: "mdi-account-box",
+        href: "/base/claim-type",
     }]
 },
 {
@@ -70,12 +76,12 @@ const list = [{
         href: "/ids/client",
     }, {
         name: "identity-resource",
-        title: "身份资源",
+        title: "Identity资源",
         icon: "mdi-identifier",
         href: "/ids/identity-resource",
     }, {
         name: "api-resource",
-        title: "接口资源",
+        title: "API资源",
         icon: "mdi-api",
         href: "/ids/api-resource",
     }]

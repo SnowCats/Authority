@@ -1,11 +1,11 @@
 interface IIdentityResourceProperty {
-  id?: number;
+  id?: string;
   type: string;
-  identityResourceId: number;
+  identityResourceId: string;
 }
 
 export default class IdentityResourceProperty implements IIdentityResourceProperty {
-  id?: number | undefined;
+  id?: string;
   type: string = '';
-  identityResourceId: number = 0;
+  identityResourceId: string = '';
 }

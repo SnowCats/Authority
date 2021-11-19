@@ -8,6 +8,10 @@
     <Folder Include="BaseEntity\" />
     <Folder Include="SystemEntity\" />
     <Folder Include="Ids4Entity\" />
+    <Folder Include="Ids4Entity\ApiResources\" />
+    <Folder Include="Ids4Entity\ApiScopes\" />
+    <Folder Include="Ids4Entity\Clients\" />
+    <Folder Include="Ids4Entity\IdentityResources\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Auth.SeedWork\Auth.SeedWork.csproj" />
@@ -20,6 +24,10 @@
     <None Remove="IdentityModel" />
     <None Remove="IdentityServer4.Storage" />
     <None Remove="IdentityServer4" />
+    <None Remove="Ids4Entity\ApiResources\" />
+    <None Remove="Ids4Entity\ApiScopes\" />
+    <None Remove="Ids4Entity\Clients\" />
+    <None Remove="Ids4Entity\IdentityResources\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="IdentityModel" Version="5.2.0" />

@@ -50,6 +50,24 @@ export default new VueRouter({
             name: 'role-list',
             component: () => import('@/pages/base/role/index.vue')
         },
+        {
+            // 声明类型-列表
+            path: '/base/claim-type',
+            name: 'claim-type-list',
+            component: () => import('@/pages/base/claim-type/index.vue')
+        },
+        {
+            // 声明类型-新增
+            path: '/base/claim-type/add',
+            name: 'claim-type-add',
+            component: () => import('@/pages/base/claim-type/add.vue')
+        },
+        {
+            // 声明类型-编辑
+            path: '/base/claim-type/edit',
+            name: 'claim-type-edit',
+            component: () => import('@/pages/base/claim-type/edit.vue')
+        },
         // 系统设置
         {
             // 模块信息
@@ -107,13 +125,13 @@ export default new VueRouter({
             component: () => import('@/pages/ids/client/edit.vue')
         },
         {
-            // 身份资源
+            // Identity资源
             path: '/ids/identity-resource',
             name: 'identity-resource-list',
             component: () => import('@/pages/ids/identity-resource/index.vue')
         },
         {
-            // 接口资源
+            // Api资源
             path: '/ids/api-resource',
             name: 'api-resource-list',
             component: () => import('@/pages/ids/api-resource/index.vue')

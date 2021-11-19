@@ -1,11 +1,11 @@
 interface IClientIdPRestriction {
-  id?: number;
+  id?: string;
   provider: string;
-  clientId: number;
+  clientId: string;
 }
 
 export default class ClientIdPRestriction implements IClientIdPRestriction {
-  id?: number | undefined;
+  id?: string;
   provider: string = '';
-  clientId: number = 0;
+  clientId: string = '';
 }

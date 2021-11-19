@@ -1,13 +1,13 @@
 interface IClientProperty {
-  id?: number;
+  id?: string;
   key: string;
   value: string;
-  clientId: number;
+  clientId: string;
 }
 
 export default class ClientProperty implements IClientProperty {
-  id?: number | undefined;
+  id?: string;
   key: string = '';
   value: string = '';
-  clientId: number = 0;
+  clientId: string = '';
 }

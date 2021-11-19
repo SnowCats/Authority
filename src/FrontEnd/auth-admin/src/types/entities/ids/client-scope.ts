@@ -1,11 +1,11 @@
 interface IClientScope {
-  id?: number;
+  id?: string;
   scope: string;
-  clientId: number;
+  clientId: string;
 }
 
 export default class ClientScope implements IClientScope {
-  id?: number | undefined;
+  id?: string;
   scope: string = '';
-  clientId: number = 0;
+  clientId: string = '';
 }

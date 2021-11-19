@@ -1,11 +1,11 @@
 interface IClientGrantType {
-  id?: number;
+  id?: string;
   grantType: string;
-  clientId: number;
+  clientId: string;
 }
 
 export default class ClientGrantType implements IClientGrantType {
-  id?: number | undefined;
+  id?: string;
   grantType: string = '';
-  clientId: number = 0;
+  clientId: string = '';
 }

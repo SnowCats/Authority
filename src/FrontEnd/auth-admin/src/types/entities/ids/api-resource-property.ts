@@ -1,13 +1,13 @@
 interface IApiResourceProperty {
-  id?: number;
+  id?: string;
   key: string;
   vaue: string;
-  apiResourceId: number;
+  apiResourceId: string;
 }
 
 export default class ApiResourceProperty implements IApiResourceProperty {
-  id?: number | undefined;
+  id?: string;
   key: string = '';
   vaue: string = '';
-  apiResourceId: number = 0;
+  apiResourceId: string = '';
 }

@@ -1,11 +1,11 @@
 interface IClientPostLogoutRedirectUri {
-  id?: number;
+  id?: string;
   postLogoutRedirectUri: string;
-  clientId: number;
+  clientId: string;
 }
 
 export default class ClientPostLogoutRedirectUri implements IClientPostLogoutRedirectUri {
-  id?: number | undefined;
+  id?: string;
   postLogoutRedirectUri: string = '';
-  clientId: number = 0;
+  clientId: string = '';
 }

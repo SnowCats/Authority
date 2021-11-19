@@ -1,5 +1,5 @@
 interface IApiScope {
-  id?: number;
+  id?: string;
   enabled: boolean;
   name: string;
   displayName: string;
@@ -10,7 +10,7 @@ interface IApiScope {
 }
 
 export default class ApiScope implements IApiScope {
-  id?: number | undefined;
+  id?: string;
   enabled: boolean = true;
   name: string = '';
   displayName: string = '';

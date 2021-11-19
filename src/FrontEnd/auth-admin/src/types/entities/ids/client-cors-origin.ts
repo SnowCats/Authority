@@ -1,11 +1,11 @@
 interface IClientCorsOrigin {
-  id?: number;
+  id?: string;
   origin: string;
-  clientId: number;
+  clientId: string;
 }
 
 export default class ClientCorsOrigin implements IClientCorsOrigin {
-  id?: number | undefined;
+  id?: string;
   origin: string = '';
-  clientId: number = 0;
+  clientId: string = '';
 }

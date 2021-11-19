@@ -1,11 +1,11 @@
 interface IApiScopeClaim {
-  id?: number;
+  id?: string;
   type: string;
-  scopeId: number;
+  scopeId: string;
 }
 
 export default class ApiScopeClaim implements IApiScopeClaim {
-  id?: number | undefined;
+  id?: string;
   type: string = '';
-  scopeId: number = 0;
+  scopeId: string = '';
 }

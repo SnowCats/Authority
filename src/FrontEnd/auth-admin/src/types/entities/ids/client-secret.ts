@@ -13,7 +13,7 @@ export default class ClientSecret implements IClientSecret {
   description: string = '';
   value: string = '';
   expiration: string = '';
-  type: string = '';
+  type: string = 'SharedSecret';
   created: string = '';
   clientId: number = 0;
 }

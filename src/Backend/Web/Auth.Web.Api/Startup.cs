@@ -2,6 +2,7 @@ using System.Reflection;
 using Auth.Core.AppSettings;
 using Auth.Core.AutoMapper;
 using Auth.Core.IoC;
+using Auth.Core.Middlewares;
 using Auth.Core.Swagger;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -64,6 +65,8 @@ namespace Auth.Web.Api
             app.UseCors("auth-admin");
 
             app.UseCookiePolicy();
+
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

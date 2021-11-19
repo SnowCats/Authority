@@ -1,11 +1,11 @@
 interface IApiResourceScope {
-  id?: number;
+  id?: string;
   scope: string;
-  apiResourceId: number;
+  apiResourceId: string;
 }
 
 export default class ApiResourceScope implements IApiResourceScope {
-  id?: number | undefined;
+  id?: string;
   scope: string = '';
-  apiResourceId: number = 0;
+  apiResourceId: string = '';
 }

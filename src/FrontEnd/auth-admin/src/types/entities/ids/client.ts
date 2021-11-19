@@ -1,5 +1,9 @@
+import ClientPostLogoutRedirectUri from './client-post-logout-redirect-uri';
+import ClientRedirectUri from './client-redirect-uri';
+import ClientSecret from './client-secret';
+
 interface IClient {
-  id?: number;  // 主键
+  id?: string;  // 主键
   enabled: boolean; // 是否启用
   clientId: string; // 客户端Id
   protocolType: string; // 协议类型
@@ -7,7 +11,7 @@ interface IClient {
   clientName: string; // 客户端名称
   description: string;  // 描述
   clientUri: string;  // 客户端Uri
-  logoUri: string;  // 注销URL
+  logoUri: string;  // LogoUri
   requireConsent: boolean;  // 需要许可
   allowRememberConsent: boolean;  // 允许记住许可
   alwaysIncludeUserClaimsInIdToken: boolean;  // 
@@ -43,10 +47,13 @@ interface IClient {
   userCodeType: string;
   deviceCodeLifetime: number;
   nonEditable: boolean;
+  clientRedirectUri: ClientRedirectUri;
+  clientPostLogoutRedirectUri: ClientPostLogoutRedirectUri;
+  clientSecrets: Array<ClientSecret>;
 }
 
 export default class Client implements IClient {
-  id?: number | undefined;
+  id?: string;
   enabled: boolean = true;
   clientId: string = '';
   protocolType: string = '';
@@ -90,4 +97,13 @@ export default class Client implements IClient {
   userCodeType: string = '';
   deviceCodeLifetime: number = 0;
   nonEditable: boolean = false;
+  clientRedirectUri: ClientRedirectUri = {
+    redirectUri: '',
+    clientId: '',
+  };
+  clientPostLogoutRedirectUri: ClientPostLogoutRedirectUri = {
+    postLogoutRedirectUri: '',
+    clientId: ''
+  };
+  clientSecrets: Array<ClientSecret> = [];
 }

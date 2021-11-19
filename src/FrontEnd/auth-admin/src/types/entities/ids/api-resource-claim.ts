@@ -1,11 +1,11 @@
 interface IApiResourceClaim {
-  id?: number;
+  id?: string;
   type: string;
-  apiResourceId: number;
+  apiResourceId: string;
 }
 
 export default class ApiResourceClaim implements IApiResourceClaim {
-  id?: number | undefined;
+  id?: string;
   type: string = '';
-  apiResourceId: number = 0;
+  apiResourceId: string = '';
 }

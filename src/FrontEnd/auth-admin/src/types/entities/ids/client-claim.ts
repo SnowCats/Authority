@@ -1,13 +1,13 @@
 interface IClientClaim {
-  id?: number;
+  id?: string;
   type: string;
   value: string;
-  clientId: number;
+  clientId: string;
 }
 
 export default class ClientClaim implements IClientClaim {
-  id?: number | undefined;
+  id?: string;
   type: string = '';
   value: string = '';
-  clientId: number = 0;
+  clientId: string = '';
 }

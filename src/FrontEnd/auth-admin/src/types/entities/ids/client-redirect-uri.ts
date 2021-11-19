@@ -1,11 +1,11 @@
 interface IClientRedirectUri {
-  id?: number;
+  id?: string;
   redirectUri: string;
-  clientId: number;
+  clientId: string;
 }
 
 export default class ClientRedirectUri implements IClientRedirectUri {
-  id?: number | undefined;
+  id?: string;
   redirectUri: string = '';
-  clientId: number = 0;
+  clientId: string = '';
 }

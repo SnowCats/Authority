@@ -1,5 +1,5 @@
 interface IIdentityResource {
-  id?: number;
+  id?: string;
   enabled: boolean;
   name: string;
   displayName: string;
@@ -13,7 +13,7 @@ interface IIdentityResource {
 }
 
 export default class IdentityResource implements IIdentityResource {
-  id?: number | undefined;
+  id?: string;
   enabled: boolean = true;
   name: string = '';
   displayName: string = '';

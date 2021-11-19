@@ -1,11 +1,11 @@
 interface IIdentityResourceClaim {
-  id?: number;
+  id?: string;
   type: string;
-  identityResourceId: number;
+  identityResourceId: string;
 }
 
 export default class IdentityResourceClaim implements IIdentityResourceClaim {
-  id?: number | undefined;
+  id?: string;
   type: string = '';
-  identityResourceId: number = 0;
+  identityResourceId: string = '';
 }

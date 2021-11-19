@@ -1,13 +1,13 @@
 interface IApiScopeProperty {
-  id?: number;
+  id?: string;
   key: string;
   value: string;
-  scopeId: number;
+  scopeId: string;
 }
 
 export default class ApiScopeProperty implements IApiScopeProperty {
-  id?: number | undefined;
+  id?: string;
   key: string = '';
   value: string = '';
-  scopeId: number = 0;
+  scopeId: string = '';
 }
